@@ -16,7 +16,13 @@ from linebot.models import (
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 
-wtf_reason = ['一例一休', '一個阿嬤嘎挖共，不出來選，天公伯不會原諒我']
+wtf_reason = [
+    '一例一休',
+    '陸客不來了',
+    '一個阿嬤嘎挖共，不出來選，天公伯不會原諒我',
+    '只要是男人就會喜歡邱主任',
+    '車子她開的～我上了她的車～就～咻的滑進摩鐵了',
+]
 
 application = Flask(__name__)
 
