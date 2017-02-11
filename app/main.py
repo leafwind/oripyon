@@ -75,7 +75,7 @@ def make_reply(type, uid, msg):
     #    profile = line_bot_api.get_profile(uid)
     #    print(profile.__dict__)
     #    return '{} 的顯圖：{}, 狀態：{}'.decode('utf-8').format(profile.display_name, profile.picture_url, profile.status_message)
-    elif 'QQ' in msg:
+    elif msg == '可以幫我QQ嗎':
         return '幫QQ喔'
     elif '魔法'.decode('utf-8') in msg:
         return '僕と契約して、魔法少女になってよ！'
