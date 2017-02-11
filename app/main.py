@@ -16,6 +16,8 @@ from linebot.models import (
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 
+wtf_reason = ['一例一休', '一個阿嬤嘎挖共，不出來選，天公伯不會原諒我']
+
 application = Flask(__name__)
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
@@ -81,5 +83,8 @@ def make_reply(type, uid, msg):
         return '僕と契約して、魔法少女になってよ！'
     elif 'ㄆㄆ'.decode('utf-8') in msg:
         return 'gmail!'
+    elif '請問為什麼'.decode('utf-8') in msg:
+        random.seed(os.urandom(5))
+        return '因為{}。'.format(random.choice(wtf_reason))
     else:
         return None
