@@ -26,3 +26,8 @@ Bot Setting:
 Go to [Business Center](https://business.line.me/zh-hant/)
 
 * Account List -> Your Accounts -> Messaging API -> LINE Developers
+
+## Ref.
+
+[link 1](http://qiita.com/Kosuke-Szk/items/e31df8665f2a83406362)
+[link 2](http://qiita.com/mochan_tk/items/db3fd4e4867dd3fb6540)
