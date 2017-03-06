@@ -27,6 +27,13 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 
 * Account List -> Your Accounts -> Messaging API -> LINE Developers
 
+### Copy uWSGI Systemd Unit File (16.04)
+
+`sudo cp line_bot.service /etc/systemd/system/line_bot.service`
+`sudo systemctl start line_bot`
+`sudo systemctl enable line_bot`
+
+
 ## Ref.
 
 [link 1](http://qiita.com/Kosuke-Szk/items/e31df8665f2a83406362)

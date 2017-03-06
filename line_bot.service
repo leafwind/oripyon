@@ -1,0 +1,14 @@
+[Unit]
+Description=uWSGI instance to serve line_bot
+After=network.target
+
+[Service]
+User=leafbot
+Group=www-data
+WorkingDirectory=/home/leafbot/git/line_bot/
+Environment="PATH=/home/leafbot/git/line_bot/__/bin"
+ExecStart=/home/leafbot/git/line_bot/__/bin/uwsgi --ini uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target
+
