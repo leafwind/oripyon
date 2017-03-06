@@ -20,19 +20,11 @@ Bot Setting:
 * Auto response Y/N
 * Greetings Y/N
 
-
 ## Get Channel Secret and Channel Access Token
 
 Go to [Business Center](https://business.line.me/zh-hant/)
 
 * Account List -> Your Accounts -> Messaging API -> LINE Developers
-
-### Copy uWSGI Systemd Unit File (16.04)
-
-`sudo cp line_bot.service /etc/systemd/system/line_bot.service`
-`sudo systemctl start line_bot`
-`sudo systemctl enable line_bot`
-
 
 ## Ref.
 
