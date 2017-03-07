@@ -99,7 +99,7 @@ def make_reply(type, uid, msg):
     elif '請問為什麼'.decode('utf-8') in msg:
         random.seed(os.urandom(5))
         return '因為{}。'.format(random.choice(wtf_reason))
-    elif '作運動'.decode('utf-8') in msg:
+    elif '作運動'.decode('utf-8') in msg or '做運動'.decode('utf-8') in msg:
         return 'https://www.facebook.com/dailyheyhey/videos/1721131438179051'
     else:
         return None
