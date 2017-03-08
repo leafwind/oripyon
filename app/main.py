@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import random
-from app.config import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
+
 from flask import Flask, request, abort
 
 from linebot import (
@@ -13,7 +13,11 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
+
+from app.config import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
+from app import cwb_weather_predictor
+
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 
 wtf_reason = [
@@ -80,7 +84,11 @@ def handle_message(event):
         TextSendMessage(text=reply))
 
 def make_reply(type, uid, msg):
-    if '小路占卜'.decode('utf-8') in msg:
+    msg_list = msg.split(' ')
+    len_msg = len(msg_list)
+    if msg_list[0] == '天氣'.decode('utf-8'):
+        return cwb_weather_predictor.predict(msg_list[1])
+    elif '小路占卜'.decode('utf-8') in msg:
         global maple_phrase
         # profile = line_bot_api.get_profile(uid)
         random.seed(os.urandom(5))
