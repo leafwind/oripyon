@@ -87,7 +87,7 @@ def make_reply(type, uid, msg):
     msg_list = msg.split(' ')
     len_msg = len(msg_list)
     if msg_list[0] == '天氣'.decode('utf-8'):
-        return cwb_weather_predictor.predict(msg_list[1])
+        return cwb_weather_predictor.predict(msg_list[1].encode('utf-8').replace('台', '臺').decode('utf-8'))
     elif '小路占卜'.decode('utf-8') in msg:
         global maple_phrase
         # profile = line_bot_api.get_profile(uid)
