@@ -14,7 +14,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
-from app.config import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
+from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 from app import cwb_weather_predictor
 
