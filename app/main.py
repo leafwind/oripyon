@@ -11,7 +11,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
+    MessageEvent, TextMessage, TextSendMessage, CarouselTemplate, CarouselColumn, URITemplateAction, PostbackTemplateAction, MessageTemplateAction, TemplateSendMessage, ConfirmTemplate, ButtonsTemplate
 )
 
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
@@ -67,7 +67,49 @@ def handle_message(event):
     print('=========')
     print(event.__dict__)
     print(event.source.__dict__)
-    if event.source.type == 'room':
+    if event.message.text == 'carousel':
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(text='hoge1', title='fuga1', actions=[
+                URITemplateAction(
+                    label='Go to line.me', uri='https://line.me'),
+                PostbackTemplateAction(label='ping', data='ping')
+            ]),
+            CarouselColumn(text='hoge2', title='fuga2', actions=[
+                PostbackTemplateAction(
+                    label='ping with text', data='ping',
+                    text='ping'),
+                MessageTemplateAction(label='Translate Rice', text='米')
+            ]),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+        return
+    elif event.message.text == 'confirm':
+        confirm_template = ConfirmTemplate(text='Do it?', actions=[
+            MessageTemplateAction(label='Yes', text='Yes!'),
+            MessageTemplateAction(label='No', text='No!'),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+        return
+    elif event.message.text == 'buttons':
+        buttons_template = ButtonsTemplate(
+            title='My buttons sample', text='Hello, my buttons', actions=[
+                URITemplateAction(
+                    label='Go to line.me', uri='https://line.me'),
+                PostbackTemplateAction(label='ping', data='ping'),
+                PostbackTemplateAction(
+                    label='ping with text', data='ping',
+                    text='ping'),
+                MessageTemplateAction(label='Translate Rice', text='米')
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+        return
+    elif event.source.type == 'room':
         rid = event.source.room_id
         reply = make_reply('room', rid, event.message.text)
     elif event.source.type == 'user':
@@ -109,5 +151,7 @@ def make_reply(type, uid, msg):
         return '因為{}。'.format(random.choice(wtf_reason))
     elif '作運動'.decode('utf-8') in msg or '做運動'.decode('utf-8') in msg:
         return 'https://www.facebook.com/dailyheyhey/videos/1721131438179051'
+    elif '中文'.decode('utf-8') in msg:
+        return '我覺的台灣人的中文水準以經爛ㄉ很嚴重 大家重來都不重視 因該要在加強 才能越來越利害'
     else:
         return None
