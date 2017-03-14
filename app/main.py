@@ -17,24 +17,11 @@ from linebot.models import (
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 from app.line_templates import make_template_action, make_carousel_column, make_carousel_template, make_confirm_template, make_buttons_template
+from app import wtf_reasons
 from app import cwb_weather_predictor
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 
-wtf_reason = [
-    '一例一休',
-    '陸客不來了',
-    '一個阿嬤嘎挖共，不出來選，天公伯不會原諒我',
-    '只要是男人就會喜歡邱主任',
-    '車子她開的～我上了她的車～就～咻的滑進摩鐵了',
-    '手沒放在鍵盤上不能算工時',
-    '然後他就死掉了',
-    '我犯了全天下男人都會犯的錯',
-    '白海豚會轉彎',
-    '我沒講過白海豚會轉彎',
-    '一個便當吃不夠，你有沒有吃兩個？',
-    '垃圾不分藍綠',
-]
 
 application = Flask(__name__)
 
@@ -143,7 +130,7 @@ def make_reply(type, uid, msg):
         return 'gmail!'
     elif '請問為什麼'.decode('utf-8') in msg:
         random.seed(os.urandom(5))
-        return '因為{}。'.format(random.choice(wtf_reason))
+        return '因為{}。'.format(random.choice(wtf_reasons.reasons))
     elif '作運動'.decode('utf-8') in msg or '做運動'.decode('utf-8') in msg:
         return 'https://www.facebook.com/dailyheyhey/videos/1721131438179051'
     elif '中文'.decode('utf-8') in msg:
