@@ -11,11 +11,12 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, CarouselTemplate, CarouselColumn, URITemplateAction, PostbackTemplateAction, MessageTemplateAction, TemplateSendMessage, ConfirmTemplate, ButtonsTemplate
+    MessageEvent, TextMessage, TextSendMessage, TemplateSendMessage
 )
 
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
+from app.line_templates import make_template_action, make_carousel_column, make_carousel_template, make_confirm_template, make_buttons_template
 from app import cwb_weather_predictor
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
@@ -67,46 +68,40 @@ def handle_message(event):
     print('=========')
     print(event.__dict__)
     print(event.source.__dict__)
+    leafwind_photo_url = 'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-e9329cd5f8f44a76-320-320.png'
+    kaori_photo_url = 'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-4808e3743f50232e-320-320.jpeg'
+    uri_action = make_template_action('uri', '前往卡歐的首頁', uri='http://yfting.com')
+    uri_action2 = make_template_action('uri', '前往玉米的首頁', uri='https://data.leafwind.tw')
+    postback_action = make_template_action('postback', 'ping', data='ping')
+    postback_action_with_text = make_template_action('postback', 'ping with text', data='ping', text='ping')
+    message_action = make_template_action('message', 'Translate Rice', text='米')
     if event.message.text == 'carousel':
-        carousel_template = CarouselTemplate(columns=[
-            CarouselColumn(text='hoge1', title='fuga1', actions=[
-                URITemplateAction(
-                    label='Go to line.me', uri='https://line.me'),
-                PostbackTemplateAction(label='ping', data='ping')
-            ]),
-            CarouselColumn(text='hoge2', title='fuga2', actions=[
-                PostbackTemplateAction(
-                    label='ping with text', data='ping',
-                    text='ping'),
-                MessageTemplateAction(label='Translate Rice', text='米')
-            ]),
-        ])
+        col1 = make_carousel_column('這是卡歐', 'Hi~', [uri_action, postback_action], kaori_photo_url)
+        col2 = make_carousel_column('這是玉米', 'ㄏㄏ', [uri_action2, message_action], leafwind_photo_url)
+
+        carousel_template = make_carousel_template([col1, col2])
+
         template_message = TemplateSendMessage(
-            alt_text='Buttons alt text', template=carousel_template)
+            alt_text='carousel alt text', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
         return
-    elif event.message.text == 'confirm':
-        confirm_template = ConfirmTemplate(text='Do it?', actions=[
-            MessageTemplateAction(label='Yes', text='Yes!'),
-            MessageTemplateAction(label='No', text='No!'),
-        ])
+    elif event.message.text == 'confirm':  # left / right buttons
+        message_action = make_template_action('message', '是', text='帥！')
+        message_action2 = make_template_action('message', '否', text='帥！')
+        confirm_template = make_confirm_template('玉米帥嗎？', [message_action, message_action2])
         template_message = TemplateSendMessage(
-            alt_text='Confirm alt text', template=confirm_template)
+            alt_text='confirm alt text', template=confirm_template)
         line_bot_api.reply_message(event.reply_token, template_message)
         return
-    elif event.message.text == 'buttons':
-        buttons_template = ButtonsTemplate(
-            title='My buttons sample', text='Hello, my buttons', actions=[
-                URITemplateAction(
-                    label='Go to line.me', uri='https://line.me'),
-                PostbackTemplateAction(label='ping', data='ping'),
-                PostbackTemplateAction(
-                    label='ping with text', data='ping',
-                    text='ping'),
-                MessageTemplateAction(label='Translate Rice', text='米')
-            ])
+    elif event.message.text == 'buttons':  # top-down buttons
+        buttons_template = make_buttons_template(
+            'My buttons sample',
+            'Hello, my buttons',
+            [uri_action, postback_action, postback_action_with_text, message_action],
+            leafwind_photo_url
+        )
         template_message = TemplateSendMessage(
-            alt_text='Buttons alt text', template=buttons_template)
+            alt_text='buttons alt text', template=buttons_template)
         line_bot_api.reply_message(event.reply_token, template_message)
         return
     elif event.source.type == 'room':
