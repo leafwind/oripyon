@@ -19,6 +19,7 @@ from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 from app.line_templates import make_template_action, make_carousel_column, make_carousel_template, make_confirm_template, make_buttons_template
 from app import wtf_reasons
 from app import cwb_weather_predictor
+from predict_code_map import PREDICT_CODE_MAP
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 
@@ -118,7 +119,18 @@ def make_reply(type, uid, msg):
     if msg == 'oripyon':
         return '原始碼請看 https://github.com/leafwind/line_bot'
     elif msg_list[0] == '天氣'.decode('utf-8'):
-        return cwb_weather_predictor.predict(msg_list[1].encode('utf-8').replace('台', '臺').decode('utf-8'))
+        location = msg_list[1].encode('utf-8').replace('台', '臺').decode('utf-8')
+        predicted_result = cwb_weather_predictor.predict(location)
+        predicted_result = predicted_result[0]  # temporary use first result
+        # image_url = 'http://www.cwb.gov.tw/V7/symbol/weather/gif/night/{}.gif'.format(predicted_result['Wx'])
+        return_str = '\n'.join([
+            '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
+            '天氣：{}'.format(PREDICT_CODE_MAP[predicted_result['Wx']]),
+            predicted_result['CI'],
+            '溫度：{}~{}(C)'.format(str(predicted_result['MinT']), str(predicted_result['MaxT'])),
+            '降雨機率：{}%'.format(str(predicted_result['PoP'])),
+        ])
+        return return_str
     elif '小路占卜'.decode('utf-8') in msg:
         global maple_phrase
         random.seed(os.urandom(5))
