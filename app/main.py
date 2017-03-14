@@ -30,7 +30,7 @@ handler = WebhookHandler(CHANNEL_SECRET)
 
 @application.route('/')
 def hello_world():
-    return 'Hello World from flaskapp2!'
+    return '<a href=\'https://github.com/leafwind/line_bot\'>https://github.com/leafwind/line_bot</a>'
 
 @application.route("/callback", methods=['POST'])
 def callback():
@@ -110,7 +110,9 @@ def handle_message(event):
 def make_reply(type, uid, msg):
     msg_list = msg.split(' ')
     len_msg = len(msg_list)
-    if msg_list[0] == '天氣'.decode('utf-8'):
+    if msg == 'oripyon':
+        return '原始碼請看 https://github.com/leafwind/line_bot'
+    elif msg_list[0] == '天氣'.decode('utf-8'):
         return cwb_weather_predictor.predict(msg_list[1].encode('utf-8').replace('台', '臺').decode('utf-8'))
     elif '小路占卜'.decode('utf-8') in msg:
         global maple_phrase
