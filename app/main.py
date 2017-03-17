@@ -2,7 +2,8 @@
 import os
 import random
 
-from flask import Flask, request, abort
+from flask import Flask, request, abort, render_template, url_for
+
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -24,14 +25,14 @@ from predict_code_map import PREDICT_CODE_MAP
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 
 
-application = Flask(__name__)
+application = Flask(__name__, template_folder='templates')
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 
-@application.route('/')
-def hello_world():
-    return '<a href=\'https://github.com/leafwind/line_bot\'>https://github.com/leafwind/line_bot</a>'
+@application.route('/', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
 
 @application.route("/callback", methods=['POST'])
 def callback():
