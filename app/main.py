@@ -123,13 +123,25 @@ def make_reply(type, uid, msg):
         predicted_result = cwb_weather_predictor.predict(location)
         predicted_result = predicted_result[0]  # temporary use first result
         # image_url = 'http://www.cwb.gov.tw/V7/symbol/weather/gif/night/{}.gif'.format(predicted_result['Wx'])
-        return_str = '\n'.join([
-            '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
-            '天氣：{}'.format(PREDICT_CODE_MAP[predicted_result['Wx']]),
-            predicted_result['CI'],
-            '溫度：{}~{}(C)'.format(str(predicted_result['MinT']), str(predicted_result['MaxT'])),
-            '降雨機率：{}%'.format(str(predicted_result['PoP'])),
-        ])
+        if not predicted_result['success']:
+            return '查無資料'
+        if predicted_result['level'] == 2:
+            return_str = '\n'.join([
+                '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
+                '天氣：{}'.format(PREDICT_CODE_MAP[predicted_result['Wx']]),
+                predicted_result['CI'],
+                '溫度：{}~{}(C)'.format(str(predicted_result['MinT']), str(predicted_result['MaxT'])),
+                '降雨機率：{}%'.format(str(predicted_result['PoP'])),
+            ])
+        elif predicted_result['level'] == 3:
+            return_str = '\n'.join([
+                '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
+                '天氣：{}'.format(PREDICT_CODE_MAP[predicted_result['Wx']]),
+                # predicted_result['CI'],
+                '溫度：{}°C 體感：{}°C'.format(str(predicted_result['T']), str(predicted_result['AT'])),
+                # '降雨機率：{}%'.format(str(predicted_result['PoP'])),
+            ])
+            
         return return_str
     elif '小路占卜'.decode('utf-8') in msg:
         global maple_phrase
