@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
+    <head>
+        <meta charset="utf-8"/>
+        <style>
+            h1   {color: blue;}
+            p    {color: red;}
+            {text-align: center;}
+            .codeblock {
+                border: 2px dashed black;
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>oripyon - line bot</h1>
 
-  </head>
-  <body>
-    <h1>oripyon - line bot</h1>
+        <img src="{{url_for('static', filename='oripyon.png')}}" />
+        <h2>若您使用手機，請點選此<a href='https://line.me/R/ti/p/iQCiVD07f6'>好友連結</a>加我為好友</h2>
+        <h2>若您使用電腦，可以用手機掃描以下 QR code</h2>
+        <h2><img src="{{url_for('static', filename='oripyon_qr_code.png')}}" /></h2>
+        <h2>使用範例：</h2>
+        <h3 class='codeblock'>天氣 台北市</h3>
+        <h3 class='codeblock'>天氣 龍潭區</h3>
+        <p>此機器人使用中央氣象局提供之 <a href='http://opendata.cwb.gov.tw'>Open Data 資料</a></p>
+        <p>並且還在測試階段，若因任何情況導致氣象資料不準確，本人概不負責</p>
 
-    <img src="{{url_for('static', filename='oripyon.png')}}" />
-    <img src="{{url_for('static', filename='oripyon_qr_code.png')}}" />
-    <h2>使用範例：</h2>
-    <h3>天氣 台北市</h3>
-    <h3>天氣 龍潭區</h3>
-    <p>此機器人使用中央氣象局提供之 <a href='http://opendata.cwb.gov.tw'>Open Data 資料</a></p>
-    <p>並且還在測試階段，若因任何情況導致氣象資料不準確，本人概不負責</p>
-
-    source code: <a href=\'https://github.com/leafwind/line_bot\'>https://github.com/leafwind/line_bot</a>
-  </body>
+        開放原始碼：<a href=\'https://github.com/leafwind/line_bot\'>https://github.com/leafwind/line_bot</a>
+    </body>
 
 </html>
