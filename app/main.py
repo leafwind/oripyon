@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import random
+from datetime import datetime
 
 from flask import Flask, request, abort, render_template, url_for
 
@@ -19,7 +20,7 @@ from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 from app.line_templates import make_template_action, make_carousel_column, make_carousel_template, make_confirm_template, make_buttons_template
 from app import wtf_reasons
-from app import cwb_weather_predictor
+from app import cwb_weather_predictor, predict_AQI
 from predict_code_map import PREDICT_CODE_MAP
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
@@ -123,26 +124,39 @@ def make_reply(type, uid, msg):
         location = msg_list[1].encode('utf-8').replace('台', '臺').decode('utf-8')
         predicted_result = cwb_weather_predictor.predict(location)
         predicted_result = predicted_result[0]  # temporary use first result
+        AQI = predict_AQI.predict_AQI(location)
         # image_url = 'http://www.cwb.gov.tw/V7/symbol/weather/gif/night/{}.gif'.format(predicted_result['Wx'])
         if not predicted_result['success']:
             return '查無資料'
         if predicted_result['level'] == 2:
             return_str = '\n'.join([
                 '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
-                '天氣：{}'.format(PREDICT_CODE_MAP[predicted_result['Wx']]),
-                predicted_result['CI'],
-                '溫度：{}~{}(C)'.format(str(predicted_result['MinT']), str(predicted_result['MaxT'])),
+                '{} / {} / {}~{}(°C)'.format(PREDICT_CODE_MAP[predicted_result['Wx']], predicted_result['CI'], str(predicted_result['MinT']), str(predicted_result['MaxT'])),
                 '降雨機率：{}%'.format(str(predicted_result['PoP'])),
             ])
+            if AQI:
+                return_str += '\n' + \
+                '{} AQI: {}({}) {}預測{}'.format(
+                    AQI['area'].encode('utf-8'),
+                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'),
+                    datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
+                    datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
+                )
         elif predicted_result['level'] == 3:
             return_str = '\n'.join([
                 '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
-                '天氣：{}'.format(PREDICT_CODE_MAP[predicted_result['Wx']]),
+                '{} / {}°C (體感 {})'.format(PREDICT_CODE_MAP[predicted_result['Wx']], str(predicted_result['T']), str(predicted_result['AT'])),
                 # predicted_result['CI'],
-                '溫度：{}°C 體感：{}°C'.format(str(predicted_result['T']), str(predicted_result['AT'])),
                 # '降雨機率：{}%'.format(str(predicted_result['PoP'])),
             ])
-            
+            if AQI:
+                return_str += '\n' + \
+                '{} AQI: {}({}) {}預測{}'.format(
+                    AQI['area'].encode('utf-8'),
+                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'),
+                    datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
+                    datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
+                ) 
         return return_str
     elif '小路占卜'.decode('utf-8') in msg:
         global maple_phrase

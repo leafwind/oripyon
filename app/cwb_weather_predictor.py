@@ -10,8 +10,9 @@ from constants import CWB_DB_PATH
 logging.basicConfig(level=logging.DEBUG)
 
 def predict(location):
-    ts_now = int(time.time())
     conn = sqlite3.connect(CWB_DB_PATH)
+    ts_now = int(time.time())
+        
     c = conn.cursor()
     query_str = '''SELECT end_ts, Wx, MaxT, MinT, PoP, CI FROM {} WHERE location=? AND end_ts > ? ORDER BY end_ts ASC; '''.format('level_1_2')
     c.execute(query_str, (location, ts_now))
