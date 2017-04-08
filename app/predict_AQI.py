@@ -1,0 +1,35 @@
+# -*- coding: utf-8 -*-
+import logging
+import time
+from datetime import datetime
+
+import sqlite3
+
+from constants import CWB_DB_PATH, TABLE_AQI
+from taiwan_area_map.query_area import query_area
+
+logging.basicConfig(level=logging.DEBUG)
+
+def predict_AQI(location):
+    now_ts = int(time.time())
+    conn = sqlite3.connect(CWB_DB_PATH)
+    area = query_area(location)
+    r_dict = {}
+    if len(area) == 1:
+        area = area[0][0]
+        c = conn.cursor()
+        query_str = '''SELECT publish_ts, forecast_ts, area, major_pollutant, AQI FROM {} WHERE area=? AND publish_ts = (SELECT MAX(publish_ts) FROM {} WHERE area=?) AND forecast_ts > ? ORDER BY forecast_ts ASC; '''.format(TABLE_AQI, TABLE_AQI)
+        c.execute(query_str, (area, area, now_ts - 12 * 3600))
+        logging.debug(query_str)
+        result = c.fetchone()
+        publish_ts, forecast_ts, area, major_pollutant, AQI = result
+        r_dict = {
+            'publish_ts': publish_ts,
+            'forecast_ts': forecast_ts,
+            'area': area,
+            'major_pollutant': major_pollutant,
+            'AQI': AQI,
+        }
+                
+    conn.close()
+    return r_dict
