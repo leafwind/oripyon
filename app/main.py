@@ -136,9 +136,9 @@ def make_reply(type, uid, msg):
             ])
             if AQI:
                 return_str += '\n' + \
-                '{} AQI: {}({}) {}預測{}'.format(
+                '{} AQI: {}({} {}) {}預測{}'.format(
                     AQI['area'].encode('utf-8'),
-                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'),
+                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'), AQI['status'],
                     datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
                     datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
                 )
@@ -151,9 +151,9 @@ def make_reply(type, uid, msg):
             ])
             if AQI:
                 return_str += '\n' + \
-                '{} AQI: {}({}) {}預測{}'.format(
+                '{} AQI: {}({} {}) {}預測{}'.format(
                     AQI['area'].encode('utf-8'),
-                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'),
+                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'), AQI['status'],
                     datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
                     datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
                 ) 

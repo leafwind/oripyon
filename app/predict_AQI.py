@@ -7,6 +7,7 @@ import sqlite3
 
 from constants import CWB_DB_PATH, TABLE_AQI
 from taiwan_area_map.query_area import query_area
+from predict_code_map import AQI_THRESHOLD, AQI_STR
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -23,12 +24,16 @@ def predict_AQI(location):
         logging.debug(query_str)
         result = c.fetchone()
         publish_ts, forecast_ts, area, major_pollutant, AQI = result
+        for i, t in enumerate(AQI_THRESHOLD):
+            if AQI + 1 >= t:
+                status = AQI_STR[i]
         r_dict = {
             'publish_ts': publish_ts,
             'forecast_ts': forecast_ts,
             'area': area,
             'major_pollutant': major_pollutant,
             'AQI': AQI,
+            'status': status,
         }
                 
     conn.close()
