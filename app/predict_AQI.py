@@ -22,6 +22,7 @@ def predict_AQI(location):
         query_str = '''SELECT publish_ts, forecast_ts, area, major_pollutant, AQI FROM {} WHERE area=? AND publish_ts = (SELECT MAX(publish_ts) FROM {} WHERE area=?) AND forecast_ts > ? ORDER BY forecast_ts ASC; '''.format(TABLE_AQI, TABLE_AQI)
         c.execute(query_str, (area, area, now_ts - 12 * 3600))
         logging.debug(query_str)
+        logging.debug('area: %s, forecast_ts: %s', area, now_ts - 12 * 3600)
         result = c.fetchone()
         publish_ts, forecast_ts, area, major_pollutant, AQI = result
         for i, t in enumerate(AQI_THRESHOLD):

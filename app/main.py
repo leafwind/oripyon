@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 import random
-from datetime import datetime
+import logging
+import re
 
 from flask import Flask, request, abort, render_template, url_for
 
@@ -20,8 +21,8 @@ from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 from app.line_templates import make_template_action, make_carousel_column, make_carousel_template, make_confirm_template, make_buttons_template
 from app import wtf_reasons
-from app import cwb_weather_predictor, predict_AQI
-from predict_code_map import PREDICT_CODE_MAP
+from common_reply import common_reply
+from group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 
@@ -30,6 +31,7 @@ application = Flask(__name__, template_folder='templates')
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
+
 
 @application.route('/', methods=['GET', 'POST'])
 def index():
@@ -56,11 +58,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print('=========')
-    print('timestamp: {}'.format(event.timestamp))
-    print('reply_token: {}'.format(event.reply_token))
-    print('type: {}'.format(event.type))
-    print('message: {}'.format(event.message.__dict__))
-    print('source: {}'.format(event.source.__dict__))
+    logging.info('%s', event.__dict__)
     leafwind_photo_url = 'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-e9329cd5f8f44a76-320-320.png'
     kaori_photo_url = 'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-4808e3743f50232e-320-320.jpeg'
     uri_action = make_template_action('uri', '前往卡歐的首頁', uri='http://yfting.com')
@@ -98,16 +96,14 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, template_message)
         return
     elif event.source.type == 'room':  # 自訂聊天
-        rid = event.source.room_id
-        reply = make_reply('room', rid, event.message.text)
+        source_id = event.source.room_id
     elif event.source.type == 'user':
-        uid = event.source.user_id
-        reply = make_reply('user', uid, event.message.text)
-        # profile = line_bot_api.get_profile(uid)
+        source_id = event.source.user_id
+        # profile = line_bot_api.get_profile(source_id)
         # status = '{} 的顯圖：{}, 狀態：{}'.decode('utf-8').format(profile.display_name, profile.picture_url, profile.status_message)
     elif event.source.type == 'group':  # 群組
-        gid = event.source.group_id
-        reply = make_reply('group', gid, event.message.text)
+        source_id = event.source.group_id
+    reply = make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
 
     if not reply:
         return
@@ -115,66 +111,30 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=reply))
 
-def make_reply(type, uid, msg):
-    msg_list = msg.split(' ')
-    len_msg = len(msg_list)
-    if msg == 'oripyon':
-        return '原始碼請看 https://github.com/leafwind/line_bot'
-    elif msg_list[0] == '天氣'.decode('utf-8'):
-        location = msg_list[1].encode('utf-8').replace('台', '臺').decode('utf-8')
-        predicted_result = cwb_weather_predictor.predict(location)
-        predicted_result = predicted_result[0]  # temporary use first result
-        AQI = predict_AQI.predict_AQI(location)
-        # image_url = 'http://www.cwb.gov.tw/V7/symbol/weather/gif/night/{}.gif'.format(predicted_result['Wx'])
-        if not predicted_result['success']:
-            return '查無資料'
-        if predicted_result['level'] == 2:
-            return_str = '\n'.join([
-                '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
-                '{} / {} / {}~{}(°C)'.format(PREDICT_CODE_MAP[predicted_result['Wx']], predicted_result['CI'], str(predicted_result['MinT']), str(predicted_result['MaxT'])),
-                '降雨機率：{}%'.format(str(predicted_result['PoP'])),
-            ])
-            if AQI:
-                return_str += '\n' + \
-                '{} AQI: {}({} {}) {}預測{}'.format(
-                    AQI['area'].encode('utf-8'),
-                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'), AQI['status'],
-                    datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
-                    datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
-                )
-        elif predicted_result['level'] == 3:
-            return_str = '\n'.join([
-                '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
-                '{} / {}°C (體感 {})'.format(PREDICT_CODE_MAP[predicted_result['Wx']], str(predicted_result['T']), str(predicted_result['AT'])),
-                # predicted_result['CI'],
-                # '降雨機率：{}%'.format(str(predicted_result['PoP'])),
-            ])
-            if AQI:
-                return_str += '\n' + \
-                '{} AQI: {}({} {}) {}預測{}'.format(
-                    AQI['area'].encode('utf-8'),
-                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'), AQI['status'],
-                    datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
-                    datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
-                ) 
-        return return_str
-    elif '小路占卜'.decode('utf-8') in msg:
-        global maple_phrase
-        random.seed(os.urandom(5))
-        ph = random.choice(maple_phrase)
-        return '今日運勢：{}'.decode('utf-8').format(ph.decode('utf-8'))
-    elif '幫QQ'.decode('utf-8') in msg:
-        return '幫QQ喔'
-    elif '魔法'.decode('utf-8') in msg:
-        return '僕と契約して、魔法少女になってよ！'
-    elif 'ㄆㄆ'.decode('utf-8') in msg:
-        return 'gmail!'
-    elif '請問為什麼'.decode('utf-8') in msg:
-        random.seed(os.urandom(5))
-        return '因為{}。'.format(random.choice(wtf_reasons.reasons))
-    elif '作運動'.decode('utf-8') in msg or '做運動'.decode('utf-8') in msg:
-        return 'https://www.facebook.com/dailyheyhey/videos/1721131438179051'
-    elif '中文'.decode('utf-8') in msg:
-        return '我覺的台灣人的中文水準以經爛ㄉ很嚴重 大家重來都不重視 因該要在加強 才能越來越利害'
-    else:
+def make_reply(type, source_id, msg, reply_token=None):
+    result = common_reply(msg, line_bot_api, source_id, reply_token)
+    if result:  # has reply, no need go futher search
         return None
+    group_reply_test(msg, line_bot_api, source_id, reply_token)
+    group_reply_lineage_m(msg, line_bot_api, source_id, reply_token)
+    group_reply_maplestory(msg, line_bot_api, source_id, reply_token)
+    group_reply_yebai(msg, line_bot_api, source_id, reply_token)
+    if source_id == 'C0cd56d37156c5ad3fe04b702624d50dd':  # maplestory
+        if '小路占卜'.decode('utf-8') in msg:
+            global maple_phrase
+            random.seed(os.urandom(5))
+            ph = random.choice(maple_phrase)
+            return '今日運勢：{}'.decode('utf-8').format(ph.decode('utf-8'))
+        elif '幫QQ'.decode('utf-8') in msg:
+            return '幫QQ喔'
+        elif '魔法'.decode('utf-8') in msg:
+            return '僕と契約して、魔法少女になってよ！'
+        elif '請問為什麼'.decode('utf-8') in msg:
+            random.seed(os.urandom(5))
+            return '因為{}。'.format(random.choice(wtf_reasons.reasons))
+        elif '作運動'.decode('utf-8') in msg or '做運動'.decode('utf-8') in msg:
+            return 'https://www.facebook.com/dailyheyhey/videos/1721131438179051'
+        else:
+            return None
+    else:
+        pass

@@ -26,6 +26,10 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 
 * Account List -> Your Accounts -> Messaging API -> LINE Developers
 
+## Restart uwsgi to apply code change
+
+`sudo systemctl restart line_bot_uwsgi`
+
 ## Ref.
 
 [link 1](http://qiita.com/Kosuke-Szk/items/e31df8665f2a83406362)
