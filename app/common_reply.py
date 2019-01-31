@@ -32,28 +32,29 @@ gurulingpo = '''
  `･+｡*･+ ﾟ
 '''
 
-def common_reply(msg, line_bot_api, source_id, reply_token):
+
+def common_reply(msg, line_bot_api, _source_id, reply_token):
     msg_list = msg.split(' ')
     if help_pattern.search(msg):
         reply = '原始碼請看 https://github.com/leafwind/line_bot'
-        line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if '爛中文'.decode('utf-8') in msg:
         reply = '我覺的台灣人的中文水準以經爛ㄉ很嚴重 大家重來都不重視 因該要在加強 才能越來越利害'
-        line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if '幫QQ'.decode('utf-8') in msg:
         reply = '幫QQ喔'
-        line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if '魔法少女'.decode('utf-8') in msg:
         reply = '僕と契約して、魔法少女になってよ！'
-        line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if '請問為什麼'.decode('utf-8') in msg:
         random.seed(os.urandom(5))
         reply = '因為{}。'.format(random.choice(wtf_reasons.reasons))
-        line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if msg_list[0] == '天氣'.decode('utf-8'):
         location = msg_list[1].encode('utf-8').replace('台', '臺').decode('utf-8')
@@ -66,34 +67,38 @@ def common_reply(msg, line_bot_api, source_id, reply_token):
         if predicted_result['level'] == 2:
             return_str = '\n'.join([
                 '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
-                '{} / {} / {}~{}(°C)'.format(PREDICT_CODE_MAP[predicted_result['Wx']], predicted_result['CI'], str(predicted_result['MinT']), str(predicted_result['MaxT'])),
+                '{} / {} / {}~{}(°C)'.format(PREDICT_CODE_MAP[predicted_result['Wx']], predicted_result['CI'],
+                                             str(predicted_result['MinT']), str(predicted_result['MaxT'])),
                 '降雨機率：{}%'.format(str(predicted_result['PoP'])),
             ])
             if AQI:
                 return_str += '\n' + \
-                '{} AQI: {}({} {}) {}預測{}'.format(
-                    AQI['area'].encode('utf-8'),
-                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'), AQI['status'],
-                    datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
-                    datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
-                )
+                              '{} AQI: {}({} {}) {}預測{}'.format(
+                                  AQI['area'].encode('utf-8'),
+                                  AQI['AQI'], AQI['major_pollutant'].encode('utf-8'), AQI['status'],
+                                  datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
+                                  datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
+                              )
         elif predicted_result['level'] == 3:
             return_str = '\n'.join([
                 '{} {} 時為止：'.format(location.encode('utf-8'), predicted_result['time_str']),
-                '{} / {}°C (體感 {})'.format(PREDICT_CODE_MAP[predicted_result['Wx']], str(predicted_result['T']), str(predicted_result['AT'])),
+                '{} / {}°C (體感 {})'.format(PREDICT_CODE_MAP[predicted_result['Wx']], str(predicted_result['T']),
+                                           str(predicted_result['AT'])),
                 # predicted_result['CI'],
                 # '降雨機率：{}%'.format(str(predicted_result['PoP'])),
             ])
             if AQI:
                 return_str += '\n' + \
-                '{} AQI: {}({} {}) {}預測{}'.format(
-                    AQI['area'].encode('utf-8'),
-                    AQI['AQI'], AQI['major_pollutant'].encode('utf-8'), AQI['status'],
-                    datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
-                    datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
-                ) 
+                              '{} AQI: {}({} {}) {}預測{}'.format(
+                                  AQI['area'].encode('utf-8'),
+                                  AQI['AQI'], AQI['major_pollutant'].encode('utf-8'), AQI['status'],
+                                  datetime.fromtimestamp(AQI['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
+                                  datetime.fromtimestamp(AQI['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
+                              )
+        else:
+            return '查無資料'
         reply = return_str
-        line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if gurulingpo_pattern.search(msg):
         line_bot_api.reply_message(reply_token, [

@@ -5,10 +5,12 @@ import logging
 
 tarot_cards = json.load(open('app/tarot.json'))
 
+
 def tarot():
     card = random.choice(tarot_cards)
     logging.info('%s: %s', card['nameCN'], card['url'])
     return card
+
 
 def fortune():
     dice = random.randint(1, 1000)  # 1 <= N <= 1000

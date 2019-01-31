@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from linebot.models import (
-    CarouselTemplate, CarouselColumn, URITemplateAction, PostbackTemplateAction, MessageTemplateAction, ConfirmTemplate, ButtonsTemplate
+    CarouselTemplate, CarouselColumn, URITemplateAction, PostbackTemplateAction, MessageTemplateAction, ConfirmTemplate,
+    ButtonsTemplate
 )
+
 
 def make_template_action(action_type, label, uri=None, data=None, text=None):
     if action_type == 'uri':
@@ -20,7 +22,7 @@ def make_carousel_column(title, text, actions, thumbnail_image_url):
         return CarouselColumn(title=title, text=text, actions=actions, thumbnail_image_url=thumbnail_image_url)
     else:
         return CarouselColumn(title=title, text=text, actions=actions)
-    
+
 
 def make_carousel_template(carousel_columns):
     return CarouselTemplate(columns=carousel_columns)
