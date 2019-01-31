@@ -9,10 +9,11 @@ from constants import CWB_DB_PATH
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 def predict(location):
     conn = sqlite3.connect(CWB_DB_PATH)
     ts_now = int(time.time())
-        
+
     c = conn.cursor()
     query_str = '''SELECT end_ts, Wx, MaxT, MinT, PoP, CI FROM {} WHERE location=? AND end_ts > ? ORDER BY end_ts ASC; '''.format('level_1_2')
     c.execute(query_str, (location, ts_now))
@@ -44,7 +45,7 @@ def predict(location):
         logging.debug(location)
         logging.debug(ts_now)
         result_level_3 = c.fetchall()
-        #INSERT OR REPLACE INTO level_3 VALUES ('宜蘭縣', '五結鄉', 1489734000, 1489744800, 26, 21, 21, 0, '')
+        # INSERT OR REPLACE INTO level_3 VALUES ('宜蘭縣', '五結鄉', 1489734000, 1489744800, 26, 21, 21, 0, '')
         if not result_level_3:
             conn.close()
             return [{'success': False}]

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 
-from flask import Flask, request, abort, render_template, url_for
-
+from flask import Flask, request, abort, render_template
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -16,11 +14,11 @@ from linebot.models import (
 )
 
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
-from app.line_templates import make_template_action, make_carousel_column, make_carousel_template, make_confirm_template, make_buttons_template
+from app.line_templates import make_template_action, make_carousel_column
+from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
 from common_reply import common_reply
-from group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai, group_reply_mao_sino_alice
-
-
+from group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
+from group_reply import group_reply_mao_sino_alice
 
 application = Flask(__name__, template_folder='templates')
 
@@ -31,6 +29,7 @@ handler = WebhookHandler(CHANNEL_SECRET)
 @application.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
+
 
 @application.route("/callback", methods=['POST'])
 def callback():
@@ -54,8 +53,10 @@ def callback():
 def handle_message(event):
     print('=========')
     logging.info('%s', event.__dict__)
-    leafwind_photo_url = 'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-e9329cd5f8f44a76-320-320.png'
-    kaori_photo_url = 'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-4808e3743f50232e-320-320.jpeg'
+    leafwind_photo_url = \
+        'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-e9329cd5f8f44a76-320-320.png'
+    kaori_photo_url = \
+        'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-4808e3743f50232e-320-320.jpeg'
     uri_action = make_template_action('uri', '前往卡歐的首頁', uri='http://yfting.com')
     uri_action2 = make_template_action('uri', '前往玉米的首頁', uri='https://data.leafwind.tw')
     postback_action = make_template_action('postback', 'ping', data='ping')
@@ -95,9 +96,12 @@ def handle_message(event):
     elif event.source.type == 'user':
         source_id = event.source.user_id
         # profile = line_bot_api.get_profile(source_id)
-        # status = '{} 的顯圖：{}, 狀態：{}'.decode('utf-8').format(profile.display_name, profile.picture_url, profile.status_message)
+        # status = '{} 的顯圖：{}, 狀態：{}'.decode('utf-8').format(profile.display_name, profile.picture_url,
+        #                                                    profile.status_message)
     elif event.source.type == 'group':  # 群組
         source_id = event.source.group_id
+    else:
+        return
     reply = make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
 
     if not reply:
@@ -106,9 +110,10 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=reply))
 
-def make_reply(type, source_id, msg, reply_token=None):
+
+def make_reply(_source_type, source_id, msg, reply_token=None):
     result = common_reply(msg, line_bot_api, source_id, reply_token)
-    if result:  # has reply, no need go futher search
+    if result:  # has reply, no need go further search
         return None
     group_reply_test(msg, line_bot_api, source_id, reply_token)
     group_reply_lineage_m(msg, line_bot_api, source_id, reply_token)

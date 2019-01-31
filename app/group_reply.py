@@ -22,6 +22,7 @@ GROUP_IDS = {
 
 help_find_pattern = re.compile('協尋'.decode('utf-8'))
 
+
 def group_reply_test(msg, line_bot_api, source_id, reply_token):
     if source_id != GROUP_IDS['test']:
         return
@@ -31,14 +32,16 @@ def group_reply_test(msg, line_bot_api, source_id, reply_token):
             original_content_url='https://i.imgur.com/BFTQEnG.png',
             preview_image_url='https://i.imgur.com/BFTQEnG.png',
         )
-        line_bot_api.reply_message(reply_token, [ image_message ])
+        line_bot_api.reply_message(reply_token, [image_message])
     return
+
 
 def group_reply_lineage_m(msg, line_bot_api, source_id, reply_token):
     if source_id != GROUP_IDS['lineage_m']:
         return
     logging.info('頻道：%s', '天堂老司機')
     return
+
 
 def group_reply_maplestory(msg, line_bot_api, source_id, reply_token):
     if source_id != GROUP_IDS['maplestory']:
@@ -56,6 +59,7 @@ def group_reply_maplestory(msg, line_bot_api, source_id, reply_token):
         ])
     return
 
+
 def group_reply_yebai(msg, line_bot_api, source_id, reply_token):
     if source_id != GROUP_IDS['yebai']:
         return
@@ -71,6 +75,7 @@ def group_reply_yebai(msg, line_bot_api, source_id, reply_token):
         ])
     return
 
+
 def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
     if source_id != GROUP_IDS['mao_sino_alice']:
         return
@@ -80,6 +85,7 @@ def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
             TextSendMessage(text=u'@FuryNerd'.encode('utf-8'))
         ])
         return
+
 
 def group_reply_luna(msg, line_bot_api, source_id, reply_token):
     if source_id != GROUP_IDS['luna']:
