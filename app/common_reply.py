@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import re
+import os
+import random
 from datetime import datetime
 
 from linebot.models import (
@@ -10,12 +12,25 @@ from linebot.models import (
 from dice import fortune, tarot
 from app import cwb_weather_predictor, predict_AQI
 from predict_code_map import PREDICT_CODE_MAP
+from app import wtf_reasons
 
 # equivalent to:
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
 fortune_pattern = re.compile('運勢'.decode('utf-8'))
 tarot_pattern = re.compile('塔羅'.decode('utf-8'))
+gurulingpo_pattern = re.compile('咕嚕靈波'.decode('utf-8'))
 help_pattern = re.compile('oripyon\s?說明'.decode('utf-8'))
+gurulingpo = '''
+*``･*+。
+ ｜   `*｡
+ ｜     *｡
+ ｡∩∧ ∧   *
++   (･∀･ )*｡+ﾟ咕嚕靈波
+`*｡ ヽ  つ*ﾟ*
+ `･+｡*･`ﾟ⊃ +ﾟ
+ ☆  ∪~ ｡*ﾟ
+ `･+｡*･+ ﾟ
+'''
 
 def common_reply(msg, line_bot_api, source_id, reply_token):
     msg_list = msg.split(' ')
@@ -25,6 +40,19 @@ def common_reply(msg, line_bot_api, source_id, reply_token):
         return True
     if '爛中文'.decode('utf-8') in msg:
         reply = '我覺的台灣人的中文水準以經爛ㄉ很嚴重 大家重來都不重視 因該要在加強 才能越來越利害'
+        line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        return True
+    if '幫QQ'.decode('utf-8') in msg:
+        reply = '幫QQ喔'
+        line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        return True
+    if '魔法少女'.decode('utf-8') in msg:
+        reply = '僕と契約して、魔法少女になってよ！'
+        line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        return True
+    if '請問為什麼'.decode('utf-8') in msg:
+        random.seed(os.urandom(5))
+        reply = '因為{}。'.format(random.choice(wtf_reasons.reasons))
         line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
         return True
     if msg_list[0] == '天氣'.decode('utf-8'):
@@ -66,6 +94,11 @@ def common_reply(msg, line_bot_api, source_id, reply_token):
                 ) 
         reply = return_str
         line_bot_api.reply_message(reply_token, [ TextSendMessage(text=reply) ])
+        return True
+    if gurulingpo_pattern.search(msg):
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=gurulingpo)
+        ])
         return True
     if tarot_pattern.search(msg):
         card = tarot()

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-import random
 import logging
 import re
 
@@ -18,13 +16,10 @@ from linebot.models import (
 )
 
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
-from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 from app.line_templates import make_template_action, make_carousel_column, make_carousel_template, make_confirm_template, make_buttons_template
-from app import wtf_reasons
 from common_reply import common_reply
-from group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
+from group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai, group_reply_mao_sino_alice
 
-maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 
 
 application = Flask(__name__, template_folder='templates')
@@ -119,22 +114,4 @@ def make_reply(type, source_id, msg, reply_token=None):
     group_reply_lineage_m(msg, line_bot_api, source_id, reply_token)
     group_reply_maplestory(msg, line_bot_api, source_id, reply_token)
     group_reply_yebai(msg, line_bot_api, source_id, reply_token)
-    if source_id == 'C0cd56d37156c5ad3fe04b702624d50dd':  # maplestory
-        if '小路占卜'.decode('utf-8') in msg:
-            global maple_phrase
-            random.seed(os.urandom(5))
-            ph = random.choice(maple_phrase)
-            return '今日運勢：{}'.decode('utf-8').format(ph.decode('utf-8'))
-        elif '幫QQ'.decode('utf-8') in msg:
-            return '幫QQ喔'
-        elif '魔法'.decode('utf-8') in msg:
-            return '僕と契約して、魔法少女になってよ！'
-        elif '請問為什麼'.decode('utf-8') in msg:
-            random.seed(os.urandom(5))
-            return '因為{}。'.format(random.choice(wtf_reasons.reasons))
-        elif '作運動'.decode('utf-8') in msg or '做運動'.decode('utf-8') in msg:
-            return 'https://www.facebook.com/dailyheyhey/videos/1721131438179051'
-        else:
-            return None
-    else:
-        pass
+    group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token)

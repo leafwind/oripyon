@@ -2,10 +2,14 @@
 
 import logging
 import re
+import os
+import random
 
 from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
+from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
+maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 
 GROUP_IDS = {
     'test': 'C1bebaeaf89242089f0d755d492df6cb6',
@@ -13,6 +17,7 @@ GROUP_IDS = {
     'yebai': 'C25add4301bc790a641e07b02b868a9b7',
     'maplestory': 'C0cd56d37156c5ad3fe04b702624d50dd',
     'lineage_m': 'C2f63f279abd655966368630816bd0cad',
+    'mao_sino_alice': 'Cfb6a76351d112834244144a1cd4f0f57',
 }
 
 help_find_pattern = re.compile('協尋'.decode('utf-8'))
@@ -39,6 +44,16 @@ def group_reply_maplestory(msg, line_bot_api, source_id, reply_token):
     if source_id != GROUP_IDS['maplestory']:
         return
     logging.info('頻道：%s', '小路北七群')
+    if '小路占卜'.decode('utf-8') in msg:
+        global maple_phrase
+        random.seed(os.urandom(5))
+        ph = random.choice(maple_phrase)
+        msg = '今日運勢：{}'.decode('utf-8').format(ph.decode('utf-8'))
+    else:
+        return None
+    line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=msg)
+        ])
     return
 
 def group_reply_yebai(msg, line_bot_api, source_id, reply_token):
@@ -47,8 +62,8 @@ def group_reply_yebai(msg, line_bot_api, source_id, reply_token):
     logging.info('頻道：%s', '葉白')
     if help_find_pattern.search(msg):
         image_message = ImageSendMessage(
-            original_content_url='https://i.imgur.com/igrFN9F.jpg',
-            preview_image_url='https://i.imgur.com/igrFN9F.jpg',
+            original_content_url='https://i.imgur.com/ksIHMn6.jpg',
+            preview_image_url='https://i.imgur.com/ksIHMn6.jpg',
         )
         line_bot_api.reply_message(reply_token, [
             image_message,
@@ -56,13 +71,22 @@ def group_reply_yebai(msg, line_bot_api, source_id, reply_token):
         ])
     return
 
+def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
+    if source_id != GROUP_IDS['mao_sino_alice']:
+        return
+    logging.info('頻道：%s', '死愛魔王城')
+    if '測試'.decode('utf-8') in msg:
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=u'@FuryNerd'.encode('utf-8'))
+        ])
+        return
+
 def group_reply_luna(msg, line_bot_api, source_id, reply_token):
     if source_id != GROUP_IDS['luna']:
         return
     logging.info('頻道：%s', '皇家御貓園')
     if '涼哥是怎樣的人'.decode('utf-8') in msg:
         line_bot_api.reply_message(reply_token, [
-            image_message,
             TextSendMessage(text=u'正直善良又誠懇、不會說話卻實在'.encode('utf-8'))
         ])
         return

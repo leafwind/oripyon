@@ -30,6 +30,10 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 
 `sudo systemctl restart line_bot_uwsgi`
 
+## Debug
+
+`tail -f /var/log/uwsgi/uwsgi.log -n 100`
+
 ## Ref.
 
 [link 1](http://qiita.com/Kosuke-Szk/items/e31df8665f2a83406362)
