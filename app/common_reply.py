@@ -3,6 +3,7 @@
 import re
 import os
 import random
+import time
 from datetime import datetime
 
 from linebot.models import (
@@ -55,6 +56,43 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         random.seed(os.urandom(5))
         reply = '因為{}。'.format(random.choice(wtf_reasons.reasons))
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
+        return True
+    if msg_list[0] == '空品'.decode('utf-8'):
+        image_url = 'https://taqm.epa.gov.tw/taqm/Chart/AqiMap/map2.aspx?lang=tw&ts={}'.format(
+            int(time.time() * 1000)
+        )
+        image_message = ImageSendMessage(
+            original_content_url=image_url,
+            preview_image_url=image_url
+        )
+        line_bot_api.reply_message(reply_token, [
+            image_message,
+        ])
+        return True
+    if msg_list[0] == '天氣'.decode('utf-8'):
+        image_url = 'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={}'.format(
+            int(time.time())
+        )
+        image_message = ImageSendMessage(
+            original_content_url=image_url,
+            preview_image_url=image_url
+        )
+        line_bot_api.reply_message(reply_token, [
+            image_message,
+        ])
+        return True
+    if msg_list[0] == '即時雨量'.decode('utf-8'):
+        image_url = 'https://www.cwb.gov.tw/V7/observe/rainfall/Data/2019-02-02_0030.QZT.jpg'.format(
+            datetime.fromtimestamp(int(time.time()-600)/1800*1800)
+            # CWB may delay few minutes, set 10mins
+        )
+        image_message = ImageSendMessage(
+            original_content_url=image_url,
+            preview_image_url=image_url
+        )
+        line_bot_api.reply_message(reply_token, [
+            image_message,
+        ])
         return True
     if msg_list[0] == '天氣'.decode('utf-8'):
         location = msg_list[1].encode('utf-8').replace('台', '臺').decode('utf-8')
