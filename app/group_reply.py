@@ -89,7 +89,7 @@ def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
 
 
 def group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token):
-    if source_id != GROUP_IDS['mao_sino_alice']:
+    if source_id != GROUP_IDS['nier_sino_alice']:
         return
     logging.info('頻道：%s', '尼爾主題餐廳')
     if '頓頓是我的'.decode('utf-8') in msg:
