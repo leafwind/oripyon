@@ -81,9 +81,9 @@ def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
     if source_id != GROUP_IDS['mao_sino_alice']:
         return
     logging.info('頻道：%s', '死愛魔王城')
-    if '測試'.decode('utf-8') in msg:
+    if '小米米'.decode('utf-8') in msg:
         line_bot_api.reply_message(reply_token, [
-            TextSendMessage(text=u'@FuryNerd'.encode('utf-8'))
+            TextSendMessage(text=u'綁起來電擊烤焦爆香切段上菜（¯﹃¯）'.encode('utf-8'))
         ])
         return
 
@@ -98,6 +98,11 @@ def group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token):
         ])
         return
     elif '名字是我的'.decode('utf-8') in msg:
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=u'是我的！！'.encode('utf-8'))
+        ])
+        return
+    elif '雞排是我的'.decode('utf-8') in msg:
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=u'是我的！！'.encode('utf-8'))
         ])
