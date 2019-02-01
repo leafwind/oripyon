@@ -18,7 +18,7 @@ from app.line_templates import make_template_action, make_carousel_column
 from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
 from common_reply import common_reply
 from group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
-from group_reply import group_reply_mao_sino_alice
+from group_reply import group_reply_mao_sino_alice, group_reply_nier_sino_alice
 
 application = Flask(__name__, template_folder='templates')
 
@@ -120,3 +120,4 @@ def make_reply(_source_type, source_id, msg, reply_token=None):
     group_reply_maplestory(msg, line_bot_api, source_id, reply_token)
     group_reply_yebai(msg, line_bot_api, source_id, reply_token)
     group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token)
+    group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token)

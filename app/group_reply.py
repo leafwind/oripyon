@@ -18,6 +18,7 @@ GROUP_IDS = {
     'maplestory': 'C0cd56d37156c5ad3fe04b702624d50dd',
     'lineage_m': 'C2f63f279abd655966368630816bd0cad',
     'mao_sino_alice': 'Cfb6a76351d112834244144a1cd4f0f57',
+    'nier_sino_alice': 'C1e38a92f8c7b4ad377df882b9f3bf336',
 }
 
 help_find_pattern = re.compile('協尋'.decode('utf-8'))
@@ -83,6 +84,22 @@ def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
     if '測試'.decode('utf-8') in msg:
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=u'@FuryNerd'.encode('utf-8'))
+        ])
+        return
+
+
+def group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token):
+    if source_id != GROUP_IDS['mao_sino_alice']:
+        return
+    logging.info('頻道：%s', '尼爾主題餐廳')
+    if '頓頓是我的'.decode('utf-8') in msg:
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=u'是我的！！'.encode('utf-8'))
+        ])
+        return
+    elif '名字是我的'.decode('utf-8') in msg:
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=u'是我的！！'.encode('utf-8'))
         ])
         return
 
