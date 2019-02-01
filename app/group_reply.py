@@ -86,6 +86,17 @@ def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
             TextSendMessage(text=u'綁起來電擊烤焦爆香切段上菜（¯﹃¯）'.encode('utf-8'))
         ])
         return
+    elif '2050'.decode('utf-8') in msg:
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=u'兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'.encode('utf-8')),
+            TextSendMessage(text=u'睡你麻痺起來嗨ヽ(`Д´)ノ'.encode('utf-8')),
+        ])
+        return
+    elif '死愛資料庫'.decode('utf-8') in msg:
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=u'https://sinoalice.game-db.tw/'.encode('utf-8')),
+        ])
+        return
 
 
 def group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token):
@@ -105,6 +116,16 @@ def group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token):
     elif '雞排是我的'.decode('utf-8') in msg:
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=u'是我的！！'.encode('utf-8'))
+        ])
+        return
+    elif '生哥是我的'.decode('utf-8') in msg:
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=u'好阿給你。'.encode('utf-8'))
+        ])
+        return
+    elif '死愛資料庫'.decode('utf-8') in msg:
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=u'https://sinoalice.game-db.tw/'.encode('utf-8')),
         ])
         return
 
