@@ -18,6 +18,7 @@ from common_reply import common_reply
 from group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
 from group_reply import group_reply_mao_sino_alice, group_reply_nier_sino_alice, group_reply_luna
 
+logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)

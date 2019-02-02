@@ -123,13 +123,14 @@ def group_reply_nier_sino_alice(msg, line_bot_api, reply_token):
                 line_bot_api.reply_message(reply_token, [
                     TextSendMessage(text=u'是我的！！'.encode('utf-8'))
                 ])
-            return
+                return
         for name in unwanted_list:
             if name in msg:
                 line_bot_api.reply_message(reply_token, [
                     TextSendMessage(text=u'好阿給你。'.encode('utf-8'))
                 ])
-            return
+                return
+        return
     elif '死愛資料庫' in msg:
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=u'https://sinoalice.game-db.tw/'.encode('utf-8')),
