@@ -15,6 +15,8 @@ from dice import fortune, tarot
 from app import cwb_weather_predictor, predict_AQI
 from predict_code_map import PREDICT_CODE_MAP
 from app import wtf_reasons
+from app.emoji_list import cry_emoji_list
+from app.util import get_short_url
 
 # equivalent to:
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
@@ -46,8 +48,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if '幫QQ' in msg:
-        emoji_list = ['0x100018', '0x100019', '0x100094', '0x10007C']
-        reply = '幫QQ喔 {}'.format(random.choice(emoji_list))
+        reply = '幫QQ喔 {}'.format(random.choice(cry_emoji_list))
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if '魔法少女' in msg:
@@ -63,24 +64,18 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         image_url = 'https://taqm.epa.gov.tw/taqm/Chart/AqiMap/map2.aspx?lang=tw&ts={}'.format(
             int(time.time() * 1000)
         )
-        image_message = ImageSendMessage(
-            original_content_url=image_url,
-            preview_image_url=image_url
-        )
+        short_url = get_short_url(image_url)
         line_bot_api.reply_message(reply_token, [
-            image_message,
+            TextSendMessage(text=short_url)
         ])
         return True
     if msg == '天氣':
         image_url = 'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={}'.format(
             int(time.time())
         )
-        image_message = ImageSendMessage(
-            original_content_url=image_url,
-            preview_image_url=image_url
-        )
+        short_url = get_short_url(image_url)
         line_bot_api.reply_message(reply_token, [
-            image_message,
+            TextSendMessage(text=short_url)
         ])
         return True
     if msg == '即時雨量':
@@ -91,13 +86,10 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         image_url = 'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{}.QZT.jpg'.format(
             datetime.strftime(target_date, '%Y-%m-%d_%H%M')
         )
+        short_url = get_short_url(image_url)
         logging.info(image_url)
-        image_message = ImageSendMessage(
-            original_content_url=image_url,
-            preview_image_url=image_url
-        )
         line_bot_api.reply_message(reply_token, [
-            image_message,
+            TextSendMessage(text=short_url)
         ])
         return True
     if msg == '雷達':
@@ -108,13 +100,10 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         image_url = 'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{}.png'.format(
             datetime.strftime(target_date, '%Y%m%d%H%M')
         )
+        short_url = get_short_url(image_url)
         logging.info(image_url)
-        image_message = ImageSendMessage(
-            original_content_url=image_url,
-            preview_image_url=image_url
-        )
         line_bot_api.reply_message(reply_token, [
-            image_message,
+            TextSendMessage(text=short_url)
         ])
         return True
     if msg_list[0] == '天氣':
