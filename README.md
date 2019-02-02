@@ -38,3 +38,7 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 
 [link 1](http://qiita.com/Kosuke-Szk/items/e31df8665f2a83406362)
 [link 2](http://qiita.com/mochan_tk/items/db3fd4e4867dd3fb6540)
+[Line Messaging API](https://developers.line.biz/en/reference/messaging-api/#text-message)
+[Emoji Unicode Tables](https://apps.timwhitlock.info/emoji/tables/unicode)
+[Emoji supported by Line bot](https://developers.line.biz/media/messaging-api/emoji-list.pdf)
+[Sticker supported by Line bot](https://developers.line.biz/media/messaging-api/messages/sticker_list.pdf)
