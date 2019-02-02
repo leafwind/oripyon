@@ -57,7 +57,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         reply = '因為{}。'.format(random.choice(wtf_reasons.reasons))
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
-    if msg_list[0] == '空品':
+    if msg == '空品':
         image_url = 'https://taqm.epa.gov.tw/taqm/Chart/AqiMap/map2.aspx?lang=tw&ts={}'.format(
             int(time.time() * 1000)
         )
@@ -69,7 +69,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
             image_message,
         ])
         return True
-    if msg_list[0] == '天氣':
+    if msg == '天氣':
         image_url = 'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={}'.format(
             int(time.time())
         )
@@ -81,7 +81,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
             image_message,
         ])
         return True
-    if msg_list[0] == '即時雨量':
+    if msg == '即時雨量':
         image_url = 'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{}.QZT.jpg'.format(
             datetime.strftime(datetime.fromtimestamp(int(time.time()-600)/1800*1800), '%Y-%m-%d_%H%M')
             # CWB may delay few minutes, set 10mins
@@ -94,7 +94,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
             image_message,
         ])
         return True
-    if msg_list[0] == '雷達':
+    if msg == '雷達':
         image_url = 'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{}.png'.format(
             datetime.strftime(datetime.fromtimestamp(int(time.time()-600)/1800*1800), '%Y%m%d%H%M')
             # CWB may delay few minutes, set 10mins

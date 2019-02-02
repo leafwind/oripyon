@@ -41,7 +41,7 @@ GROUP_MAPPING = {
         'name': '小路北七群',
         'function': group_reply_maplestory,
     },
-    'C2f63f279abd655966368630816bd0cad': {
+    'C966396824051cbb00e35af7b4123a0a5': {
         'name': '天堂老司機',
         'function': group_reply_lineage_m,
     },
