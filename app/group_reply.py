@@ -90,7 +90,7 @@ def group_reply_yebai(msg, line_bot_api, reply_token):
         )
         line_bot_api.reply_message(reply_token, [
             image_message,
-            TextSendMessage(text=u'請幫幫忙找找他...等等他是誰？(((ﾟДﾟ;)))'.encode('utf-8'))
+            TextSendMessage(text='請幫幫忙找找他...等等他是誰？(((ﾟДﾟ;)))')
         ])
     return
 
@@ -98,18 +98,18 @@ def group_reply_yebai(msg, line_bot_api, reply_token):
 def group_reply_mao_sino_alice(msg, line_bot_api, reply_token):
     if '小米米' in msg:
         line_bot_api.reply_message(reply_token, [
-            TextSendMessage(text=u'綁起來電擊烤焦爆香切段上菜（¯﹃¯）'.encode('utf-8'))
+            TextSendMessage(text='綁起來電擊烤焦爆香切段上菜（¯﹃¯）')
         ])
         return
     elif '2050' in msg:
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text='兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'),
-            TextSendMessage(text=u'睡你麻痺起來嗨ヽ(`Д´)ノ'.encode('utf-8')),
+            TextSendMessage(text='睡你麻痺起來嗨ヽ(`Д´)ノ'),
         ])
         return
     elif '死愛資料庫' in msg:
         line_bot_api.reply_message(reply_token, [
-            TextSendMessage(text=u'https://sinoalice.game-db.tw/'.encode('utf-8')),
+            TextSendMessage(text='https://sinoalice.game-db.tw/'),
         ])
         return
 
@@ -121,19 +121,19 @@ def group_reply_nier_sino_alice(msg, line_bot_api, reply_token):
         for name in wanted_list:
             if name in msg:
                 line_bot_api.reply_message(reply_token, [
-                    TextSendMessage(text=u'是我的！！'.encode('utf-8'))
+                    TextSendMessage(text='是我的！！')
                 ])
                 return
         for name in unwanted_list:
             if name in msg:
                 line_bot_api.reply_message(reply_token, [
-                    TextSendMessage(text=u'好阿給你。'.encode('utf-8'))
+                    TextSendMessage(text='好阿給你。')
                 ])
                 return
         return
     elif '死愛資料庫' in msg:
         line_bot_api.reply_message(reply_token, [
-            TextSendMessage(text=u'https://sinoalice.game-db.tw/'.encode('utf-8')),
+            TextSendMessage(text='https://sinoalice.game-db.tw/'),
         ])
         return
 
@@ -141,7 +141,7 @@ def group_reply_nier_sino_alice(msg, line_bot_api, reply_token):
 def group_reply_luna(msg, line_bot_api, reply_token):
     if '涼哥' in msg:
         line_bot_api.reply_message(reply_token, [
-            TextSendMessage(text=u'正直善良又誠懇、不會說話卻實在'.encode('utf-8'))
+            TextSendMessage(text='正直善良又誠懇、不會說話卻實在')
         ])
         return
     return
