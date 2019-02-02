@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 import time
-from datetime import datetime
 
 import sqlite3
 
