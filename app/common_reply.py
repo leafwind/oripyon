@@ -122,14 +122,14 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         usdtwd_date = datetime.strptime(mapping['USDTWD']['UTC'], '%Y-%m-%d %H:%M:%S')
         usdtwd_ts = calendar.timegm(usdtwd_date.timetuple())
         usdtwd_date_utc8 = datetime.utcfromtimestamp(usdtwd_ts + 8 * 3600)
-        reply_usd_twd = '參考匯率（非台銀）：1USD = {} TWD ({})'.format(
+        reply_usd_twd = '參考匯率（非台銀）\n1USD = {} TWD\n{}'.format(
             mapping['USDTWD']['Exrate'],
             usdtwd_date_utc8
         )
         usdjpy_date = datetime.strptime(mapping['USDJPY']['UTC'], '%Y-%m-%d %H:%M:%S')
         usdjpy_ts = calendar.timegm(usdjpy_date.timetuple())
         usdjpy_date_utc8 = datetime.utcfromtimestamp(usdjpy_ts + 8 * 3600)
-        reply_usd_jpy = '參考匯率（非台銀）：1USD = {} JPY ({})'.format(
+        reply_usd_jpy = '參考匯率（非台銀）\n1USD = {} JPY\n{}'.format(
             mapping['USDJPY']['Exrate'],
             usdjpy_date_utc8
         )
