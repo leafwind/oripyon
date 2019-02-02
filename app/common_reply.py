@@ -5,6 +5,7 @@ import os
 import random
 import time
 import logging
+import calendar
 from datetime import datetime
 
 from linebot.models import (
@@ -118,13 +119,19 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         #         "Exrate": 109.49484758
         #     },
         # }
-        reply_usd_twd = '參考匯率：1USD={}TWD ({})'.format(
+        usdtwd_date = datetime.strptime(mapping['USDTWD']['UTC'], '%Y-%m-%d %H:%M:%S')
+        usdtwd_ts = calendar.timegm(usdtwd_date.timetuple())
+        usdtwd_date_utc8 = datetime.utcfromtimestamp(usdtwd_ts + 8 * 3600)
+        reply_usd_twd = '參考匯率（非台銀）：1USD = {} TWD ({})'.format(
             mapping['USDTWD']['Exrate'],
-            mapping['USDTWD']['UTC']
+            usdtwd_date_utc8
         )
-        reply_usd_jpy = '參考匯率：1USD={}JPY ({})'.format(
+        usdjpy_date = datetime.strptime(mapping['USDJPY']['UTC'], '%Y-%m-%d %H:%M:%S')
+        usdjpy_ts = calendar.timegm(usdjpy_date.timetuple())
+        usdjpy_date_utc8 = datetime.utcfromtimestamp(usdjpy_ts + 8 * 3600)
+        reply_usd_jpy = '參考匯率（非台銀）：1USD = {} JPY ({})'.format(
             mapping['USDJPY']['Exrate'],
-            mapping['USDJPY']['UTC']
+            usdjpy_date_utc8
         )
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=reply_usd_twd),
