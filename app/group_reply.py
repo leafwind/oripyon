@@ -1,69 +1,74 @@
 # -*- coding: utf-8 -*-
 
-import logging
 import re
 import os
 import random
 
 from linebot.models import (
-    TextSendMessage, ImageSendMessage
+    TextSendMessage, ImageSendMessage, TemplateSendMessage
 )
+
+from app.line_templates import make_template_action, make_carousel_column
+from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
-
-GROUP_IDS = {
-    'test': {
-        'name': '測試群組',
-        'id': 'C1bebaeaf89242089f0d755d492df6cb6',
-    },
-    'luna': {
-        'name': '皇家御貓園',
-        'id': 'C690e08d2fb900d5bbd873e103d500b92',
-    },
-    'yebai': {
-        'name': '葉白',
-        'id': 'C25add4301bc790a641e07b02b868a9b7',
-    },
-    'maplestory': {
-        'name': '小路北七群',
-        'id': 'C0cd56d37156c5ad3fe04b702624d50dd',
-    },
-    'lineage_m': {
-        'name': '天堂老司機',
-        'id': 'C2f63f279abd655966368630816bd0cad',
-    },
-    'mao_sino_alice': {
-        'name': '死愛魔王城',
-        'id': 'Cfb6a76351d112834244144a1cd4f0f57',
-    },
-    'nier_sino_alice': {
-        'name': '尼爾主題餐廳',
-        'id': 'C1e38a92f8c7b4ad377df882b9f3bf336',
-    },
-}
-
-GROUP_ID_NAME = {}
-for key in GROUP_IDS:
-    GROUP_ID_NAME[GROUP_IDS[key]['id']] = GROUP_IDS[key]['name']
-
 help_find_pattern = re.compile('協尋')
 
 
-def group_reply_test(msg, line_bot_api, source_id, reply_token):
+def group_reply_test(msg, line_bot_api, reply_token):
     if msg == '!hinet':
         image_message = ImageSendMessage(
             original_content_url='https://i.imgur.com/BFTQEnG.png',
             preview_image_url='https://i.imgur.com/BFTQEnG.png',
         )
         line_bot_api.reply_message(reply_token, [image_message])
+
+    leafwind_photo_url = \
+        'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-e9329cd5f8f44a76-320-320.png'
+    kaori_photo_url = \
+        'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-4808e3743f50232e-320-320.jpeg'
+    uri_action = make_template_action('uri', '前往卡歐的首頁', uri='http://yfting.com')
+    uri_action2 = make_template_action('uri', '前往玉米的首頁', uri='https://data.leafwind.tw')
+    postback_action = make_template_action('postback', 'ping', data='ping')
+    postback_action_with_text = make_template_action('postback', 'ping with text', data='ping', text='ping')
+    message_action = make_template_action('message', 'Translate Rice', text='米')
+    if msg == 'carousel':
+        col1 = make_carousel_column('這是卡歐', 'Hi~', [uri_action, postback_action], kaori_photo_url)
+        col2 = make_carousel_column('這是玉米', 'ㄏㄏ', [uri_action2, message_action], leafwind_photo_url)
+
+        carousel_template = make_carousel_template([col1, col2])
+
+        template_message = TemplateSendMessage(
+            alt_text='carousel alt text', template=carousel_template)
+        line_bot_api.reply_message(reply_token, template_message)
+        return
+    elif msg == 'confirm':  # left / right buttons
+        message_action = make_template_action('message', '是', text='帥！')
+        message_action2 = make_template_action('message', '否', text='帥！')
+        confirm_template = make_confirm_template('玉米帥嗎？', [message_action, message_action2])
+        template_message = TemplateSendMessage(
+            alt_text='confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(reply_token, template_message)
+        return
+    elif msg == 'buttons':  # top-down buttons
+        buttons_template = make_buttons_template(
+            'My buttons sample',
+            'Hello, my buttons',
+            [uri_action, postback_action, postback_action_with_text, message_action],
+            leafwind_photo_url
+        )
+        template_message = TemplateSendMessage(
+            alt_text='buttons alt text', template=buttons_template)
+        line_bot_api.reply_message(reply_token, template_message)
+        return
     return
 
 
-def group_reply_lineage_m(msg, line_bot_api, source_id, reply_token):
+def group_reply_lineage_m(msg, line_bot_api, reply_token):
     return
 
 
-def group_reply_maplestory(msg, line_bot_api, source_id, reply_token):
+def group_reply_maplestory(msg, line_bot_api, reply_token):
     if '小路占卜' in msg:
         global maple_phrase
         random.seed(os.urandom(5))
@@ -77,7 +82,7 @@ def group_reply_maplestory(msg, line_bot_api, source_id, reply_token):
     return
 
 
-def group_reply_yebai(msg, line_bot_api, source_id, reply_token):
+def group_reply_yebai(msg, line_bot_api, reply_token):
     if help_find_pattern.search(msg):
         image_message = ImageSendMessage(
             original_content_url='https://i.imgur.com/ksIHMn6.jpg',
@@ -90,7 +95,7 @@ def group_reply_yebai(msg, line_bot_api, source_id, reply_token):
     return
 
 
-def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
+def group_reply_mao_sino_alice(msg, line_bot_api, reply_token):
     if '小米米' in msg:
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=u'綁起來電擊烤焦爆香切段上菜（¯﹃¯）'.encode('utf-8'))
@@ -109,7 +114,7 @@ def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
         return
 
 
-def group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token):
+def group_reply_nier_sino_alice(msg, line_bot_api, reply_token):
     wanted_list = ['頓頓', '名字', '雞排', '來來']
     unwanted_list = ['生哥']
     if '我的' in msg:
@@ -132,7 +137,7 @@ def group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token):
         return
 
 
-def group_reply_luna(msg, line_bot_api, source_id, reply_token):
+def group_reply_luna(msg, line_bot_api, reply_token):
     if '涼哥' in msg:
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=u'正直善良又誠懇、不會說話卻實在'.encode('utf-8'))
