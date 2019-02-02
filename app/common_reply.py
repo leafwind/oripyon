@@ -82,8 +82,21 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         ])
         return True
     if msg_list[0] == '即時雨量'.decode('utf-8'):
-        image_url = 'https://www.cwb.gov.tw/V7/observe/rainfall/Data/2019-02-02_0030.QZT.jpg'.format(
-            datetime.fromtimestamp(int(time.time()-600)/1800*1800)
+        image_url = 'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{}.QZT.jpg'.format(
+            datetime.strftime(datetime.fromtimestamp(int(time.time()-600)/1800*1800), '%Y-%m-%d_%H%M')
+            # CWB may delay few minutes, set 10mins
+        )
+        image_message = ImageSendMessage(
+            original_content_url=image_url,
+            preview_image_url=image_url
+        )
+        line_bot_api.reply_message(reply_token, [
+            image_message,
+        ])
+        return True
+    if msg_list[0] == '雷達'.decode('utf-8'):
+        image_url = 'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{}.png'.format(
+            datetime.strftime(datetime.fromtimestamp(int(time.time()-600)/1800*1800), '%Y%m%d%H%M')
             # CWB may delay few minutes, set 10mins
         )
         image_message = ImageSendMessage(

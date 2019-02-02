@@ -19,6 +19,7 @@ from app.line_templates import make_carousel_template, make_confirm_template, ma
 from common_reply import common_reply
 from group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
 from group_reply import group_reply_mao_sino_alice, group_reply_nier_sino_alice
+from group_reply import GROUP_ID_NANE
 
 application = Flask(__name__, template_folder='templates')
 
@@ -51,8 +52,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    print('=========')
-    logging.info('%s', event.__dict__)
+    # logging.info('%s', event.__dict__)
     leafwind_photo_url = \
         'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-e9329cd5f8f44a76-320-320.png'
     kaori_photo_url = \
@@ -112,6 +112,7 @@ def handle_message(event):
 
 
 def make_reply(_source_type, source_id, msg, reply_token=None):
+    logging.info('{}：{}'.format(GROUP_ID_NANE.get(source_id, source_id), msg.encode('utf-8')))
     result = common_reply(msg, line_bot_api, source_id, reply_token)
     if result:  # has reply, no need go further search
         return None
