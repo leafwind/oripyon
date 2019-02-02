@@ -30,7 +30,9 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 # Development
 
 `virtualenv venv -p python3.7`
+
 `. venv/bin/activate`
+
 `pip install -r requirements.txt`
 
 ## Restart uwsgi to apply code change
