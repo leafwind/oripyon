@@ -105,7 +105,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         target_ts = target_ts / 1800 * 1800  # truncate to 30 minutes
         target_date = datetime.fromtimestamp(target_ts + 8 * 3600)  # UTC+8
         image_url = 'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{}.png'.format(
-            datetime.strftime(target_date, '%Y-%m-%d_%H%M')
+            datetime.strftime(target_date, '%Y%m%d%H%M')
         )
         logging.info(image_url)
         image_message = ImageSendMessage(
