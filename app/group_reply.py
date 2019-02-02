@@ -103,7 +103,7 @@ def group_reply_mao_sino_alice(msg, line_bot_api, reply_token):
         return
     elif '2050' in msg:
         line_bot_api.reply_message(reply_token, [
-            TextSendMessage(text=u'兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'.encode('utf-8')),
+            TextSendMessage(text='兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'),
             TextSendMessage(text=u'睡你麻痺起來嗨ヽ(`Д´)ノ'.encode('utf-8')),
         ])
         return
