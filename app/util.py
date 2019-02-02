@@ -10,3 +10,9 @@ def get_short_url(target_url):
         return r.json()['data']['picseeUrl']
     else:
         logging.error(r.status_code)
+
+
+def get_exchange_rate():
+    r = requests.get('https://tw.rter.info/capi.php')
+    mapping = r.json()
+    return mapping

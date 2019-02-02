@@ -16,7 +16,7 @@ from app import cwb_weather_predictor, predict_AQI
 from predict_code_map import PREDICT_CODE_MAP
 from app import wtf_reasons
 from app.emoji_list import cry_emoji_list
-from app.util import get_short_url
+from app.util import get_short_url, get_exchange_rate
 
 # equivalent to:
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
@@ -104,6 +104,31 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         logging.info(image_url)
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=short_url)
+        ])
+        return True
+    if msg == '匯率':
+        mapping = get_exchange_rate()
+        # {
+        #     "USDTWD": {
+        #         "UTC": "2019-02-02 10:00:10",
+        #         "Exrate": 30.7775
+        #     },
+        #     "USDJPY": {
+        #         "UTC": "2019-02-02 10:00:10",
+        #         "Exrate": 109.49484758
+        #     },
+        # }
+        reply_usd_twd = '參考匯率：1USD={}TWD ({})'.format(
+            mapping['USDTWD']['Exrate'],
+            mapping['USDTWD']['UTC']
+        )
+        reply_usd_jpy = '參考匯率：1USD={}JPY ({})'.format(
+            mapping['USDJPY']['Exrate'],
+            mapping['USDJPY']['UTC']
+        )
+        line_bot_api.reply_message(reply_token, [
+            TextSendMessage(text=reply_usd_twd),
+            TextSendMessage(text=reply_usd_jpy)
         ])
         return True
     if msg_list[0] == '天氣':
