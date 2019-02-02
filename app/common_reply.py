@@ -17,10 +17,10 @@ from app import wtf_reasons
 
 # equivalent to:
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
-fortune_pattern = re.compile('運勢'.decode('utf-8'))
-tarot_pattern = re.compile('塔羅'.decode('utf-8'))
-gurulingpo_pattern = re.compile('咕嚕靈波'.decode('utf-8'))
-help_pattern = re.compile('oripyon\s?說明'.decode('utf-8'))
+fortune_pattern = re.compile('運勢')
+tarot_pattern = re.compile('塔羅')
+gurulingpo_pattern = re.compile('咕嚕靈波')
+help_pattern = re.compile('oripyon\s?說明')
 gurulingpo = '''
 *``･*+。
  ｜   `*｡
@@ -40,24 +40,24 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         reply = '原始碼請看 https://github.com/leafwind/line_bot'
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
-    if '爛中文'.decode('utf-8') in msg:
+    if '爛中文' in msg:
         reply = '我覺的台灣人的中文水準以經爛ㄉ很嚴重 大家重來都不重視 因該要在加強 才能越來越利害'
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
-    if '幫QQ'.decode('utf-8') in msg:
+    if '幫QQ' in msg:
         reply = '幫QQ喔'
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
-    if '魔法少女'.decode('utf-8') in msg:
+    if '魔法少女' in msg:
         reply = '僕と契約して、魔法少女になってよ！'
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
-    if '請問為什麼'.decode('utf-8') in msg:
+    if '請問為什麼' in msg:
         random.seed(os.urandom(5))
         reply = '因為{}。'.format(random.choice(wtf_reasons.reasons))
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
-    if msg_list[0] == '空品'.decode('utf-8'):
+    if msg_list[0] == '空品':
         image_url = 'https://taqm.epa.gov.tw/taqm/Chart/AqiMap/map2.aspx?lang=tw&ts={}'.format(
             int(time.time() * 1000)
         )
@@ -69,7 +69,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
             image_message,
         ])
         return True
-    if msg_list[0] == '天氣'.decode('utf-8'):
+    if msg_list[0] == '天氣':
         image_url = 'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={}'.format(
             int(time.time())
         )
@@ -81,7 +81,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
             image_message,
         ])
         return True
-    if msg_list[0] == '即時雨量'.decode('utf-8'):
+    if msg_list[0] == '即時雨量':
         image_url = 'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{}.QZT.jpg'.format(
             datetime.strftime(datetime.fromtimestamp(int(time.time()-600)/1800*1800), '%Y-%m-%d_%H%M')
             # CWB may delay few minutes, set 10mins
@@ -94,7 +94,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
             image_message,
         ])
         return True
-    if msg_list[0] == '雷達'.decode('utf-8'):
+    if msg_list[0] == '雷達':
         image_url = 'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{}.png'.format(
             datetime.strftime(datetime.fromtimestamp(int(time.time()-600)/1800*1800), '%Y%m%d%H%M')
             # CWB may delay few minutes, set 10mins
@@ -107,8 +107,8 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
             image_message,
         ])
         return True
-    if msg_list[0] == '天氣'.decode('utf-8'):
-        location = msg_list[1].encode('utf-8').replace('台', '臺').decode('utf-8')
+    if msg_list[0] == '天氣':
+        location = msg_list[1].encode('utf-8').replace('台', '臺')
         predicted_result = cwb_weather_predictor.predict(location)
         predicted_result = predicted_result[0]  # temporary use first result
         AQI = predict_AQI.predict_AQI(location)
