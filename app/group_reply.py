@@ -42,16 +42,14 @@ GROUP_IDS = {
     },
 }
 
-GROUP_ID_NANE = {}
+GROUP_ID_NAME = {}
 for key in GROUP_IDS:
-    GROUP_ID_NANE[GROUP_IDS[key]['id']] = GROUP_IDS[key]['name']
+    GROUP_ID_NAME[GROUP_IDS[key]['id']] = GROUP_IDS[key]['name']
 
 help_find_pattern = re.compile('協尋')
 
 
 def group_reply_test(msg, line_bot_api, source_id, reply_token):
-    if source_id != GROUP_IDS['test']['id']:
-        return
     if msg == '!hinet':
         image_message = ImageSendMessage(
             original_content_url='https://i.imgur.com/BFTQEnG.png',
@@ -62,14 +60,10 @@ def group_reply_test(msg, line_bot_api, source_id, reply_token):
 
 
 def group_reply_lineage_m(msg, line_bot_api, source_id, reply_token):
-    if source_id != GROUP_IDS['lineage_m']['id']:
-        return
     return
 
 
 def group_reply_maplestory(msg, line_bot_api, source_id, reply_token):
-    if source_id != GROUP_IDS['maplestory']['id']:
-        return
     if '小路占卜' in msg:
         global maple_phrase
         random.seed(os.urandom(5))
@@ -84,8 +78,6 @@ def group_reply_maplestory(msg, line_bot_api, source_id, reply_token):
 
 
 def group_reply_yebai(msg, line_bot_api, source_id, reply_token):
-    if source_id != GROUP_IDS['yebai']['id']:
-        return
     if help_find_pattern.search(msg):
         image_message = ImageSendMessage(
             original_content_url='https://i.imgur.com/ksIHMn6.jpg',
@@ -99,8 +91,6 @@ def group_reply_yebai(msg, line_bot_api, source_id, reply_token):
 
 
 def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
-    if source_id != GROUP_IDS['mao_sino_alice']['id']:
-        return
     if '小米米' in msg:
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=u'綁起來電擊烤焦爆香切段上菜（¯﹃¯）'.encode('utf-8'))
@@ -120,8 +110,6 @@ def group_reply_mao_sino_alice(msg, line_bot_api, source_id, reply_token):
 
 
 def group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token):
-    if source_id != GROUP_IDS['nier_sino_alice']['id']:
-        return
     wanted_list = ['頓頓', '名字', '雞排', '來來']
     unwanted_list = ['生哥']
     if '我的' in msg:
@@ -145,8 +133,6 @@ def group_reply_nier_sino_alice(msg, line_bot_api, source_id, reply_token):
 
 
 def group_reply_luna(msg, line_bot_api, source_id, reply_token):
-    if source_id != GROUP_IDS['luna']['id']:
-        return
     if '涼哥' in msg:
         line_bot_api.reply_message(reply_token, [
             TextSendMessage(text=u'正直善良又誠懇、不會說話卻實在'.encode('utf-8'))
