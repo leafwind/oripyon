@@ -4,6 +4,7 @@ import re
 import os
 import random
 import time
+import logging
 from datetime import datetime
 
 from linebot.models import (
@@ -84,8 +85,9 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
     if msg == '即時雨量':
         image_url = 'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{}.QZT.jpg'.format(
             datetime.strftime(datetime.fromtimestamp(int(time.time()-600)/1800*1800), '%Y-%m-%d_%H%M')
-            # CWB may delay few minutes, set 10mins
+            # CWB may delay few minutes, set 10 minutes
         )
+        logging.info(image_url)
         image_message = ImageSendMessage(
             original_content_url=image_url,
             preview_image_url=image_url
@@ -97,8 +99,9 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
     if msg == '雷達':
         image_url = 'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{}.png'.format(
             datetime.strftime(datetime.fromtimestamp(int(time.time()-600)/1800*1800), '%Y%m%d%H%M')
-            # CWB may delay few minutes, set 10mins
+            # CWB may delay few minutes, set 10 minutes
         )
+        logging.info(image_url)
         image_message = ImageSendMessage(
             original_content_url=image_url,
             preview_image_url=image_url
