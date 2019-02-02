@@ -14,9 +14,9 @@ from linebot.models import (
 )
 
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
-from common_reply import common_reply
-from group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
-from group_reply import group_reply_mao_sino_alice, group_reply_nier_sino_alice, group_reply_luna
+from app.common_reply import common_reply
+from app.group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
+from app.group_reply import group_reply_mao_sino_alice, group_reply_nier_sino_alice, group_reply_luna
 
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
@@ -97,7 +97,7 @@ def handle_message(event):
 
 
 def make_reply(_source_type, source_id, msg, reply_token=None):
-    msg = msg.encode('utf-8')  # bytes to string
+    msg = msg# bytes to string
     logging.info('{}：{}'.format(GROUP_MAPPING.get(source_id, {'name': source_id}).get('name'), msg))
     result = common_reply(msg, line_bot_api, source_id, reply_token)
     if result:  # has reply, no need to search group reply

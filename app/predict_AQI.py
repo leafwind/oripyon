@@ -7,7 +7,7 @@ import sqlite3
 
 from constants import CWB_DB_PATH, TABLE_AQI
 from taiwan_area_map.query_area import query_area
-from predict_code_map import AQI_THRESHOLD, AQI_STR
+from app.predict_code_map import AQI_THRESHOLD, AQI_STR
 
 logging.basicConfig(level=logging.DEBUG)
 

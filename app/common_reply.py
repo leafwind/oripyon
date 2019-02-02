@@ -12,9 +12,9 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 
-from dice import fortune, tarot
+from app.dice import fortune, tarot
 from app import cwb_weather_predictor, predict_AQI
-from predict_code_map import PREDICT_CODE_MAP
+from app.predict_code_map import PREDICT_CODE_MAP
 from app import wtf_reasons
 from app.emoji_list import cry_emoji_list
 from app.util import get_short_url, get_exchange_rate
