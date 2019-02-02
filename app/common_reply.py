@@ -46,7 +46,8 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if '幫QQ' in msg:
-        reply = '幫QQ喔'
+        emoji_list = ['0x100018', '0x100019', '0x100094', '0x10007C']
+        reply = '幫QQ喔 {}'.format(random.choice(emoji_list))
         line_bot_api.reply_message(reply_token, [TextSendMessage(text=reply)])
         return True
     if '魔法少女' in msg:
