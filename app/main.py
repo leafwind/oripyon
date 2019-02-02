@@ -113,7 +113,7 @@ def handle_message(event):
 
 def make_reply(_source_type, source_id, msg, reply_token=None):
     msg = msg.encode('utf-8')  # bytes to string
-    logging.info('{}：{}'.format(GROUP_ID_NANE.get(source_id, source_id), msg.encode('utf-8')))
+    logging.info('{}：{}'.format(GROUP_ID_NANE.get(source_id, source_id), msg))
     result = common_reply(msg, line_bot_api, source_id, reply_token)
     if result:  # has reply, no need go further search
         return None
