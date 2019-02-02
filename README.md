@@ -25,6 +25,13 @@ Bot Setting:
 Go to [Business Center](https://business.line.me/zh-hant/)
 
 * Account List -> Your Accounts -> Messaging API -> LINE Developers
+* fill `line_auth_key.py` with secret and access token
+
+# Development
+
+`virtualenv venv -p python3.7`
+`. venv/bin/activate`
+`pip install -r requirements.txt`
 
 ## Restart uwsgi to apply code change
 
