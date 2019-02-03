@@ -80,7 +80,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
     if msg == '即時雨量':
         now = int(time.time())
         target_ts = now - 600  # CWB may delay few minutes, set 10 minutes
-        target_ts = target_ts / 1800 * 1800  # truncate to 30 minutes
+        target_ts = target_ts // 1800 * 1800  # truncate to 30 minutes
         target_date = datetime.fromtimestamp(target_ts + 8 * 3600)  # UTC+8
         image_url = 'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{}.QZT.jpg'.format(
             datetime.strftime(target_date, '%Y-%m-%d_%H%M')
@@ -94,7 +94,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
     if msg == '雷達':
         now = int(time.time())
         target_ts = now - 600  # CWB may delay few minutes, set 10 minutes
-        target_ts = target_ts / 1800 * 1800  # truncate to 30 minutes
+        target_ts = target_ts // 600 * 600  # truncate to 10 minutes
         target_date = datetime.fromtimestamp(target_ts + 8 * 3600)  # UTC+8
         image_url = 'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{}.png'.format(
             datetime.strftime(target_date, '%Y%m%d%H%M')
