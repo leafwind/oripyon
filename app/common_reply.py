@@ -199,7 +199,7 @@ def common_reply(msg, line_bot_api, _source_id, reply_token):
         )
         line_bot_api.reply_message(reply_token, [
             image_message,
-            TextSendMessage(text='{}: {}'.format(card['nameCN'].encode('utf-8'), card['conclusion'].encode('utf-8')))
+            TextSendMessage(text='{}: {}'.format(card['nameCN'], card['conclusion']))
         ])
         return True
     elif fortune_pattern.search(msg):
