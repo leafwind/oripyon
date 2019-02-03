@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # http://opendata.cwb.gov.tw/opendatadoc/MFC/A0012-001.pdf
 # 頻率副詞的關係以 list 順序表示，前面為主要，後面為次要
 

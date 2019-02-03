@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from linebot.models import (
     CarouselTemplate, CarouselColumn, URITemplateAction, PostbackTemplateAction, MessageTemplateAction, ConfirmTemplate,
     ButtonsTemplate

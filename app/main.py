@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 
 from flask import Flask, request, abort, render_template
