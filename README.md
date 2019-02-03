@@ -1,4 +1,4 @@
-# Line Bot
+# Line Bot [![Build Status](https://travis-ci.org/leafwind/line_bot.svg?branch=master)](https://travis-ci.org/leafwind/line_bot) [![Coverage Status](https://coveralls.io/repos/github/leafwind/line_bot/badge.svg?branch=master)](https://coveralls.io/github/leafwind/line_bot?branch=master)
 
 Simple bot build by [line-bot-sdk-python](https://github.com/line/line-bot-sdk-python)
 
