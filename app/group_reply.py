@@ -64,7 +64,7 @@ def group_reply_test(msg, line_bot_api, reply_token):
     return
 
 
-def group_reply_lineage_m(msg, line_bot_api, reply_token):
+def group_reply_lineage_m(_msg, _line_bot_api, _reply_token):
     return
 
 

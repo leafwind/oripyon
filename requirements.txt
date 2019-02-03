@@ -2,5 +2,7 @@ line-bot-sdk==1.1.0
 Flask==0.12
 uWSGI==2.0.14
 request
+nose
+coverage
 pylint
 pyflakes
