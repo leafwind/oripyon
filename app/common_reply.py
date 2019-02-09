@@ -44,7 +44,7 @@ def common_reply(msg):
     if '爛中文' in msg:
         reply = '我覺的台灣人的中文水準以經爛ㄉ很嚴重 大家重來都不重視 因該要在加強 才能越來越利害'
         return [TextSendMessage(text=reply)]
-    if '幫QQ' in msg:
+    if '幫qq' in msg:
         reply = '幫QQ喔 {}'.format(random.choice(cry_emoji_list))
         return [TextSendMessage(text=reply)]
     if '魔法少女' in msg:
