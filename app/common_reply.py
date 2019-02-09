@@ -37,7 +37,8 @@ gurulingpo = '''
 
 
 def common_reply(msg):
-    msg_list = msg.lower().split(' ')
+    msg = msg.lower()
+    msg_list = msg.split(' ')
     if help_pattern.search(msg):
         reply = '原始碼請看 https://github.com/leafwind/line_bot'
         return [TextSendMessage(text=reply)]
