@@ -63,13 +63,15 @@ def common_reply(msg):
         return [TextSendMessage(text=short_url)]
     if '空品 ' in msg:
         location = msg_list[1].replace('台', '臺')
-        aqi = predict_AQI.predict_AQI(location)
+        aqi_info = predict_AQI.predict_AQI(location)
+        if not aqi_info:
+            return [TextSendMessage(text='查無資料')]
 
-        aqi_str = '{} AQI: {}({} {}) {}預測{}'.format(
-            aqi['area'],
-            aqi['AQI'], aqi['major_pollutant'], aqi['status'],
-            datetime.fromtimestamp(aqi['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
-            datetime.fromtimestamp(aqi['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
+        aqi_str = '{} {} 預測 {} AQI: {}(狀況：{} 主要污染源：{}) '.format(
+            aqi_info['area'],
+            datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時'),
+            datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d %H 時'),
+            aqi_info['AQI'], aqi_info['status'], aqi_info['major_pollutant'],
         )
         return [TextSendMessage(text=aqi_str)]
     if msg == '天氣':
@@ -138,7 +140,7 @@ def common_reply(msg):
         location = msg_list[1].encode('utf-8').replace('台', '臺')
         predicted_result = cwb_weather_predictor.predict(location)
         predicted_result = predicted_result[0]  # temporary use first result
-        aqi = predict_AQI.predict_AQI(location)
+        aqi_info = predict_AQI.predict_AQI(location)
         # image_url = 'http://www.cwb.gov.tw/V7/symbol/weather/gif/night/{}.gif'.format(predicted_result['Wx'])
         if not predicted_result['success']:
             return [TextSendMessage(text='查無資料')]
@@ -149,13 +151,13 @@ def common_reply(msg):
                                              str(predicted_result['MinT']), str(predicted_result['MaxT'])),
                 '降雨機率：{}%'.format(str(predicted_result['PoP'])),
             ])
-            if aqi:
+            if aqi_info:
                 return_str += '\n' + \
                               '{} AQI: {}({} {}) {}預測{}'.format(
-                                  aqi['area'].encode('utf-8'),
-                                  aqi['AQI'], aqi['major_pollutant'].encode('utf-8'), aqi['status'],
-                                  datetime.fromtimestamp(aqi['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
-                                  datetime.fromtimestamp(aqi['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
+                                  aqi_info['area'].encode('utf-8'),
+                                  aqi_info['AQI'], aqi_info['major_pollutant'].encode('utf-8'), aqi_info['status'],
+                                  datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
+                                  datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
                               )
         elif predicted_result['level'] == 3:
             return_str = '\n'.join([
@@ -165,13 +167,13 @@ def common_reply(msg):
                 # predicted_result['CI'],
                 # '降雨機率：{}%'.format(str(predicted_result['PoP'])),
             ])
-            if aqi:
+            if aqi_info:
                 return_str += '\n' + \
                               '{} AQI: {}({} {}) {}預測{}'.format(
-                                  aqi['area'].encode('utf-8'),
-                                  aqi['AQI'], aqi['major_pollutant'].encode('utf-8'), aqi['status'],
-                                  datetime.fromtimestamp(aqi['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
-                                  datetime.fromtimestamp(aqi['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
+                                  aqi_info['area'].encode('utf-8'),
+                                  aqi_info['AQI'], aqi_info['major_pollutant'].encode('utf-8'), aqi_info['status'],
+                                  datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
+                                  datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
                               )
         else:
             return [TextSendMessage(text='查無資料')]

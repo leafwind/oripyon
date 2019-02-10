@@ -30,7 +30,7 @@ def predict_AQI(location):
             'publish_ts': publish_ts,
             'forecast_ts': forecast_ts,
             'area': area,
-            'major_pollutant': major_pollutant,
+            'major_pollutant': major_pollutant if major_pollutant else '無',
             'AQI': AQI,
             'status': status,
         }
