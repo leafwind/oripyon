@@ -60,7 +60,8 @@ def common_reply(msg):
             int(time.time() * 1000)
         )
         short_url = get_short_url(image_url)
-
+        return [TextSendMessage(text=short_url)]
+    if '空品 ' in msg:
         location = msg_list[1].replace('台', '臺')
         aqi = predict_AQI.predict_AQI(location)
 
@@ -70,10 +71,7 @@ def common_reply(msg):
             datetime.fromtimestamp(aqi['publish_ts'] + 8 * 3600).strftime('%m/%d %H'),
             datetime.fromtimestamp(aqi['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
         )
-        return [
-            TextSendMessage(text=short_url),
-            TextSendMessage(text=aqi_str),
-        ]
+        return [TextSendMessage(text=aqi_str)]
     if msg == '天氣':
         image_url = 'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={}'.format(
             int(time.time())
