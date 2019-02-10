@@ -116,7 +116,7 @@ def group_reply_nier_sino_alice(msg):
                     else:
                         return [TextSendMessage(text='拿杖敲爆你的腦殼 O-(///￣皿￣)⊃━☆ﾟ.*･｡')]
                 elif name in ['四姐', '四姊']:
-                    return [TextSendMessage(text='永遠單身的小秘書')]
+                    return [TextSendMessage(text='永遠單身的小秘書 (●´ω｀●)ゞ')]
                 elif name == 'EBB':
                     return [TextSendMessage(text='不要潛水出來嗨 ヽ(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)人(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)ﾉ')]
                 else:
