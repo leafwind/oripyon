@@ -108,8 +108,8 @@ def group_reply_nier_sino_alice(msg):
     wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB', '初雪', '鈴♡']
     unwanted_list = ['生哥']
     male_list = ['生哥', '芙芙', '性迪', '阿星', '肉肉']
-    female_list = ['名字', '盼盼', '四姐', 'EBB', '初雪', '鈴♡']
-    asexual_list = ['丶丶', '丿丿', '樹樹', '兔比', '小葵', '雞排']
+    female_list = ['名字', '盼盼', '四姐', 'EBB', '初雪', '鈴♡', '凝凝', '楓楓']
+    asexual_list = ['丶丶', '丿丿', '樹樹', '兔比', '小葵', '雞排', 'Momo']
     all_list = male_list + female_list + asexual_list
     if '我的' in msg or '誰的' in msg:
         for name in wanted_list:
@@ -140,6 +140,8 @@ def group_reply_nier_sino_alice(msg):
         return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(male_list)))]
     elif msg.startswith('抽女 '):
         return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(female_list)))]
+    elif msg.startswith('抽不明 '):
+        return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(asexual_list)))]
     elif msg.startswith('抽全部 '):
         return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(all_list)))]
     elif '死愛資料庫' in msg:
