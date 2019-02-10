@@ -67,10 +67,10 @@ def common_reply(msg):
         if not aqi_info:
             return [TextSendMessage(text='查無資料')]
 
-        aqi_str = '{}區域 {} 預測 {}\nAQI：{}\n狀況：{}\n主要污染源：{}'.format(
+        aqi_str = '{}區域 {} 預測 {}日\nAQI：{}\n狀況：{}\n主要污染源：{}'.format(
             aqi_info['area'],
             datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時'),
-            datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d %H 時'),
+            datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
             aqi_info['AQI'], aqi_info['status'], aqi_info['major_pollutant'],
         )
         return [TextSendMessage(text=aqi_str)]
