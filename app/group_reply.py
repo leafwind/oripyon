@@ -105,9 +105,13 @@ def group_reply_mao_sino_alice(msg):
 
 
 def group_reply_nier_sino_alice(msg):
-    wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB']
+    wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB', '初雪', '鈴♡']
     unwanted_list = ['生哥']
-    if '我的' in msg:
+    male_list = ['生哥', '芙芙', '性迪', '阿星']
+    female_list = wanted_list
+    asexual_list = ['、、', '丿丿', '樹樹', '兔比']
+    all_list = male_list + female_list + asexual_list
+    if '我的' in msg or '誰的' in msg:
         for name in wanted_list:
             if name in msg:
                 if name == '盼盼':
@@ -124,11 +128,20 @@ def group_reply_nier_sino_alice(msg):
 
         for name in unwanted_list:
             if name in msg:
-                return [TextSendMessage(text='好阿給你。')]
+                if random.random() >= 0.2:
+                    return [TextSendMessage(text='好阿給你。')]
+                else:
+                    return [TextSendMessage(text='只、只能借你一下喔...')]
 
         return []
-    if '雞排' in msg and '吃' in msg:
+    elif '雞排' in msg and '吃' in msg:
         return [TextSendMessage(text='我也要吃 (๑´ڡ`๑)')]
+    elif '抽男' in msg:
+        return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(male_list)))]
+    elif '抽女' in msg:
+        return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(female_list)))]
+    elif '抽全部' in msg:
+        return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(all_list)))]
     elif '死愛資料庫' in msg:
         return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
 
