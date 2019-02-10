@@ -49,7 +49,7 @@ def common_reply(msg):
         reply = '幫QQ喔 {}'.format(random.choice(cry_emoji_list))
         return [TextSendMessage(text=reply)]
     if '魔法少女' in msg:
-        reply = '僕と契約して、魔法少女になってよ！'
+        reply = '／人◕ ‿‿ ◕人＼ 僕と契約して、魔法少女になってよ！'
         return [TextSendMessage(text=reply)]
     if '請問為什麼' in msg:
         random.seed(os.urandom(5))
