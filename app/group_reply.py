@@ -9,6 +9,7 @@ from linebot.models import (
 from app.line_templates import make_template_action, make_carousel_column
 from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
+from app.emoji_list import cry_emoji_list
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 help_find_pattern = re.compile('協尋')
 
@@ -104,18 +105,30 @@ def group_reply_mao_sino_alice(msg):
 
 
 def group_reply_nier_sino_alice(msg):
-    wanted_list = ['頓頓', '名字', '雞排', '來來']
+    wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB']
     unwanted_list = ['生哥']
     if '我的' in msg:
         for name in wanted_list:
             if name in msg:
-                return [TextSendMessage(text='是我的！！')]
+                if name == '盼盼':
+                    if random.random() >= 0.2:
+                        return [TextSendMessage(text='已經是她們會長的形狀了 {}'.format(random.choice(cry_emoji_list)))]
+                    else:
+                        return [TextSendMessage(text='拿杖敲爆你的腦殼 O-(///￣皿￣)⊃━☆ﾟ.*･｡')]
+                elif name in ['四姐', '四姊']:
+                    return [TextSendMessage(text='永遠單身的小秘書')]
+                elif name == 'EBB':
+                    return [TextSendMessage(text='不要潛水出來嗨 ヽ(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)人(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)ﾉ')]
+                else:
+                    return [TextSendMessage(text='是我的！！')]
 
         for name in unwanted_list:
             if name in msg:
                 return [TextSendMessage(text='好阿給你。')]
 
         return []
+    if '雞排' in msg and '吃' in msg:
+        return [TextSendMessage(text='我也要吃 (๑´ڡ`๑)')]
     elif '死愛資料庫' in msg:
         return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
 
