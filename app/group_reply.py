@@ -136,11 +136,11 @@ def group_reply_nier_sino_alice(msg):
         return []
     elif '雞排' in msg and '吃' in msg:
         return [TextSendMessage(text='我也要吃 (๑´ڡ`๑)')]
-    elif '抽男' in msg:
+    elif msg.startswith('抽男 '):
         return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(male_list)))]
-    elif '抽女' in msg:
+    elif msg.startswith('抽女 '):
         return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(female_list)))]
-    elif '抽全部' in msg:
+    elif msg.startswith('抽全部 '):
         return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(all_list)))]
     elif '死愛資料庫' in msg:
         return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
