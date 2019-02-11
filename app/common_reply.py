@@ -104,6 +104,7 @@ def common_reply(msg):
                 PM25=aqi_info['PM25'],
             )
             reply_messages.append(TextSendMessage(text='{}'.format(aqi_str)))
+        logging.info(reply_messages)
         return reply_messages
     if msg == '天氣':
         image_url = 'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={}'.format(
