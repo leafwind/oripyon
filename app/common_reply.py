@@ -16,6 +16,7 @@ from app.predict_code_map import PREDICT_CODE_MAP
 from app import wtf_reasons
 from app.emoji_list import cry_emoji_list
 from app.util import get_short_url, get_exchange_rate
+from taiwan_area_map.query_area import query_area
 
 # equivalent to:
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
@@ -74,6 +75,29 @@ def common_reply(msg):
             aqi_info['AQI'], aqi_info['status'], aqi_info['major_pollutant'],
         )
         return [TextSendMessage(text=aqi_str)]
+    if '空品現況 ' in msg:
+        location = msg_list[1].replace('台', '臺')
+        area_list = query_area(location)
+        if not area_list:
+            return [TextSendMessage(text='查無資料')]
+        county_list = []
+        for area in area_list:
+            if area[1] not in county_list:
+                county_list.append(area[1])
+        if len(county_list) > 1:
+            return [TextSendMessage(text='指定的地區有多個可能，請問你指的是哪個縣市？{}'.format(county_list))]#
+
+        aqi_info = predict_AQI.query_aqi(location)
+        if not aqi_info:
+            return [TextSendMessage(text='查無資料')]
+
+        # aqi_str = '{}區域 {} 預測 {}日\nAQI：{}\n狀況：{}\n主要污染源：{}'.format(
+        #     aqi_info['area'],
+        #     datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時'),
+        #     datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
+        #     aqi_info['AQI'], aqi_info['status'], aqi_info['major_pollutant'],
+        # )
+        return [TextSendMessage(text='{}'.format(aqi_info))]
     if msg == '天氣':
         image_url = 'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={}'.format(
             int(time.time())
