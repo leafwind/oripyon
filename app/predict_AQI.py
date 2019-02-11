@@ -58,14 +58,16 @@ def query_aqi(county):
 
     query_str = '''SELECT MAX(publish_ts) FROM {TABLE_AQI} WHERE county=?; '''.format(
         TABLE_AQI=TABLE_AQI)
+    logging.debug(query_str)
+    logging.debug('county: %s', county)
     c.execute(query_str, county)
-    publish_ts = c.fetchall()
+    publish_ts = c.fetchone()
 
     query_str = '''SELECT site_name, publish_ts, AQI, pollutant, status, PM10, PM25 FROM {TABLE_AQI} WHERE county=? AND publish_ts = ?; '''.format(
         TABLE_AQI=TABLE_AQI)
-    c.execute(query_str, (county, publish_ts))
     logging.debug(query_str)
-    logging.debug('county: %s', county)
+    logging.debug('county: %s, publish_ts: %s', county, publish_ts)
+    c.execute(query_str, (county, publish_ts))
     result = c.fetchall()
     r_list = []
     for r in result:
