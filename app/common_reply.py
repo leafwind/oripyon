@@ -87,7 +87,7 @@ def common_reply(msg):
         if len(county_list) > 1:
             return [TextSendMessage(text='指定的地區有多個可能，請問你指的是哪個縣市？{}'.format(county_list))]#
 
-        aqi_info = predict_AQI.query_aqi(location)
+        aqi_info = predict_AQI.query_aqi(county_list[0])
         if not aqi_info:
             return [TextSendMessage(text='查無資料')]
 
