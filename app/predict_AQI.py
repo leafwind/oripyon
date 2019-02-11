@@ -66,6 +66,7 @@ def query_aqi(county):
     for r in result:
         site_name, publish_ts, AQI, pollutant, status, PM10, PM25 = r
         r_list.append({
+            'county': county,
             'site_name': site_name,
             'publish_ts': publish_ts,
             'AQI': AQI,

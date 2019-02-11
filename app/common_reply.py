@@ -87,17 +87,23 @@ def common_reply(msg):
         if len(county_list) > 1:
             return [TextSendMessage(text='指定的地區有多個可能，請問你指的是哪個縣市？{}'.format(county_list))]#
 
-        aqi_info = predict_AQI.query_aqi(county_list[0])
-        if not aqi_info:
+        aqi_infos = predict_AQI.query_aqi(county_list[0])
+        if not aqi_infos:
             return [TextSendMessage(text='查無資料')]
-
-        # aqi_str = '{}區域 {} 預測 {}日\nAQI：{}\n狀況：{}\n主要污染源：{}'.format(
-        #     aqi_info['area'],
-        #     datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時'),
-        #     datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
-        #     aqi_info['AQI'], aqi_info['status'], aqi_info['major_pollutant'],
-        # )
-        return [TextSendMessage(text='{}'.format(aqi_info))]
+        reply_messages = []
+        reply_messages.append(TextSendMessage(text='{}'.format(county_list[0])))
+        for aqi_info in aqi_infos:
+            aqi_str = '{site_name} {date_hr} AQI：{aqi} 狀況：{status} 主要污染源：{pollutant} PM10: {PM10} PM2.5: {PM25}'.format(
+                site_name=aqi_info['site_name'],
+                date_hr=datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時'),
+                aqi=aqi_info['AQI'],
+                pollutant=aqi_info['pollutant'],
+                status=aqi_info['status'],
+                PM10=aqi_info['PM10'],
+                PM25=aqi_info['PM25'],
+            )
+            reply_messages.append(TextSendMessage(text='{}'.format(aqi_str)))
+        return reply_messages
     if msg == '天氣':
         image_url = 'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={}'.format(
             int(time.time())
