@@ -59,7 +59,7 @@ def query_aqi(county):
     query_str = '''SELECT MAX(publish_ts) FROM {TABLE_AQI} WHERE county=?; '''.format(
         TABLE_AQI=TABLE_AQI)
     logging.debug(query_str)
-    logging.debug('county: %s', [county])
+    logging.debug('county: %s', (county,))
     c.execute(query_str, county)
     publish_ts = c.fetchone()
 
