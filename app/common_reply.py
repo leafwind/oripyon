@@ -61,9 +61,9 @@ def common_reply(msg):
         )
         short_url = get_short_url(image_url)
         return [TextSendMessage(text=short_url)]
-    if '空品 ' in msg:
+    if '空品預測 ' in msg:
         location = msg_list[1].replace('台', '臺')
-        aqi_info = predict_AQI.predict_AQI(location)
+        aqi_info = predict_AQI.predict_aqi(location)
         if not aqi_info:
             return [TextSendMessage(text='查無資料')]
 
@@ -140,7 +140,7 @@ def common_reply(msg):
         location = msg_list[1].encode('utf-8').replace('台', '臺')
         predicted_result = cwb_weather_predictor.predict(location)
         predicted_result = predicted_result[0]  # temporary use first result
-        aqi_info = predict_AQI.predict_AQI(location)
+        aqi_info = predict_AQI.predict_aqi(location)
         # image_url = 'http://www.cwb.gov.tw/V7/symbol/weather/gif/night/{}.gif'.format(predicted_result['Wx'])
         if not predicted_result['success']:
             return [TextSendMessage(text='查無資料')]
