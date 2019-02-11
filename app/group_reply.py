@@ -107,8 +107,8 @@ def group_reply_mao_sino_alice(msg):
 def group_reply_nier_sino_alice(msg):
     wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB', '初雪', '鈴']
     unwanted_list = ['生哥', '阿生']
-    male_list = ['生哥', '芙芙', '性迪', '阿星', '肉肉']
-    female_list = ['名字', '盼盼', '四姐', 'EBB', '初雪', '鈴♡', '凝凝', '楓楓']
+    male_list = ['生哥', '芙芙', '性迪', '阿星', '肉肉', '肉凱', '糕連']
+    female_list = ['名字', '盼盼', '四姐', 'EBB', '初雪', '鈴♡', '凝凝', '楓楓', 'A婭']
     asexual_list = ['丶丶', '丿丿', '樹樹', '兔比', '小葵', '雞排', 'Momo']
     all_list = male_list + female_list + asexual_list
     if '我的' in msg or '誰的' in msg:
