@@ -61,7 +61,8 @@ def query_aqi(county):
     logging.debug(query_str)
     logging.debug('county: %s', county)
     c.execute(query_str, [county])
-    publish_ts = int(c.fetchone())
+    (publish_ts,) = c.fetchone()
+    publish_ts = int(publish_ts)
 
     query_str = '''SELECT site_name, publish_ts, AQI, pollutant, status, PM10, PM25 FROM {TABLE_AQI} WHERE county=? AND publish_ts = ?; '''.format(
         TABLE_AQI=TABLE_AQI)
