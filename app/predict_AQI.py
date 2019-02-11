@@ -58,7 +58,7 @@ def query_aqi(county):
 
     query_str = '''SELECT MAX(publish_ts) FROM {TABLE_AQI} WHERE county=?; '''.format(
         TABLE_AQI=TABLE_AQI)
-    c.execute(query_str, (county))
+    c.execute(query_str, county)
     publish_ts = c.fetchall()
 
     query_str = '''SELECT site_name, publish_ts, AQI, pollutant, status, PM10, PM25 FROM {TABLE_AQI} WHERE county=? AND publish_ts = ?; '''.format(
