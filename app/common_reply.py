@@ -92,8 +92,9 @@ def common_reply(msg):
             return [TextSendMessage(text='查無資料')]
         reply_messages = []
         reply_messages.append(TextSendMessage(text='{}'.format(county_list[0])))
+        aqi_str = ''
         for aqi_info in aqi_infos:
-            aqi_str = '{site_name} {date_hr} AQI：{aqi} 狀況：{status} 主要污染源：{pollutant} PM10: {PM10} PM2.5: {PM25}'.format(
+            aqi_str += '{site_name} {date_hr} AQI：{aqi} 狀況：{status} 主要污染源：{pollutant} PM10: {PM10} PM2.5: {PM25}\n'.format(
                 site_name=aqi_info['site_name'],
                 date_hr=datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時'),
                 aqi=aqi_info['AQI'],
