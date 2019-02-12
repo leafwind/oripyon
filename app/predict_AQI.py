@@ -31,11 +31,11 @@ def predict_aqi(location):
 
     area_list = area_list[0][0]
     c = conn.cursor()
-    query_str = '''SELECT publish_ts, forecast_ts, area, major_pollutant, AQI FROM {} WHERE area=? AND publish_ts = (SELECT MAX(publish_ts) FROM {} WHERE area=?) AND forecast_ts > ? ORDER BY forecast_ts ASC; '''.format(
+    query_str = '''SELECT publish_ts, forecast_ts, area, major_pollutant, AQI FROM {} WHERE area=:area AND publish_ts = (SELECT MAX(publish_ts) FROM {} WHERE area=:area) AND forecast_ts > :min_ts ORDER BY forecast_ts ASC; '''.format(
         TABLE_AQFN, TABLE_AQFN)
-    c.execute(query_str, (area_list, area_list, now_ts - 12 * 3600))
+    c.execute(query_str, {'area': area_list, 'min_ts': now_ts - 12 * 3600})
     logging.debug(query_str)
-    logging.debug('area: %s, forecast_ts: %s', area_list, now_ts - 12 * 3600)
+    logging.debug('area: %s, min_ts: %s', area_list, now_ts - 12 * 3600)
     result = c.fetchone()
     publish_ts, forecast_ts, area_list, major_pollutant, aqi = result
 
@@ -56,19 +56,19 @@ def query_aqi(county):
     conn = sqlite3.connect(CWB_DB_PATH)
     c = conn.cursor()
 
-    query_str = '''SELECT MAX(publish_ts) FROM {TABLE_AQI} WHERE county=?; '''.format(
+    query_str = '''SELECT MAX(publish_ts) FROM {TABLE_AQI} WHERE county=:county; '''.format(
         TABLE_AQI=TABLE_AQI)
     logging.debug(query_str)
     logging.debug('county: %s', county)
-    c.execute(query_str, [county])
+    c.execute(query_str, {'county': county})
     (publish_ts,) = c.fetchone()
     publish_ts = int(publish_ts)
 
-    query_str = '''SELECT site_name, publish_ts, AQI, pollutant, status, PM10, PM25 FROM {TABLE_AQI} WHERE county=? AND publish_ts = ?; '''.format(
+    query_str = '''SELECT site_name, publish_ts, AQI, pollutant, status, PM10, PM25 FROM {TABLE_AQI} WHERE county=:county AND publish_ts=:publish_ts; '''.format(
         TABLE_AQI=TABLE_AQI)
     logging.debug(query_str)
     logging.debug('county: %s, publish_ts: %s', county, publish_ts)
-    c.execute(query_str, [county, publish_ts])
+    c.execute(query_str, {'county': county, 'publish_ts': publish_ts})
     result = c.fetchall()
     r_list = []
     for r in result:
