@@ -151,5 +151,8 @@ def group_reply_nier_sino_alice(msg):
 def group_reply_luna(msg):
     if '涼哥' in msg:
         return [TextSendMessage(text='正直善良又誠懇、不會說話卻實在')]
+    return
 
+
+def group_reply_working(msg):
     return
