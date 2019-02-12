@@ -72,15 +72,15 @@ def query_aqi(county):
     result = c.fetchall()
     r_list = []
     for r in result:
-        site_name, publish_ts, AQI, pollutant, status, PM10, PM25 = r
+        site_name, publish_ts, aqi, pollutant, status, pm10, pm25 = r
         r_list.append({
             'county': county,
             'site_name': site_name,
-            'AQI': AQI,
+            'AQI': aqi,
             'pollutant': pollutant if pollutant else '無',
             'status': status,
-            'PM10': PM10,
-            'PM25': PM25,
+            'PM10': pm10,
+            'PM25': pm25,
         })
 
     conn.close()
