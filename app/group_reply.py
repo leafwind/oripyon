@@ -93,15 +93,26 @@ def group_reply_yebai(msg):
 def group_reply_mao_sino_alice(msg):
     if '小米米' in msg:
         return [TextSendMessage(text='綁起來電擊烤焦爆香切段上菜（¯﹃¯）')]
-
     elif '2050' in msg:
         return [
             TextSendMessage(text='兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'),
             TextSendMessage(text='睡你麻痺起來嗨ヽ(`Д´)ノ'),
         ]
-
     elif '死愛資料庫' in msg:
         return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
+    elif '狗糧' == msg:
+        return [TextSendMessage(text='1200-1230, 1930-2000, 2230-2300, 0100-0130')]
+    else:
+        return []
+
+
+def group_reply_taiwan_sino_alice(msg):
+    if '死愛資料庫' in msg:
+        return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
+    elif '狗糧' == msg:
+        return [TextSendMessage(text='1200-1230, 1930-2000, 2230-2300, 0100-0130')]
+    else:
+        return []
 
 
 def group_reply_nier_sino_alice(msg):
@@ -146,7 +157,12 @@ def group_reply_nier_sino_alice(msg):
         return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(all_list)))]
     elif '死愛資料庫' in msg:
         return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
-
+    elif '狗糧' == msg:
+        return [TextSendMessage(text='1200-1230, 1930-2000, 2230-2300, 0100-0130')]
+    elif 'ID對照表' == msg:
+        return [TextSendMessage(text='四姊 963028424\n頓頓 208404895\nstCarP 329543491\n夜貓先生 832644419')]
+    else:
+        return []
 
 def group_reply_luna(msg):
     if '涼哥' in msg:
@@ -154,5 +170,5 @@ def group_reply_luna(msg):
     return
 
 
-def group_reply_working(msg):
+def group_reply_working(_msg):
     return

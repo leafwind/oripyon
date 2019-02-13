@@ -16,7 +16,8 @@ from linebot.models import (
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.common_reply import common_reply
 from app.group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
-from app.group_reply import group_reply_mao_sino_alice, group_reply_nier_sino_alice, group_reply_luna, group_reply_working
+from app.group_reply import group_reply_mao_sino_alice, group_reply_nier_sino_alice, group_reply_luna
+from app.group_reply import group_reply_working, group_reply_taiwan_sino_alice
 
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
@@ -52,6 +53,10 @@ GROUP_MAPPING = {
     'C1e38a92f8c7b4ad377df882b9f3bf336': {
         'name': '尼爾主題餐廳',
         'function': group_reply_nier_sino_alice,
+    },
+    'C15c762c0a497d62992c01b42ba9b39d9': {
+        'name': '死愛台版交流區',
+        'function': group_reply_taiwan_sino_alice,
     },
     'Cbc420349e56f3bae5d5f46fafb0ac5cb': {
         'name': '社畜人生的煩惱',
