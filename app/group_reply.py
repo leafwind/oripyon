@@ -101,7 +101,7 @@ def group_reply_mao_sino_alice(msg):
     elif '死愛資料庫' in msg:
         return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
     elif '狗糧' == msg:
-        return [TextSendMessage(text='1200-1230, 1930-2000, 2230-2300, 0100-0130')]
+        return [TextSendMessage(text='07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼')]
     else:
         return []
 
@@ -110,7 +110,7 @@ def group_reply_taiwan_sino_alice(msg):
     if '死愛資料庫' in msg:
         return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
     elif '狗糧' == msg:
-        return [TextSendMessage(text='1200-1230, 1930-2000, 2230-2300, 0100-0130')]
+        return [TextSendMessage(text='07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼')]
     else:
         return []
 
@@ -158,7 +158,7 @@ def group_reply_nier_sino_alice(msg):
     elif '死愛資料庫' in msg:
         return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
     elif '狗糧' == msg:
-        return [TextSendMessage(text='1200-1230, 1930-2000, 2230-2300, 0100-0130')]
+        return [TextSendMessage(text='07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼')]
     elif 'ID對照表' == msg:
         return [TextSendMessage(text='四姊 963028424\n頓頓 208404895\nstCarP 329543491\n夜貓先生 832644419')]
     else:
