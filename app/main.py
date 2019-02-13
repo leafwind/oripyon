@@ -108,7 +108,7 @@ def handle_message(event):
 def make_reply(_source_type, source_id, msg, reply_token=None):
     msg = msg# bytes to string
     logging.info('{}：{}'.format(GROUP_MAPPING.get(source_id, {'name': source_id}).get('name'), msg))
-    reply = common_reply(msg)
+    reply = common_reply(source_id, msg)
     if reply:  # has reply, no need to search group reply
         line_bot_api.reply_message(reply_token, reply)
         return

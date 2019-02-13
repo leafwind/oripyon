@@ -35,9 +35,15 @@ gurulingpo = '''
  ☆  ∪~ ｡*ﾟ
  `･+｡*･+ ﾟ
 '''
+last_msg = {}
+replied_time = {}
 
 
-def common_reply(msg):
+def common_reply(source_id, msg):
+    if msg == last_msg.get(source_id, None) and int(time.time()) - 600 > replied_time.get((source_id, msg), 0):
+        replied_time[(source_id, msg)] = int(time.time())
+        return [TextSendMessage(text=msg)]
+    last_msg[source_id] = msg
     msg = msg.lower()
     msg_list = msg.split(' ')
     if help_pattern.search(msg):
