@@ -10,7 +10,7 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 
-from app.dice import fortune, tarot
+from app.dice import fortune, tarot, nca
 from app import cwb_weather_predictor, predict_AQI
 from app.predict_code_map import PREDICT_CODE_MAP
 from app import wtf_reasons
@@ -218,6 +218,9 @@ def common_reply(source_id, msg):
         ]
     elif fortune_pattern.search(msg):
         result = fortune()
+        return [TextSendMessage(text=result)]
+    elif msg.startswith('nca'):
+        result = nca()
         return [TextSendMessage(text=result)]
     else:
         return []
