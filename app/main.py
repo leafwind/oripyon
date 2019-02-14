@@ -88,6 +88,19 @@ def callback():
     return 'OK'
 
 
+@handler.default()
+def default(event):
+    if event.source.type == 'room':
+        source_id = event.source.room_id
+    elif event.source.type == 'user':
+        source_id = event.source.user_id
+    elif event.source.type == 'group':
+        source_id = event.source.group_id
+    else:
+        raise ValueError
+    logging.info('{}：{}'.format(GROUP_MAPPING.get(source_id, {'name': source_id}).get('name'), event.message))
+
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     # logging.info('%s', event.__dict__)

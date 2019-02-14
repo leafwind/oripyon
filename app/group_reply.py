@@ -100,7 +100,7 @@ def group_reply_mao_sino_alice(msg):
             '睡你麻痺起來嗨ヽ(`Д´)ノ',
         ]
     elif '夢魘順序' in msg:
-        replies = ['sky降攻 -> 普爾加防 -> 米米(工讀生)黑腕 -> 芙溫妖精王-> 邱御豪降防']
+        replies = ['sky降攻 -> 普爾加防 -> 米米(工讀生)黑腕 -> 芙溫妖精王 -> 邱御豪降防']
     elif '死愛資料庫' in msg:
         replies = ['https://sinoalice.game-db.tw/']
     elif '狗糧' == msg:
