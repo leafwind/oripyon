@@ -126,6 +126,17 @@ def group_reply_nier_sino_alice(msg):
     female_list = ['名字', '盼盼', '四姐', 'EBB', '初雪', '鈴♡', '凝凝', '楓楓', 'A婭']
     asexual_list = ['丶丶', '丿丿', '樹樹', '兔比', '小葵', '雞排', 'Momo']
     all_list = male_list + female_list + asexual_list
+    id_list = [
+        '四姊 963028424',
+        '頓頓 208404895',
+        'stCarP 329543491',
+        '夜貓先生 832644419',
+        '撇撇 121381885',
+        '楓楓 694730233',
+        '西門(愛睏狼) 403332013',
+        '10(Lan Shawn) 372629712',
+        '火腿通粉(肉凱) 589363711',
+    ]
     if '我的' in msg or '誰的' in msg:
         for name in wanted_list:
             if name in msg:
@@ -165,8 +176,8 @@ def group_reply_nier_sino_alice(msg):
         return [TextSendMessage(text='07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼')]
     elif '素材' == msg:
         return [TextSendMessage(text='武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼')]
-    elif 'ID對照表' == msg:
-        return [TextSendMessage(text='四姊 963028424\n頓頓 208404895\nstCarP 329543491\n夜貓先生 832644419')]
+    elif msg.startswith('ID對照表'):
+        return [TextSendMessage(text='\n'.join(id_list))]
     else:
         return []
 
