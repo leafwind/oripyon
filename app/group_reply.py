@@ -72,7 +72,7 @@ def group_reply_maplestory(msg):
         global maple_phrase
         random.seed(os.urandom(5))
         ph = random.choice(maple_phrase)
-        msg = '今日運勢：{}'.format(ph)
+        msg = f'今日運勢：{ph}'
         return [TextSendMessage(text=msg)]
     else:
         return []
@@ -91,30 +91,44 @@ def group_reply_yebai(msg):
 
 
 def group_reply_mao_sino_alice(msg):
+    replies = None
     if '小米米' in msg:
-        return [TextSendMessage(text='綁起來電擊烤焦爆香切段上菜（¯﹃¯）')]
+        replies = ['綁起來電擊烤焦爆香切段上菜（¯﹃¯）']
     elif '2050' in msg:
-        return [
-            TextSendMessage(text='兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'),
-            TextSendMessage(text='睡你麻痺起來嗨ヽ(`Д´)ノ'),
+        replies = [
+            '兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡',
+            '睡你麻痺起來嗨ヽ(`Д´)ノ',
         ]
+    elif '夢魘順序' in msg:
+        replies = ['sky降攻 -> 普爾加防 -> 米米(工讀生)黑腕 -> 芙溫妖精王-> 邱御豪降防']
     elif '死愛資料庫' in msg:
-        return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
+        replies = ['https://sinoalice.game-db.tw/']
     elif '狗糧' == msg:
-        return [TextSendMessage(text='07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼')]
+        replies = ['07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼']
     elif '素材' == msg:
-        return [TextSendMessage(text='武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼')]
+        replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
+    else:
+        pass
+
+    if replies:
+        return [TextSendMessage(text=r) for r in replies]
     else:
         return []
 
 
 def group_reply_taiwan_sino_alice(msg):
+    replies = None
     if '死愛資料庫' in msg:
-        return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
+        replies = ['https://sinoalice.game-db.tw/']
     elif '狗糧' == msg:
-        return [TextSendMessage(text='07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼')]
+        replies = ['07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼']
     elif '素材' == msg:
-        return [TextSendMessage(text='武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼')]
+        replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
+    else:
+        pass
+
+    if replies:
+        return [TextSendMessage(text=r) for r in replies]
     else:
         return []
 
@@ -136,48 +150,54 @@ def group_reply_nier_sino_alice(msg):
         '西門(愛睏狼) 403332013',
         '10(Lan Shawn) 372629712',
         '火腿通粉(肉凱) 589363711',
+        '肉肉 220242535',
+        'redyee 866447142',
     ]
+    replies = None
     if '我的' in msg or '誰的' in msg:
         for name in wanted_list:
             if name in msg:
                 if name == '盼盼':
                     if random.random() >= 0.2:
-                        return [TextSendMessage(text='已經是她們會長的形狀了 {}'.format(random.choice(cry_emoji_list)))]
+                        replies = [f'已經是她們會長的形狀了 {random.choice(cry_emoji_list)}']
                     else:
-                        return [TextSendMessage(text='拿杖敲爆你的腦殼 O-(///￣皿￣)⊃━☆ﾟ.*･｡')]
+                        replies = ['拿杖敲爆你的腦殼 O-(///￣皿￣)⊃━☆ﾟ.*･｡']
                 elif name in ['四姐', '四姊']:
-                    return [TextSendMessage(text='永遠單身的小秘書 (●´ω｀●)ゞ')]
+                    replies = ['永遠單身的小秘書 (●´ω｀●)ゞ']
                 elif name == 'EBB':
-                    return [TextSendMessage(text='不要潛水出來嗨 ヽ(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)人(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)ﾉ')]
+                    replies = ['不要潛水出來嗨 ヽ(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)人(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)ﾉ']
                 else:
-                    return [TextSendMessage(text='是我的！！')]
+                    replies = ['是我的！！']
 
         for name in unwanted_list:
             if name in msg:
                 if random.random() >= 0.2:
-                    return [TextSendMessage(text='好阿給你。')]
+                    replies = ['好阿給你。']
                 else:
-                    return [TextSendMessage(text='只、只能借你一下喔...')]
-
-        return []
+                    replies = ['只、只能借你一下喔...']
     elif '雞排' in msg and '吃' in msg:
-        return [TextSendMessage(text='我也要吃 (๑´ڡ`๑)')]
+        replies = ['我也要吃 (๑´ڡ`๑)']
     elif msg.startswith('抽男 '):
-        return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(male_list)))]
+        replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(male_list)}呢！']
     elif msg.startswith('抽女 '):
-        return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(female_list)))]
+        replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(female_list)}呢！']
     elif msg.startswith('抽不明 '):
-        return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(asexual_list)))]
+        replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(asexual_list)}呢！']
     elif msg.startswith('抽全部 '):
-        return [TextSendMessage(text='(੭•̀ω•́)੭ 恭喜你，是{}呢！'.format(random.choice(all_list)))]
+        replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(all_list)}呢！']
     elif '死愛資料庫' in msg:
-        return [TextSendMessage(text='https://sinoalice.game-db.tw/')]
+        replies = ['https://sinoalice.game-db.tw/']
     elif '狗糧' == msg:
-        return [TextSendMessage(text='07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼')]
+        replies = ['07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼']
     elif '素材' == msg:
-        return [TextSendMessage(text='武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼')]
+        replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
     elif msg.startswith('ID對照表'):
-        return [TextSendMessage(text='\n'.join(id_list))]
+        replies = ['\n'.join(id_list)]
+    else:
+        pass
+
+    if replies:
+        return [TextSendMessage(text=r) for r in replies]
     else:
         return []
 

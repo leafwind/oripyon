@@ -45,11 +45,11 @@ def common_reply(source_id, msg):
         logging.info('偵測到重複，準備推齊')
         repeated_diff_ts = now - replied_time.get((source_id, msg), 0)
         if repeated_diff_ts > 600:
-            logging.info('{} 上次重複已經超過 {} 秒，執行推齊！'.format(msg, repeated_diff_ts))
+            logging.info(f'{msg} 上次重複已經超過 {repeated_diff_ts} 秒，執行推齊！')
             replied_time[(source_id, msg)] = now
             return [TextSendMessage(text=msg)]
         else:
-            logging.info('{} 上次重複在 {} 秒內，不推齊'.format(msg, repeated_diff_ts))
+            logging.info(f'{msg} 上次重複在 {repeated_diff_ts} 秒內，不推齊')
     last_msg[source_id] = msg
     msg = msg.lower()
     msg_list = msg.split(' ')
@@ -60,19 +60,17 @@ def common_reply(source_id, msg):
         reply = '我覺的台灣人的中文水準以經爛ㄉ很嚴重 大家重來都不重視 因該要在加強 才能越來越利害'
         return [TextSendMessage(text=reply)]
     if '幫qq' in msg:
-        reply = '幫QQ喔 {}'.format(random.choice(cry_emoji_list))
+        reply = f'幫QQ喔 {random.choice(cry_emoji_list)}'
         return [TextSendMessage(text=reply)]
     if '魔法少女' in msg:
         reply = '／人◕ ‿‿ ◕人＼ 僕と契約して、魔法少女になってよ！'
         return [TextSendMessage(text=reply)]
     if '請問為什麼' in msg:
         random.seed(os.urandom(5))
-        reply = '因為{}。'.format(random.choice(wtf_reasons.reasons))
+        reply = f'因為{random.choice(wtf_reasons.reasons)}。'
         return [TextSendMessage(text=reply)]
     if msg == '空品':
-        image_url = 'https://taqm.epa.gov.tw/taqm/Chart/AqiMap/map2.aspx?lang=tw&ts={}'.format(
-            int(time.time() * 1000)
-        )
+        image_url = f'https://taqm.epa.gov.tw/taqm/Chart/AqiMap/map2.aspx?lang=tw&ts={int(time.time() * 1000)}'
         short_url = get_short_url(image_url)
         return [TextSendMessage(text=short_url)]
     if '空品預測 ' in msg:
@@ -81,12 +79,12 @@ def common_reply(source_id, msg):
         if not aqi_info:
             return [TextSendMessage(text='查無資料')]
 
-        aqi_str = '{}區域 {} 預測 {}日\nAQI：{}\n狀況：{}\n主要污染源：{}'.format(
-            aqi_info['area'],
-            datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時'),
-            datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d'),
-            aqi_info['AQI'], aqi_info['status'], aqi_info['major_pollutant'],
-        )
+        predict_time = datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時')
+        target_time = datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d')
+        aqi_str = f'{aqi_info["area"]}區域 ' \
+                  f'{predict_time} 預測 {target_time}日\n' \
+                  f'AQI：{aqi_info["AQI"]}\n狀況：{aqi_info["status"]}\n' \
+                  f'主要污染源：{aqi_info["major_pollutant"]}'
         return [TextSendMessage(text=aqi_str)]
     if '空品現況 ' in msg:
         location = msg_list[1].replace('台', '臺')
@@ -98,33 +96,22 @@ def common_reply(source_id, msg):
             if area[1] not in county_list:
                 county_list.append(area[1])
         if len(county_list) > 1:
-            return [TextSendMessage(text='指定的地區有多個可能，請問你指的是哪個縣市？{}'.format(county_list))]#
+            return [TextSendMessage(text=f'指定的地區有多個可能，請問你指的是哪個縣市？{county_list}')]
 
         aqi_infos, publish_ts = predict_AQI.query_aqi(county_list[0])
         if not aqi_infos:
             return [TextSendMessage(text='查無資料')]
-        reply_messages = [TextSendMessage(
-            text='{county} {date_hr}'.format(
-                county=county_list[0],
-                date_hr=datetime.fromtimestamp(publish_ts + 8 * 3600).strftime('%m/%d %H 時'),
-            )
-        )]
+        date_hr = datetime.fromtimestamp(publish_ts + 8 * 3600).strftime('%m/%d %H 時')
+        reply_messages = [TextSendMessage(text=f'{county_list[0]} {date_hr}')]
         aqi_str = ''
         for aqi_info in aqi_infos:
-            aqi_str += '{site_name} AQI：{aqi} 狀況：{status} 主要污染源：{pollutant} PM10：{PM10} PM2.5：{PM25}\n'.format(
-                site_name=aqi_info['site_name'],
-                aqi=aqi_info['AQI'],
-                pollutant=aqi_info['pollutant'],
-                status=aqi_info['status'],
-                PM10=aqi_info['PM10'],
-                PM25=aqi_info['PM25'],
-            )
-        reply_messages.append(TextSendMessage(text='{}'.format(aqi_str)))
+            aqi_str += f'{aqi_info["site_name"]} AQI：{aqi_info["AQI"]} ' \
+                       f'狀況：{aqi_info["status"]} 主要污染源：{aqi_info["pollutant"]} ' \
+                       f'PM10：{aqi_info["PM10"]} PM2.5：{aqi_info["PM25"]}\n'
+        reply_messages.append(TextSendMessage(text=f'{aqi_str}'))
         return reply_messages
     if msg == '天氣':
-        image_url = 'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={}'.format(
-            int(time.time())
-        )
+        image_url = f'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={int(time.time())}'
         short_url = get_short_url(image_url)
         return [TextSendMessage(text=short_url)]
     if msg == '即時雨量':
@@ -132,9 +119,8 @@ def common_reply(source_id, msg):
         target_ts = now - 600  # CWB may delay few minutes, set 10 minutes
         target_ts = target_ts // 1800 * 1800  # truncate to 30 minutes
         target_date = datetime.fromtimestamp(target_ts + 8 * 3600)  # UTC+8
-        image_url = 'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{}.QZT.jpg'.format(
-            datetime.strftime(target_date, '%Y-%m-%d_%H%M')
-        )
+        target_date_str = datetime.strftime(target_date, '%Y-%m-%d_%H%M')
+        image_url = f'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{target_date_str}.QZT.jpg'
         short_url = get_short_url(image_url)
         logging.info(image_url)
         return [TextSendMessage(text=short_url)]
@@ -143,9 +129,8 @@ def common_reply(source_id, msg):
         target_ts = now - 600  # CWB may delay few minutes, set 10 minutes
         target_ts = target_ts // 600 * 600  # truncate to 10 minutes
         target_date = datetime.fromtimestamp(target_ts + 8 * 3600)  # UTC+8
-        image_url = 'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{}.png'.format(
-            datetime.strftime(target_date, '%Y%m%d%H%M')
-        )
+        target_date_str = datetime.strftime(target_date, '%Y%m%d%H%M')
+        image_url = f'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{target_date_str}.png'
         short_url = get_short_url(image_url)
         logging.info(image_url)
         return [TextSendMessage(text=short_url)]
@@ -164,20 +149,13 @@ def common_reply(source_id, msg):
         usdtwd_date = datetime.strptime(mapping['USDTWD']['UTC'], '%Y-%m-%d %H:%M:%S')
         usdtwd_ts = calendar.timegm(usdtwd_date.timetuple())
         usdtwd_date_utc8 = datetime.utcfromtimestamp(usdtwd_ts + 8 * 3600)
-        reply_usd_twd = '1USD = {} TWD\n{}'.format(
-            mapping['USDTWD']['Exrate'],
-            usdtwd_date_utc8
-        )
+        reply_usd_twd = f'1USD = {mapping["USDTWD"]["Exrate"]} TWD\n{usdtwd_date_utc8}'
         usdjpy_date = datetime.strptime(mapping['USDJPY']['UTC'], '%Y-%m-%d %H:%M:%S')
         usdjpy_ts = calendar.timegm(usdjpy_date.timetuple())
         usdjpy_date_utc8 = datetime.utcfromtimestamp(usdjpy_ts + 8 * 3600)
-        reply_usd_jpy = '1USD = {} JPY\n{}'.format(
-            mapping['USDJPY']['Exrate'],
-            usdjpy_date_utc8
-        )
-        reply_jpy_twd = '估計匯率\n1JPY = {} TWD\n以上匯率僅供參考，與當地銀行將會有所出入'.format(
-            mapping['USDTWD']['Exrate'] / mapping['USDJPY']['Exrate'],
-        )
+        reply_usd_jpy = f'1USD = {mapping["USDJPY"]["Exrate"]} JPY\n{usdjpy_date_utc8}'
+        reply_jpy_twd = f'估計匯率\n1JPY = {mapping["USDTWD"]["Exrate"] / mapping["USDJPY"]["Exrate"]} TWD\n' \
+                        f'以上匯率僅供參考，與當地銀行將會有所出入'
         return [
             TextSendMessage(text=reply_usd_twd),
             TextSendMessage(text=reply_usd_jpy),
@@ -236,7 +214,7 @@ def common_reply(source_id, msg):
         )
         return [
             image_message,
-            TextSendMessage(text='{}: {}'.format(card['nameCN'], card['conclusion']))
+            TextSendMessage(text=f'{card["nameCN"]}: {card["conclusion"]}')
         ]
     elif fortune_pattern.search(msg):
         result = fortune()
