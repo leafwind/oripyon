@@ -90,6 +90,7 @@ def callback():
 
 @handler.default()
 def default(event):
+    logging.info('{}'.format(event.message))
     if event.source.type == 'room':
         source_id = event.source.room_id
     elif event.source.type == 'user':
