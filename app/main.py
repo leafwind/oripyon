@@ -97,9 +97,9 @@ def default(event):
     elif event.source.type == 'group':
         source_id = event.source.group_id
         if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336':
-            if event.message.get('type', None) == 'sticker':
-                if event.message.get('packageId', None) == '1394695':
-                    if event.message.get('stickerId', None) == '15335159':
+            if event.message.type == 'sticker':
+                if event.message.packageId == '1394695':
+                    if event.message.stickerId == '15335159':
                         return [TextSendMessage(text='EBB 不要躲出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
     else:
         raise ValueError
