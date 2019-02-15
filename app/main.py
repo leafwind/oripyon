@@ -9,7 +9,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage
+    MessageEvent, TextMessage, TextSendMessage
 )
 
 
@@ -96,6 +96,11 @@ def default(event):
         source_id = event.source.user_id
     elif event.source.type == 'group':
         source_id = event.source.group_id
+        if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336':
+            if event.message.get('type', None) == 'sticker':
+                if event.message.get('packageId', None) == '1394695':
+                    if event.message.get('stickerId', None) == '15335159':
+                        return [TextSendMessage(text='EBB 不要躲出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
     else:
         raise ValueError
     logging.info('{}：{}'.format(GROUP_MAPPING.get(source_id, {'name': source_id}).get('name'), event.message))
