@@ -101,7 +101,8 @@ def default(event):
             if event.message.type == 'sticker':
                 if event.message.package_id == '1394695':
                     if event.message.sticker_id == '15335159':
-                        return [TextSendMessage(text='EBB 不要躲出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        reply = [TextSendMessage(text='EBB 不要躲出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
     else:
         raise ValueError
     logging.info('{}：{}'.format(GROUP_MAPPING.get(source_id, {'name': source_id}).get('name'), event.message))
