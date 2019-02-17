@@ -90,7 +90,7 @@ def callback():
 
 @handler.default()
 def default(event):
-    logging.info('{}'.format(event.message))
+    logging.info(f'{event.message}')
     if event.source.type == 'room':
         source_id = event.source.room_id
     elif event.source.type == 'user':
@@ -117,7 +117,7 @@ def default(event):
                         line_bot_api.reply_message(event.reply_token, reply)
     else:
         raise ValueError
-    logging.info('{}：{}'.format(GROUP_MAPPING.get(source_id, {'name': source_id}).get('name'), event.message))
+    logging.info(f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}：{event.message}")
 
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -128,8 +128,7 @@ def handle_message(event):
     elif event.source.type == 'user':
         source_id = event.source.user_id
         # profile = line_bot_api.get_profile(source_id)
-        # status = '{} 的顯圖：{}, 狀態：{}'.decode('utf-8').format(profile.display_name, profile.picture_url,
-        #                                                    profile.status_message)
+        # status = f'{profile.display_name} 的顯圖：{profile.picture_url}, 狀態：{profile.status_message}'
     elif event.source.type == 'group':  # 群組
         source_id = event.source.group_id
     else:
