@@ -61,16 +61,6 @@ replied_time = {}
 
 def common_reply(source_id, msg):
     now = int(time.time())
-    if msg == last_msg.get(source_id, None):
-        logging.info('偵測到重複，準備推齊')
-        repeated_diff_ts = now - replied_time.get((source_id, msg), 0)
-        if repeated_diff_ts > 600:
-            logging.info(f'{msg} 上次重複已經超過 {repeated_diff_ts} 秒，執行推齊！')
-            replied_time[(source_id, msg)] = now
-            return [TextSendMessage(text=msg)]
-        else:
-            logging.info(f'{msg} 上次重複在 {repeated_diff_ts} 秒內，不推齊')
-    last_msg[source_id] = msg
     msg = msg.lower()
     msg_list = msg.split(' ')
     if help_pattern.search(msg):
@@ -246,4 +236,15 @@ def common_reply(source_id, msg):
             else:
                 result = p['function']()
             return [TextSendMessage(text=result)]
+
+    if msg == last_msg.get(source_id, None):
+        logging.info('偵測到重複，準備推齊')
+        repeated_diff_ts = now - replied_time.get((source_id, msg), 0)
+        if repeated_diff_ts > 600:
+            logging.info(f'{msg} 上次重複已經超過 {repeated_diff_ts} 秒，執行推齊！')
+            replied_time[(source_id, msg)] = now
+            return [TextSendMessage(text=msg)]
+        else:
+            logging.info(f'{msg} 上次重複在 {repeated_diff_ts} 秒內，不推齊')
+    last_msg[source_id] = msg
     return []
