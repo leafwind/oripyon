@@ -80,18 +80,3 @@ def fortune():
         return ans[12]
     else:
         raise ValueError
-
-
-def gurulingpo():
-    s = '''
-*``･*+。
- ｜   `*｡
- ｜     *｡
- ｡∩∧ ∧   *
-+   (･∀･ )*｡+ﾟ咕嚕靈波
-`*｡ ヽ  つ*ﾟ*
- `･+｡*･`ﾟ⊃ +ﾟ
- ☆  ∪~ ｡*ﾟ
- `･+｡*･+ ﾟ
-    '''
-    return s

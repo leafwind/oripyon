@@ -1,21 +1,18 @@
 import re
-import os
-import random
 import time
 import logging
-import calendar
 from datetime import datetime
 
 from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 
-from app.dice import fortune, tarot, nca, choice, gurulingpo
+from app.dice import fortune, tarot, nca, choice
+from app.finance import exchange_rate
+from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help
+from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now
 from app import cwb_weather_predictor, predict_AQI
 from app.predict_code_map import PREDICT_CODE_MAP
-from app import wtf_reasons
-from app.emoji_list import cry_emoji_list
-from app.util import get_short_url, get_exchange_rate
 from taiwan_area_map.query_area import query_area
 
 # equivalent to:
@@ -23,7 +20,11 @@ from taiwan_area_map.query_area import query_area
 fortune_pattern = re.compile(r'運勢')
 tarot_pattern = re.compile(r'塔羅')
 gurulingpo_pattern = re.compile(r'咕嚕靈波')
-help_pattern = re.compile(r'oripyon\s?說明')
+mahoshoujo_pattern = re.compile(r'魔法少女')
+why_pattern = re.compile(r'請問為什麼')
+help_pattern = re.compile(r'/help')
+poor_chinese_pattern = re.compile(r'爛中文')
+qq_pattern = re.compile(r'幫qq', re.IGNORECASE)
 nca_pattern = re.compile(r'nca')
 choice_pattern = re.compile(r"""choice\s?  # choice + 0~1 space
                             \[             # [
@@ -33,26 +34,76 @@ choice_pattern = re.compile(r"""choice\s?  # choice + 0~1 space
                             """, re.VERBOSE | re.IGNORECASE)
 pattern_mapping = [
     {
-        're_obj': fortune_pattern,
+        'cmd': fortune_pattern,
         'type': 'search',
         'function': fortune,
     },
     {
-        're_obj': nca_pattern,
+        'cmd': nca_pattern,
         'type': 'search',
         'function': nca,
     },
     {
-        're_obj': gurulingpo_pattern,
+        'cmd': gurulingpo_pattern,
         'type': 'search',
         'function': gurulingpo
     },
     {
-        're_obj': choice_pattern,
+        'cmd': choice_pattern,
         'type': 'search',
         'function': choice,
         'matched_as_arg': True
-    }
+    },
+    {
+        'cmd': '天氣',
+        'type': 'equal',
+        'function': weather_now
+    },
+    {
+        'cmd': '即時雨量',
+        'type': 'equal',
+        'function': rainfall_now
+    },
+    {
+        'cmd': '雷達',
+        'type': 'equal',
+        'function': radar_now
+    },
+    {
+        'cmd': '空品',
+        'type': 'equal',
+        'function': aqi_now
+    },
+    {
+        'cmd': '匯率',
+        'type': 'equal',
+        'function': exchange_rate
+    },
+    {
+        'cmd': poor_chinese_pattern,
+        'type': 'search',
+        'function': poor_chinese
+    },
+    {
+        'cmd': qq_pattern,
+        'type': 'search',
+        'function': qq
+    },
+    {
+        'cmd': mahoshoujo_pattern,
+        'type': 'search',
+        'function': mahoshoujo
+    },
+    {
+        'cmd': why_pattern,
+        'type': 'search',
+        'function': why
+    },
+    {
+        'cmd': help_pattern,
+        'type': 'search',
+        'function': bot_help
+    },
 ]
 
 last_msg = {}
@@ -63,26 +114,6 @@ def common_reply(source_id, msg):
     now = int(time.time())
     msg = msg.lower()
     msg_list = msg.split(' ')
-    if help_pattern.search(msg):
-        reply = '原始碼請看 https://github.com/leafwind/line_bot'
-        return [TextSendMessage(text=reply)]
-    if '爛中文' in msg:
-        reply = '我覺的台灣人的中文水準以經爛ㄉ很嚴重 大家重來都不重視 因該要在加強 才能越來越利害'
-        return [TextSendMessage(text=reply)]
-    if '幫qq' in msg:
-        reply = f'幫QQ喔 {random.choice(cry_emoji_list)}'
-        return [TextSendMessage(text=reply)]
-    if '魔法少女' in msg:
-        reply = '／人◕ ‿‿ ◕人＼ 僕と契約して、魔法少女になってよ！'
-        return [TextSendMessage(text=reply)]
-    if '請問為什麼' in msg:
-        random.seed(os.urandom(5))
-        reply = f'因為{random.choice(wtf_reasons.reasons)}。'
-        return [TextSendMessage(text=reply)]
-    if msg == '空品':
-        image_url = f'https://taqm.epa.gov.tw/taqm/Chart/AqiMap/map2.aspx?lang=tw&ts={int(time.time() * 1000)}'
-        short_url = get_short_url(image_url)
-        return [TextSendMessage(text=short_url)]
     if '空品預測 ' in msg:
         location = msg_list[1].replace('台', '臺')
         aqi_info = predict_AQI.predict_aqi(location)
@@ -120,57 +151,6 @@ def common_reply(source_id, msg):
                        f'PM10：{aqi_info["PM10"]} PM2.5：{aqi_info["PM25"]}\n'
         reply_messages.append(TextSendMessage(text=f'{aqi_str}'))
         return reply_messages
-    if msg == '天氣':
-        image_url = f'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={int(time.time())}'
-        short_url = get_short_url(image_url)
-        return [TextSendMessage(text=short_url)]
-    if msg == '即時雨量':
-        now = int(time.time())
-        target_ts = now - 600  # CWB may delay few minutes, set 10 minutes
-        target_ts = target_ts // 1800 * 1800  # truncate to 30 minutes
-        target_date = datetime.fromtimestamp(target_ts + 8 * 3600)  # UTC+8
-        target_date_str = datetime.strftime(target_date, '%Y-%m-%d_%H%M')
-        image_url = f'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{target_date_str}.QZT.jpg'
-        short_url = get_short_url(image_url)
-        logging.info(image_url)
-        return [TextSendMessage(text=short_url)]
-    if msg == '雷達':
-        now = int(time.time())
-        target_ts = now - 600  # CWB may delay few minutes, set 10 minutes
-        target_ts = target_ts // 600 * 600  # truncate to 10 minutes
-        target_date = datetime.fromtimestamp(target_ts + 8 * 3600)  # UTC+8
-        target_date_str = datetime.strftime(target_date, '%Y%m%d%H%M')
-        image_url = f'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{target_date_str}.png'
-        short_url = get_short_url(image_url)
-        logging.info(image_url)
-        return [TextSendMessage(text=short_url)]
-    if msg == '匯率':
-        mapping = get_exchange_rate()
-        # {
-        #     "USDTWD": {
-        #         "UTC": "2019-02-02 10:00:10",
-        #         "Exrate": 30.7775
-        #     },
-        #     "USDJPY": {
-        #         "UTC": "2019-02-02 10:00:10",
-        #         "Exrate": 109.49484758
-        #     },
-        # }
-        usdtwd_date = datetime.strptime(mapping['USDTWD']['UTC'], '%Y-%m-%d %H:%M:%S')
-        usdtwd_ts = calendar.timegm(usdtwd_date.timetuple())
-        usdtwd_date_utc8 = datetime.utcfromtimestamp(usdtwd_ts + 8 * 3600)
-        reply_usd_twd = f'1USD = {mapping["USDTWD"]["Exrate"]} TWD\n{usdtwd_date_utc8}'
-        usdjpy_date = datetime.strptime(mapping['USDJPY']['UTC'], '%Y-%m-%d %H:%M:%S')
-        usdjpy_ts = calendar.timegm(usdjpy_date.timetuple())
-        usdjpy_date_utc8 = datetime.utcfromtimestamp(usdjpy_ts + 8 * 3600)
-        reply_usd_jpy = f'1USD = {mapping["USDJPY"]["Exrate"]} JPY\n{usdjpy_date_utc8}'
-        reply_jpy_twd = f'估計匯率\n1JPY = {mapping["USDTWD"]["Exrate"] / mapping["USDJPY"]["Exrate"]} TWD\n' \
-                        f'以上匯率僅供參考，與當地銀行將會有所出入'
-        return [
-            TextSendMessage(text=reply_usd_twd),
-            TextSendMessage(text=reply_usd_jpy),
-            TextSendMessage(text=reply_jpy_twd)
-        ]
     if msg_list[0] == '天氣':
         location = msg_list[1].encode('utf-8').replace('台', '臺')
         predicted_result = cwb_weather_predictor.predict(location)
@@ -226,16 +206,18 @@ def common_reply(source_id, msg):
         ]
     for p in pattern_mapping:
         if p['type'] == 'equal':
-            pass
-        elif p['type'] == 'search':
-            match = p['re_obj'].search(msg)
-            if not match:
-                continue
-            if p.get('matched_as_arg', False):
-                result = p['function'](match.group(0))
-            else:
+            if msg == p['cmd']:
                 result = p['function']()
-            return [TextSendMessage(text=result)]
+                return [TextSendMessage(text=result)]
+
+        elif p['type'] == 'search':
+            match = p['cmd'].search(msg)
+            if match:
+                if p.get('matched_as_arg', False):
+                    result = p['function'](match.group(0))
+                else:
+                    result = p['function']()
+                return [TextSendMessage(text=result)]
 
     if msg == last_msg.get(source_id, None):
         logging.info('偵測到重複，準備推齊')
