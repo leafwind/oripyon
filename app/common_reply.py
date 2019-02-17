@@ -241,7 +241,7 @@ def common_reply(source_id, msg):
             match = p['re_obj'].search(msg)
             if not match:
                 continue
-            if p['matched_as_arg']:
+            if p.get('matched_as_arg', False):
                 result = p['function'](match.group(0))
             else:
                 result = p['function']()
