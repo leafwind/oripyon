@@ -31,7 +31,8 @@ def nca():
 def choice(matched_msg):
     options_str = matched_msg.split('[')[1][:-1]
     options = options_str.split(',')
-    return random.choice(options)
+    result = f'自訂選項：[{",".join(options)}] → {random.choice(options)}'
+    return result
 
 def fortune():
     dice = random.randint(1, 1000)  # 1 <= N <= 1000
