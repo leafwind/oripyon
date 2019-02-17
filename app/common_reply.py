@@ -132,10 +132,8 @@ def build_complex_msg(result):
     complex_msg = []
     for msg_type, msg in result:
         if msg_type == 'text':
-            logging.info(f'trying to add {msg_type}:{msg} to final msg')
             complex_msg.append(TextSendMessage(text=msg))
         elif msg_type == 'image':
-            logging.info(f'trying to add {msg_type}:{msg} to final msg')
             complex_msg.append(ImageSendMessage(
                 original_content_url=msg,
                 preview_image_url=msg,
