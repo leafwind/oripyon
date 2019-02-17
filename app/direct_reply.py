@@ -5,7 +5,7 @@ from app.emoji_list import cry_emoji_list
 
 
 def bot_help():
-    return '原始碼請看 https://github.com/leafwind/line_bot'
+    return '說明網頁 https://oripyon.weebly.com\n原始碼 https://github.com/leafwind/line_bot'
 
 
 def poor_chinese():
