@@ -6,7 +6,7 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 
-from app.dice import fortune, tarot, nca, choice
+from app.dice import fortune, tarot, nca, choice, coc_7e_basic
 from app.finance import exchange_rate
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help
 from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status
@@ -16,6 +16,14 @@ from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aq
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
 fortune_pattern = re.compile(r'運勢')
 tarot_pattern = re.compile(r'塔羅')
+coc_7e_basic_pattern = re.compile(
+    r"""^cc            # start with cc
+        (\(-?[12]\))?  # optional (n), -2 <= n <= 2
+        <=\d+
+    """, re.VERBOSE | re.IGNORECASE)
+coc_7e_skill_pattern = re.compile(
+    r"""^cc>\d+\s?
+    """, re.VERBOSE | re.IGNORECASE)
 gurulingpo_pattern = re.compile(r'咕嚕靈波')
 mahoshoujo_pattern = re.compile(r'魔法少女')
 why_pattern = re.compile(r'請問為什麼')
@@ -25,12 +33,13 @@ qq_pattern = re.compile(r'幫qq', re.IGNORECASE)
 nca_pattern = re.compile(r'nca', re.IGNORECASE)
 aqi_predict_pattern = re.compile(r'^空品預測\s+.+')
 aqi_status_pattern = re.compile(r'^空品現況\s+.+')
-choice_pattern = re.compile(r"""choice\s?  # choice + 0~1 space
-                            \[             # [
-                            [^,\[\]]+      # not start with , [, ] (at least once)
-                            (,[^,\[\]]+)+  # plus dot (at least once)
-                            ]              # ]
-                            """, re.VERBOSE | re.IGNORECASE)
+choice_pattern = re.compile(
+    r"""choice\s?  # choice + 0~1 space
+    \[             # [
+    [^,\[\]]+      # not start with , [, ] (at least once)
+    (,[^,\[\]]+)+  # plus dot (at least once)
+    ]              # ]
+    """, re.VERBOSE | re.IGNORECASE)
 pattern_mapping = [
     {
         'cmd': fortune_pattern,
@@ -52,6 +61,12 @@ pattern_mapping = [
         'cmd': choice_pattern,
         'type': 'search',
         'function': choice,
+        'matched_as_arg': True
+    },
+    {
+        'cmd': coc_7e_basic_pattern,
+        'type': 'search',
+        'function': coc_7e_basic,
         'matched_as_arg': True
     },
     {

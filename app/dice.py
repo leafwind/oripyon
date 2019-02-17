@@ -14,8 +14,45 @@ def tarot():
     ]
 
 
+def coc_7e_basic(msg):
+    d100 = random.randint(1, 100)  # 1 <= N <= 100
+    condition = int(msg.split('<=')[1])
+    result = f'克蘇魯的呼喚七版：(1D100 <= {condition}) 初始結果 → {d100}\n'
+
+    if d100 == 1:
+        final_stat = ' → ＼大★成★功／'
+    elif d100 == 100:
+        final_stat = ' → 大失敗，すばらしく運がないな、君は。'
+    elif d100 <= condition // 5:
+        final_stat = ' → 極限成功'
+    elif d100 <= condition // 2:
+        final_stat = ' → 困難成功'
+    elif d100 <= condition:
+        final_stat = ' → 一般成功'
+    elif d100 > condition:
+        final_stat = ' → 失敗'
+    else:
+        raise ValueError(f'invalid d100 range: {d100}')
+
+    if '(' in msg:
+        extra = int(msg.split(')')[0].split('(')[1])
+        if -2 <= extra <= 2 and extra != 0:
+            tens_digit = d100 // 10
+            abs_extra = abs(extra)
+            extra_dices = [random.randint(1, 10) for _ in range(abs_extra)]
+            if extra < 0:
+                extra_dice_desc = '懲罰骰取高'
+                tens_digit = max(tens_digit, max(extra_dices))
+            else:
+                extra_dice_desc = '獎勵骰取低'
+                tens_digit = min(tens_digit, min(extra_dices))
+            final_dice = tens_digit + d100 % 10
+            result += f'→ 十位數加骰為{"、".join(extra_dices)}，{extra_dice_desc} → 最終值({final_dice})'
+    result += final_stat
+
+
 def nca():
-    n = random.randint(1, 10)  # 1 <= N <= 10
+    d10 = random.randint(1, 10)  # 1 <= N <= 10
     desc_str_map = {
         1: '大失敗\n命中包含自己的友方，由被攻擊方選擇被命中的部位。',
         2: '失敗\n未命中',
@@ -28,7 +65,7 @@ def nca():
         9: '成功\n命中腕部。\n如果該部位全部件損壞，由攻擊者選擇其他任意部位。',
         10: '成功\n命中頭部。\n如果該部位全部件損壞，由攻擊者選擇其他任意部位。',
     }
-    return f'死靈年代記之永遠的後日談：[{n}]  → {desc_str_map[n]}'
+    return f'死靈年代記之永遠的後日談：[{d10}]  → {desc_str_map[d10]}'
 
 
 def choice(matched_msg):
