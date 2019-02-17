@@ -47,7 +47,7 @@ def coc_7e_basic(msg):
                 extra_dice_desc = '獎勵骰取低'
                 tens_digit = min(tens_digit, min(extra_dices))
             final_dice = tens_digit + d100 % 10
-            result += f'→ 十位數加骰為{"、".join(extra_dices)}，{extra_dice_desc} → 最終值({final_dice})'
+            result += f'→ 十位數加骰為{"、".join([str(d) for d in extra_dices])}，{extra_dice_desc} → 最終值({str(final_dice)})'
     result += final_stat
     return result
 
