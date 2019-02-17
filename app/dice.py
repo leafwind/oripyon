@@ -17,7 +17,7 @@ def tarot():
 def coc_7e_basic(msg):
     d100 = random.randint(1, 100)  # 1 <= N <= 100
     condition = int(msg.split('<=')[1])
-    result = f'克蘇魯的呼喚七版：(1D100 <= {condition}) 初始結果 → {d100}\n'
+    result = f'克蘇魯的呼喚七版：(1D100<={condition}) 初始結果 → {d100}\n'
 
     final_dice = d100
     if '(' in msg:
@@ -34,7 +34,7 @@ def coc_7e_basic(msg):
                 tens_digit = min(tens_digit, min(extra_dices))
             final_dice = tens_digit * 10 + d100 % 10
             result += f'→ 十位數加骰為{"、".join([str(d*10) for d in extra_dices])}，{extra_dice_desc} → 最終值({str(final_dice)})'
-        
+
     if final_dice == 1:
         final_stat = ' → ＼大★成★功／'
     elif final_dice == 100:
