@@ -94,3 +94,4 @@ def gurulingpo():
  ☆  ∪~ ｡*ﾟ
  `･+｡*･+ ﾟ
     '''
+    return s
