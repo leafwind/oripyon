@@ -19,10 +19,10 @@ tarot_pattern = re.compile(r'塔羅')
 gurulingpo_pattern = re.compile(r'咕嚕靈波')
 mahoshoujo_pattern = re.compile(r'魔法少女')
 why_pattern = re.compile(r'請問為什麼')
-help_pattern = re.compile(r'/help')
+help_pattern = re.compile(r'/help', re.IGNORECASE)
 poor_chinese_pattern = re.compile(r'爛中文')
 qq_pattern = re.compile(r'幫qq', re.IGNORECASE)
-nca_pattern = re.compile(r'nca')
+nca_pattern = re.compile(r'nca', re.IGNORECASE)
 aqi_predict_pattern = re.compile(r'^空品預測\s+.+')
 aqi_status_pattern = re.compile(r'^空品現況\s+.+')
 choice_pattern = re.compile(r"""choice\s?  # choice + 0~1 space
@@ -43,9 +43,9 @@ pattern_mapping = [
         'function': nca,
     },
     {
-        'cmd': gurulingpo_pattern,
+        'cmd': tarot_pattern,
         'type': 'search',
-        'function': gurulingpo
+        'function': tarot,
     },
     {
         'cmd': choice_pattern,
@@ -107,6 +107,11 @@ pattern_mapping = [
         'function': mahoshoujo
     },
     {
+        'cmd': gurulingpo_pattern,
+        'type': 'search',
+        'function': gurulingpo
+    },
+    {
         'cmd': why_pattern,
         'type': 'search',
         'function': why
@@ -139,17 +144,6 @@ def build_complex_msg(result):
 
 def common_reply(source_id, msg):
     now = int(time.time())
-    msg = msg.lower()
-    if tarot_pattern.search(msg):
-        card = tarot()
-        image_message = ImageSendMessage(
-            original_content_url=card['url'],
-            preview_image_url=card['url']
-        )
-        return [
-            image_message,
-            TextSendMessage(text=f'{card["nameCN"]}: {card["conclusion"]}')
-        ]
     for p in pattern_mapping:
         if p['type'] == 'equal':
             if msg == p['cmd']:

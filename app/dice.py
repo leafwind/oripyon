@@ -8,7 +8,10 @@ tarot_cards = json.load(open('app/tarot.json'))
 def tarot():
     card = random.choice(tarot_cards)
     logging.info('%s: %s', card['nameCN'], card['url'])
-    return card
+    return [
+        ('image', card['url']),
+        ('text', f'{card["nameCN"]}: {card["conclusion"]}')
+    ]
 
 
 def nca():
