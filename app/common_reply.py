@@ -46,6 +46,7 @@ pattern_mapping = [
         'cmd': tarot_pattern,
         'type': 'search',
         'function': tarot,
+        'multi_type_output': True
     },
     {
         'cmd': choice_pattern,
