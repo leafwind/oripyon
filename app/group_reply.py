@@ -197,7 +197,7 @@ def group_reply_nier_sino_alice(msg):
         replies = ['07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼']
     elif '素材' == msg:
         replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
-    elif msg.startswith('ID對照表'):
+    elif msg.startswith('id對照表'):
         replies = ['\n'.join(id_list)]
     else:
         pass
