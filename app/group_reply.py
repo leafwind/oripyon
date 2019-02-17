@@ -158,6 +158,7 @@ def group_reply_nier_sino_alice(msg):
         '微風輕語(微笑) 519184032',
         '我才不告訴你累(陳俊傑) 494857518',
         '群青(盼盼) 243719941',
+        '獄剎(呂立生) 284290895',
     ]
     replies = None
     if '我的' in msg or '誰的' in msg:
