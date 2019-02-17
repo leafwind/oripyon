@@ -49,6 +49,7 @@ def coc_7e_basic(msg):
             final_dice = tens_digit + d100 % 10
             result += f'→ 十位數加骰為{"、".join(extra_dices)}，{extra_dice_desc} → 最終值({final_dice})'
     result += final_stat
+    return result
 
 
 def nca():
