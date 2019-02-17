@@ -10,7 +10,7 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 
-from app.dice import fortune, tarot, nca
+from app.dice import fortune, tarot, nca, choice
 from app import cwb_weather_predictor, predict_AQI
 from app.predict_code_map import PREDICT_CODE_MAP
 from app import wtf_reasons
@@ -24,6 +24,7 @@ fortune_pattern = re.compile('運勢')
 tarot_pattern = re.compile('塔羅')
 gurulingpo_pattern = re.compile('咕嚕靈波')
 help_pattern = re.compile('oripyon\s?說明')
+choice_pattern = re.compile(r'choice\s?\[[^,\[\]]+(,[^,\[\]]+)+]')  # choice
 gurulingpo = '''
 *``･*+。
  ｜   `*｡
@@ -216,11 +217,15 @@ def common_reply(source_id, msg):
             image_message,
             TextSendMessage(text=f'{card["nameCN"]}: {card["conclusion"]}')
         ]
-    elif fortune_pattern.search(msg):
+    if fortune_pattern.search(msg):
         result = fortune()
         return [TextSendMessage(text=result)]
-    elif msg.startswith('nca'):
+    if msg.startswith('nca'):
         result = nca()
+        return [TextSendMessage(text=result)]
+    match = choice_pattern.search(msg)
+    if match:
+        result = choice(match.group(0))
         return [TextSendMessage(text=result)]
     else:
         return []

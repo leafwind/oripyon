@@ -28,6 +28,11 @@ def nca():
     return f'死靈年代記之永遠的後日談：[{n}]  → {desc_str_map[n]}'
 
 
+def choice(matched_msg):
+    options_str = matched_msg.split('[')[1][:-1]
+    options = options_str.split(',')
+    return random.choice(options)
+
 def fortune():
     dice = random.randint(1, 1000)  # 1 <= N <= 1000
     ans = [
