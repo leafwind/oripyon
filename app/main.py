@@ -133,8 +133,7 @@ def handle_message(event):
     elif event.source.type == 'group':  # 群組
         source_id = event.source.group_id
     else:
-        logging.error(f" unknown event.source.type: {event.source.type}")
-        raise ValueError
+        raise ValueError(f" unknown event.source.type: {event.source.type}")
     logging.info(f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}：{event.message.text}")
     make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
 

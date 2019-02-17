@@ -2,6 +2,8 @@ import logging
 import time
 from datetime import datetime
 from app.util import get_short_url
+from app import predict_AQI
+from taiwan_area_map.query_area import query_area
 
 
 def weather_now():
@@ -38,6 +40,49 @@ def aqi_now():
     image_url = f'https://taqm.epa.gov.tw/taqm/Chart/AqiMap/map2.aspx?lang=tw&ts={int(time.time() * 1000)}'
     short_url = get_short_url(image_url)
     return short_url
+
+
+def aqi_predict(msg):
+    msg_list = msg.split(' ')
+    location = msg_list[1].replace('台', '臺')
+    aqi_info = predict_AQI.predict_aqi(location)
+    if not aqi_info:
+        return '查無資料'
+
+    predict_time = datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時')
+    target_time = datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d')
+    aqi_str = f'{aqi_info["area"]}區域 ' \
+              f'{predict_time} 預測 {target_time}日\n' \
+              f'AQI：{aqi_info["AQI"]}\n狀況：{aqi_info["status"]}\n' \
+              f'主要污染源：{aqi_info["major_pollutant"]}'
+    return aqi_str
+
+
+def aqi_status(msg):
+    msg_list = msg.split(' ')
+    location = msg_list[1].replace('台', '臺')
+    area_list = query_area(location)
+    if not area_list:
+        return [('text', '查無資料')]
+    county_list = []
+    for area in area_list:
+        if area[1] not in county_list:
+            county_list.append(area[1])
+    if len(county_list) > 1:
+        return [('text', f'指定的地區有多個可能，請問你指的是哪個縣市？{county_list}')]
+
+    aqi_infos, publish_ts = predict_AQI.query_aqi(county_list[0])
+    if not aqi_infos:
+        return [('text', '查無資料')]
+    date_hr = datetime.fromtimestamp(publish_ts + 8 * 3600).strftime('%m/%d %H 時')
+    reply_messages = [('text', f'{county_list[0]} {date_hr}')]
+    aqi_str = ''
+    for aqi_info in aqi_infos:
+        aqi_str += f'{aqi_info["site_name"]} AQI：{aqi_info["AQI"]} ' \
+                   f'狀況：{aqi_info["status"]} 主要污染源：{aqi_info["pollutant"]} ' \
+                   f'PM10：{aqi_info["PM10"]} PM2.5：{aqi_info["PM25"]}\n'
+    reply_messages.append(('text', f'{aqi_str}'))
+    return reply_messages
 
 
 def weather():

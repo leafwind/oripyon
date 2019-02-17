@@ -1,7 +1,6 @@
 import re
 import time
 import logging
-from datetime import datetime
 
 from linebot.models import (
     TextSendMessage, ImageSendMessage
@@ -10,10 +9,8 @@ from linebot.models import (
 from app.dice import fortune, tarot, nca, choice
 from app.finance import exchange_rate
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help
-from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now
-from app import predict_AQI
+from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status
 
-from taiwan_area_map.query_area import query_area
 
 # equivalent to:
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
@@ -26,6 +23,8 @@ help_pattern = re.compile(r'/help')
 poor_chinese_pattern = re.compile(r'爛中文')
 qq_pattern = re.compile(r'幫qq', re.IGNORECASE)
 nca_pattern = re.compile(r'nca')
+aqi_predict_pattern = re.compile(r'^空品預測\s+.+')
+aqi_status_pattern = re.compile(r'^空品現況\s+.+')
 choice_pattern = re.compile(r"""choice\s?  # choice + 0~1 space
                             \[             # [
                             [^,\[\]]+      # not start with , [, ] (at least once)
@@ -75,6 +74,19 @@ pattern_mapping = [
         'function': aqi_now
     },
     {
+        'cmd': aqi_predict_pattern,
+        'type': 'search',
+        'function': aqi_predict,
+        'matched_as_arg': True
+    },
+    {
+        'cmd': aqi_status_pattern,
+        'type': 'search',
+        'function': aqi_status,
+        'matched_as_arg': True,
+        'multi_type_output': True
+    },
+    {
         'cmd': '匯率',
         'type': 'equal',
         'function': exchange_rate
@@ -110,47 +122,24 @@ last_msg = {}
 replied_time = {}
 
 
+def build_complex_msg(result):
+    complex_msg = []
+    for msg_type, msg in result:
+        if msg_type == 'text':
+            complex_msg.append(TextSendMessage(text=msg))
+        elif msg_type == 'image':
+            complex_msg.append(ImageSendMessage(
+                original_content_url=msg,
+                preview_image_url=msg,
+            ))
+        else:
+            raise ValueError(f" unknown msg_type: {msg_type}")
+    return complex_msg
+
+
 def common_reply(source_id, msg):
     now = int(time.time())
     msg = msg.lower()
-    msg_list = msg.split(' ')
-    if '空品預測 ' in msg:
-        location = msg_list[1].replace('台', '臺')
-        aqi_info = predict_AQI.predict_aqi(location)
-        if not aqi_info:
-            return [TextSendMessage(text='查無資料')]
-
-        predict_time = datetime.fromtimestamp(aqi_info['publish_ts'] + 8 * 3600).strftime('%m/%d %H 時')
-        target_time = datetime.fromtimestamp(aqi_info['forecast_ts'] + 8 * 3600).strftime('%m/%d')
-        aqi_str = f'{aqi_info["area"]}區域 ' \
-                  f'{predict_time} 預測 {target_time}日\n' \
-                  f'AQI：{aqi_info["AQI"]}\n狀況：{aqi_info["status"]}\n' \
-                  f'主要污染源：{aqi_info["major_pollutant"]}'
-        return [TextSendMessage(text=aqi_str)]
-    if '空品現況 ' in msg:
-        location = msg_list[1].replace('台', '臺')
-        area_list = query_area(location)
-        if not area_list:
-            return [TextSendMessage(text='查無資料')]
-        county_list = []
-        for area in area_list:
-            if area[1] not in county_list:
-                county_list.append(area[1])
-        if len(county_list) > 1:
-            return [TextSendMessage(text=f'指定的地區有多個可能，請問你指的是哪個縣市？{county_list}')]
-
-        aqi_infos, publish_ts = predict_AQI.query_aqi(county_list[0])
-        if not aqi_infos:
-            return [TextSendMessage(text='查無資料')]
-        date_hr = datetime.fromtimestamp(publish_ts + 8 * 3600).strftime('%m/%d %H 時')
-        reply_messages = [TextSendMessage(text=f'{county_list[0]} {date_hr}')]
-        aqi_str = ''
-        for aqi_info in aqi_infos:
-            aqi_str += f'{aqi_info["site_name"]} AQI：{aqi_info["AQI"]} ' \
-                       f'狀況：{aqi_info["status"]} 主要污染源：{aqi_info["pollutant"]} ' \
-                       f'PM10：{aqi_info["PM10"]} PM2.5：{aqi_info["PM25"]}\n'
-        reply_messages.append(TextSendMessage(text=f'{aqi_str}'))
-        return reply_messages
     if tarot_pattern.search(msg):
         card = tarot()
         image_message = ImageSendMessage(
@@ -165,7 +154,10 @@ def common_reply(source_id, msg):
         if p['type'] == 'equal':
             if msg == p['cmd']:
                 result = p['function']()
-                return [TextSendMessage(text=result)]
+                if p.get('multi_type_output', False):
+                    return build_complex_msg(result)
+                else:
+                    return [TextSendMessage(text=result)]
 
         elif p['type'] == 'search':
             match = p['cmd'].search(msg)
@@ -174,7 +166,12 @@ def common_reply(source_id, msg):
                     result = p['function'](match.group(0))
                 else:
                     result = p['function']()
-                return [TextSendMessage(text=result)]
+                if p.get('multi_type_output', False):
+                    return build_complex_msg(result)
+                else:
+                    return [TextSendMessage(text=result)]
+        else:
+            raise ValueError(f" unknown pattern type: {p['type']}")
 
     if msg == last_msg.get(source_id, None):
         logging.info('偵測到重複，準備推齊')
