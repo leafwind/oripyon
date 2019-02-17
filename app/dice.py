@@ -34,6 +34,7 @@ def choice(matched_msg):
     result = f'自訂選項：[{",".join(options)}] → {random.choice(options)}'
     return result
 
+
 def fortune():
     dice = random.randint(1, 1000)  # 1 <= N <= 1000
     ans = [
@@ -79,3 +80,17 @@ def fortune():
         return ans[12]
     else:
         raise ValueError
+
+
+def gurulingpo():
+    s = '''
+*``･*+。
+ ｜   `*｡
+ ｜     *｡
+ ｡∩∧ ∧   *
++   (･∀･ )*｡+ﾟ咕嚕靈波
+`*｡ ヽ  つ*ﾟ*
+ `･+｡*･`ﾟ⊃ +ﾟ
+ ☆  ∪~ ｡*ﾟ
+ `･+｡*･+ ﾟ
+    '''

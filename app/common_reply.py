@@ -10,7 +10,7 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 
-from app.dice import fortune, tarot, nca, choice
+from app.dice import fortune, tarot, nca, choice, gurulingpo
 from app import cwb_weather_predictor, predict_AQI
 from app.predict_code_map import PREDICT_CODE_MAP
 from app import wtf_reasons
@@ -20,22 +20,41 @@ from taiwan_area_map.query_area import query_area
 
 # equivalent to:
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
-fortune_pattern = re.compile('運勢')
-tarot_pattern = re.compile('塔羅')
-gurulingpo_pattern = re.compile('咕嚕靈波')
-help_pattern = re.compile('oripyon\s?說明')
-choice_pattern = re.compile(r'choice\s?\[[^,\[\]]+(,[^,\[\]]+)+]')  # choice
-gurulingpo = '''
-*``･*+。
- ｜   `*｡
- ｜     *｡
- ｡∩∧ ∧   *
-+   (･∀･ )*｡+ﾟ咕嚕靈波
-`*｡ ヽ  つ*ﾟ*
- `･+｡*･`ﾟ⊃ +ﾟ
- ☆  ∪~ ｡*ﾟ
- `･+｡*･+ ﾟ
-'''
+fortune_pattern = re.compile(r'運勢')
+tarot_pattern = re.compile(r'塔羅')
+gurulingpo_pattern = re.compile(r'咕嚕靈波')
+help_pattern = re.compile(r'oripyon\s?說明')
+nca_pattern = re.compile(r'nca')
+choice_pattern = re.compile(r"""choice\s?  # choice + 0~1 space
+                            \[             # [
+                            [^,\[\]]+      # not start with , [, ] (at least once)
+                            (,[^,\[\]]+)+  # plus dot (at least once)
+                            ]              # ]
+                            """, re.VERBOSE | re.IGNORECASE)
+pattern_mapping = [
+    {
+        're_obj': fortune_pattern,
+        'type': 'search',
+        'function': fortune,
+    },
+    {
+        're_obj': nca_pattern,
+        'type': 'search',
+        'function': nca,
+    },
+    {
+        're_obj': gurulingpo_pattern,
+        'type': 'search',
+        'function': gurulingpo
+    },
+    {
+        're_obj': choice_pattern,
+        'type': 'search',
+        'function': choice,
+        'matched_as_arg': True
+    }
+]
+
 last_msg = {}
 replied_time = {}
 
@@ -205,8 +224,6 @@ def common_reply(source_id, msg):
             return [TextSendMessage(text='查無資料')]
         reply = return_str
         return [TextSendMessage(text=reply)]
-    if gurulingpo_pattern.search(msg):
-        return [TextSendMessage(text=gurulingpo)]
     if tarot_pattern.search(msg):
         card = tarot()
         image_message = ImageSendMessage(
@@ -217,15 +234,16 @@ def common_reply(source_id, msg):
             image_message,
             TextSendMessage(text=f'{card["nameCN"]}: {card["conclusion"]}')
         ]
-    if fortune_pattern.search(msg):
-        result = fortune()
-        return [TextSendMessage(text=result)]
-    if msg.startswith('nca'):
-        result = nca()
-        return [TextSendMessage(text=result)]
-    match = choice_pattern.search(msg)
-    if match:
-        result = choice(match.group(0))
-        return [TextSendMessage(text=result)]
-    else:
-        return []
+    for p in pattern_mapping:
+        if p['type'] == 'equal':
+            pass
+        elif p['type'] == 'search':
+            match = p['re_obj'].search(msg)
+            if not match:
+                continue
+            if p['matched_as_arg']:
+                result = p['function'](match.group(0))
+            else:
+                result = p['function']()
+            return [TextSendMessage(text=result)]
+    return []
