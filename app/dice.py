@@ -19,21 +19,7 @@ def coc_7e_basic(msg):
     condition = int(msg.split('<=')[1])
     result = f'克蘇魯的呼喚七版：(1D100 <= {condition}) 初始結果 → {d100}\n'
 
-    if d100 == 1:
-        final_stat = ' → ＼大★成★功／'
-    elif d100 == 100:
-        final_stat = ' → 大失敗，すばらしく運がないな、君は。'
-    elif d100 <= condition // 5:
-        final_stat = ' → 極限成功'
-    elif d100 <= condition // 2:
-        final_stat = ' → 困難成功'
-    elif d100 <= condition:
-        final_stat = ' → 一般成功'
-    elif d100 > condition:
-        final_stat = ' → 失敗'
-    else:
-        raise ValueError(f'invalid d100 range: {d100}')
-
+    final_dice = d100
     if '(' in msg:
         extra = int(msg.split(')')[0].split('(')[1])
         if -2 <= extra <= 2 and extra != 0:
@@ -48,6 +34,21 @@ def coc_7e_basic(msg):
                 tens_digit = min(tens_digit, min(extra_dices))
             final_dice = tens_digit * 10 + d100 % 10
             result += f'→ 十位數加骰為{"、".join([str(d*10) for d in extra_dices])}，{extra_dice_desc} → 最終值({str(final_dice)})'
+        
+    if final_dice == 1:
+        final_stat = ' → ＼大★成★功／'
+    elif final_dice == 100:
+        final_stat = ' → 大失敗，すばらしく運がないな、君は。'
+    elif final_dice <= condition // 5:
+        final_stat = ' → 極限成功'
+    elif final_dice <= condition // 2:
+        final_stat = ' → 困難成功'
+    elif final_dice <= condition:
+        final_stat = ' → 一般成功'
+    elif final_dice > condition:
+        final_stat = ' → 失敗'
+    else:
+        raise ValueError(f'invalid final_dice range: {final_dice}')
     result += final_stat
     return result
 
