@@ -133,12 +133,13 @@ def handle_message(event):
     elif event.source.type == 'group':  # 群組
         source_id = event.source.group_id
     else:
+        logging.error(f" unknown event.source.type: {event.source.type}")
         raise ValueError
+    logging.info(f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}：{event.message.text}")
     make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
 
 
 def make_reply(_source_type, source_id, msg, reply_token=None):
-    logging.info('{}：{}'.format(GROUP_MAPPING.get(source_id, {'name': source_id}).get('name'), msg))
     reply = common_reply(source_id, msg)
     if reply:  # has reply, no need to search group reply
         line_bot_api.reply_message(reply_token, reply)
