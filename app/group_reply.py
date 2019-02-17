@@ -134,6 +134,7 @@ def group_reply_taiwan_sino_alice(msg):
 
 
 def group_reply_nier_sino_alice(msg):
+    msg = msg.lower()
     wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB', '初雪', '鈴']
     unwanted_list = ['生哥', '阿生']
     male_list = ['生哥', '芙芙', '性迪', '阿星', '肉肉', '肉凱', '糕連']
