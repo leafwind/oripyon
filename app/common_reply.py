@@ -11,8 +11,8 @@ from app.dice import fortune, tarot, nca, choice
 from app.finance import exchange_rate
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help
 from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now
-from app import cwb_weather_predictor, predict_AQI
-from app.predict_code_map import PREDICT_CODE_MAP
+from app import predict_AQI
+
 from taiwan_area_map.query_area import query_area
 
 # equivalent to:

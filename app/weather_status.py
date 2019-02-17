@@ -44,6 +44,8 @@ def weather():
     # deprecated function
     pass
     '''
+    from app.predict_code_map import PREDICT_CODE_MAP
+    from app import cwb_weather_predictor
     if msg_list[0] == '天氣':
         location = msg_list[1].encode('utf-8').replace('台', '臺')
         predicted_result = cwb_weather_predictor.predict(location)
