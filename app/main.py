@@ -151,6 +151,8 @@ def handle_message(event):
         raise ValueError
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+    replies = [TextSendMessage(text=f'安安/ 感謝邀請我進來～')]
+    line_bot_api.reply_message(event.reply_token, replies)
 
 
 @handler.add(LeaveEvent)
@@ -165,6 +167,8 @@ def handle_message(event):
         raise ValueError
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+    replies = [TextSendMessage(text=f'有緣再見～')]
+    line_bot_api.reply_message(event.reply_token, replies)
 
 
 @handler.add(MemberJoinEvent)
