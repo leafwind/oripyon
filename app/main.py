@@ -112,7 +112,7 @@ def default(event):
         source_id = event.source.user_id
     elif event.source.type == 'group':
         source_id = event.source.group_id
-        if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336':
+        if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336' and event.source.user_id == 'U2b7c3a71683ab247b08b1f7845e20df7':
             if event.message.type == 'sticker':
                 if event.message.package_id == '1394695':
                     if event.message.sticker_id == '15335159':
