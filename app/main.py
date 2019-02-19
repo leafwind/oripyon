@@ -92,7 +92,7 @@ def callback():
 
     # handle Web hook body
     try:
-        logging.info('body: %s', body)
+        # logging.info('body: %s', body)
         handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
