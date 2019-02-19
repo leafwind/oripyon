@@ -182,7 +182,11 @@ def handle_message(event):
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}")
 
     # 可怕的象奶儀式
-    if source_id not in ['Cf794cf7dc1970c3fba9122673cf3dcde', 'C498a6c669b4648d8dcb807415554fda1']:
+    if source_id not in [
+        'C770afed112311f3f980291e1e488e0ef',
+        'Cf794cf7dc1970c3fba9122673cf3dcde',
+        'C498a6c669b4648d8dcb807415554fda1'
+    ]:
         return
     imgur_url = 'https://i.imgur.com/'
     replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
