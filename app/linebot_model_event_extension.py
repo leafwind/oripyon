@@ -34,7 +34,6 @@ class MemberLeaveEvent(Event):
     https://developers.line.biz/en/reference/messaging-api/#member-left-event
 
     Event object for when a user leaves a group or room that the bot is in.
-    You can reply to join events.
     """
 
     def __init__(self, timestamp=None, source=None, reply_token=None, left=None, **kwargs):

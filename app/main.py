@@ -208,12 +208,10 @@ def handle_message(event):
     else:
         raise ValueError
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} 有人退群囉")
     # user_ids = [m.user_id for m in event.joined.members]
     # user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
     # replies = [TextSendMessage(text=f'群友{",".join(user_names)}失去了夢想。')]
-    replies = [TextSendMessage(text=f'一位群友失去了夢想。')]
-    line_bot_api.reply_message(event.reply_token, replies)
 
 
 @handler.add(MessageEvent, message=TextMessage)
