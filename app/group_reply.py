@@ -218,6 +218,13 @@ def group_reply_luna(msg):
 def group_reply_working(_msg):
     return
 
+    
+def group_reply_mao_test(msg):
+    if '歡迎儀式' in msg:
+        imgurUrl = 'https://i.imgur.com/'
+        repliesImg = ['cLD5pX1.jpg','0dpXilD.jpg','kuHrYI6.jpg']
+        replies = [ImageSendMessage(original_content_url=imgurUrl+r, preview_image_url=imgurUrl+r,) for r in repliesImg ]
+        replies.append(TextSendMessage(text='新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+        return replies
+    return 
 
-def group_reply_mao_test(_msg):
-    return

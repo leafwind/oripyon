@@ -3,7 +3,7 @@ import json
 import logging
 import os
 
-tarot_cards = json.load(open('app/tarot.json'))
+tarot_cards = json.load(open('app/tarot.json',encoding='utf8'))
 
 
 def tarot():

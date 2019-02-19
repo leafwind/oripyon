@@ -65,8 +65,11 @@ GROUP_MAPPING = {
     'Cf794cf7dc1970c3fba9122673cf3dcde': {
         'name': '魔王城測試',
         'function': group_reply_mao_test,
+    },
+    'C498a6c669b4648d8dcb807415554fda1': {
+        'name': 'sslin test',
+        'function': group_reply_mao_test,
     }
-
 }
 
 
