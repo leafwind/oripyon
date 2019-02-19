@@ -10,7 +10,7 @@ class MemberJoinEvent(Event):
     You can reply to join events.
     """
 
-    def __init__(self, timestamp=None, source=None, reply_token=None, **kwargs):
+    def __init__(self, timestamp=None, source=None, reply_token=None, joined=None, **kwargs):
         """__init__ method.
 
         :param long timestamp: Time of the event in milliseconds
@@ -25,6 +25,9 @@ class MemberJoinEvent(Event):
 
         self.type = 'memberJoined'
         self.reply_token = reply_token
+        self.joined = self.get_or_new_from_json_dict_with_types(
+            joined, {}
+        )
 
 
 class MemberLeaveEvent(Event):
@@ -36,7 +39,7 @@ class MemberLeaveEvent(Event):
     You can reply to join events.
     """
 
-    def __init__(self, timestamp=None, source=None, reply_token=None, **kwargs):
+    def __init__(self, timestamp=None, source=None, reply_token=None, left=None, **kwargs):
         """__init__ method.
 
         :param long timestamp: Time of the event in milliseconds
@@ -51,4 +54,7 @@ class MemberLeaveEvent(Event):
 
         self.type = 'memberLeft'
         self.reply_token = reply_token
+        self.left = self.get_or_new_from_json_dict_with_types(
+            left, {}
+        )
 
