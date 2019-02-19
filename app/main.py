@@ -134,8 +134,12 @@ def default(event):
                     if event.message.sticker_id == '12169612':
                         reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
                         line_bot_api.reply_message(event.reply_token, reply)
-                if event.message.package_id == '1353138':  # https://store.line.me/stickershop/product/3219988/?ref=Desktop
+                if event.message.package_id == '1353138':  # https://store.line.me/stickershop/product/1353138/?ref=Desktop
                     if event.message.sticker_id == '14028005':
+                        reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
+                if event.message.package_id == '3219988':  # https://store.line.me/stickershop/product/3219988/?ref=Desktop
+                    if event.message.sticker_id == '35156126':
                         reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
                         line_bot_api.reply_message(event.reply_token, reply)
     else:
