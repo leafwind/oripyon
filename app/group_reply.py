@@ -215,6 +215,10 @@ def group_reply_luna(msg):
     return
 
 
+def group_reply_mao(_msg):
+    return
+
+
 def group_reply_working(_msg):
     return
 

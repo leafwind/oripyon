@@ -20,7 +20,7 @@ from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.common_reply import common_reply
 from app.group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
 from app.group_reply import group_reply_mao_sino_alice, group_reply_nier_sino_alice, group_reply_luna
-from app.group_reply import group_reply_working, group_reply_taiwan_sino_alice, group_reply_mao_test
+from app.group_reply import group_reply_working, group_reply_taiwan_sino_alice, group_reply_mao_test, group_reply_mao
 
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
@@ -64,6 +64,10 @@ GROUP_MAPPING = {
     'Cbc420349e56f3bae5d5f46fafb0ac5cb': {
         'name': '社畜人生的煩惱',
         'function': group_reply_working,
+    },
+    'C770afed112311f3f980291e1e488e0ef': {
+        'name': '魔王城測試',
+        'function': group_reply_mao,
     },
     'Cf794cf7dc1970c3fba9122673cf3dcde': {
         'name': '魔王城測試',
