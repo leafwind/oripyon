@@ -182,20 +182,23 @@ def handle_message(event):
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}")
 
     # 可怕的象奶儀式
-    if source_id not in [
+    if source_id in [
         'C770afed112311f3f980291e1e488e0ef',
         'Cf794cf7dc1970c3fba9122673cf3dcde',
         'C498a6c669b4648d8dcb807415554fda1'
     ]:
+        imgur_url = 'https://i.imgur.com/'
+        replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
+        replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
+                   replies_img]
+        # user_ids = [m.user_id for m in event.joined.members]
+        # user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
+        # replies.append(TextSendMessage(text=f'@{",".join(user_names)} 新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+        replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+    elif source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336':
+        replies = [TextSendMessage(text=f'安安～這裡是清新優質群組，每天有很多車班可以上車學習，願大家都能很快考到駕照～')]
+    else:
         return
-    imgur_url = 'https://i.imgur.com/'
-    replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
-    replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
-               replies_img]
-    # user_ids = [m.user_id for m in event.joined.members]
-    # user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
-    # replies.append(TextSendMessage(text=f'@{",".join(user_names)} 新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
-    replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
     line_bot_api.reply_message(event.reply_token, replies)
 
 
