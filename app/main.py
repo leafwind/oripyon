@@ -181,9 +181,10 @@ def handle_message(event):
     replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
     replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
                replies_img]
-    user_ids = [m.user_id for m in event.joined.members]
-    user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
-    replies.append(TextSendMessage(text=f'@{",".join(user_names)} 新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+    # user_ids = [m.user_id for m in event.joined.members]
+    # user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
+    # replies.append(TextSendMessage(text=f'@{",".join(user_names)} 新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+    replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
     line_bot_api.reply_message(event.reply_token, replies)
 
 
@@ -197,9 +198,10 @@ def handle_message(event):
         raise ValueError
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}")
-    user_ids = [m.user_id for m in event.joined.members]
-    user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
-    replies = [TextSendMessage(text=f'群友{",".join(user_names)}失去了夢想。')]
+    # user_ids = [m.user_id for m in event.joined.members]
+    # user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
+    # replies = [TextSendMessage(text=f'群友{",".join(user_names)}失去了夢想。')]
+    replies = [TextSendMessage(text=f'一位群友失去了夢想。')]
     line_bot_api.reply_message(event.reply_token, replies)
 
 
