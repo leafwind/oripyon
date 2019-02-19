@@ -9,9 +9,8 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage
+    MessageEvent, JoinEvent, LeaveEvent, TextMessage, TextSendMessage, ImageSendMessage
 )
-
 
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.common_reply import common_reply
@@ -96,9 +95,44 @@ def callback():
     return 'OK'
 
 
+@handler.add(JoinEvent)
+def handle_message(event):
+    if event.source.type == 'room':
+        source_id = event.source.room_id
+    elif event.source.type == 'user':
+        source_id = event.source.user_id
+    elif event.source.type == 'group':
+        source_id = event.source.group_id
+    else:
+        raise ValueError
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+    imgur_url = 'https://i.imgur.com/'
+    replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
+    replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
+               replies_img]
+    replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+    line_bot_api.reply_message(event.reply_token, replies)
+
+
+@handler.add(LeaveEvent)
+def handle_message(event):
+    if event.source.type == 'room':
+        source_id = event.source.room_id
+    elif event.source.type == 'user':
+        source_id = event.source.user_id
+    elif event.source.type == 'group':
+        source_id = event.source.group_id
+    else:
+        raise ValueError
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+    replies = [TextSendMessage(text=f'一位群友失去了夢想。')]
+    line_bot_api.reply_message(event.reply_token, replies)
+
+
 @handler.default()
 def default(event):
-    logging.info(f'{event.message}')
     if event.source.type == 'room':
         source_id = event.source.room_id
     elif event.source.type == 'user':
@@ -133,7 +167,8 @@ def default(event):
                         line_bot_api.reply_message(event.reply_token, reply)
     else:
         raise ValueError
-    logging.info(f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message}")
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message}")
 
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -149,7 +184,8 @@ def handle_message(event):
         source_id = event.source.group_id
     else:
         raise ValueError(f" unknown event.source.type: {event.source.type}")
-    logging.info(f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
     make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
 
 
