@@ -25,8 +25,8 @@ class MemberJoinEvent(Event):
 
         self.type = 'memberJoined'
         self.reply_token = reply_token
-        self.joined = self.get_or_new_from_json_dict_with_types(
-            joined, {}
+        self.joined = self.get_or_new_from_json_dict(
+            joined, None
         )
 
 
@@ -54,7 +54,7 @@ class MemberLeaveEvent(Event):
 
         self.type = 'memberLeft'
         self.reply_token = reply_token
-        self.left = self.get_or_new_from_json_dict_with_types(
-            left, {}
+        self.left = self.get_or_new_from_json_dict(
+            left, None
         )
 
