@@ -221,9 +221,9 @@ def group_reply_working(_msg):
     
 def group_reply_mao_test(msg):
     if '歡迎儀式' in msg:
-        imgurUrl = 'https://i.imgur.com/'
-        repliesImg = ['cLD5pX1.jpg','0dpXilD.jpg','kuHrYI6.jpg']
-        replies = [ImageSendMessage(original_content_url=imgurUrl+r, preview_image_url=imgurUrl+r,) for r in repliesImg ]
+        imgur_url = 'https://i.imgur.com/'
+        replies_img = ['cLD5pX1.jpg','0dpXilD.jpg','kuHrYI6.jpg']
+        replies = [ImageSendMessage(original_content_url=imgur_url+r, preview_image_url=imgur_url+r,) for r in replies_img ]
         replies.append(TextSendMessage(text='新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
         return replies
     return 
