@@ -3,7 +3,7 @@ import logging
 from flask import Flask, request, abort, render_template
 
 from linebot import (
-    LineBotApi, WebhookHandler
+    LineBotApi
 )
 from linebot.exceptions import (
     InvalidSignatureError
@@ -14,6 +14,7 @@ from linebot.models import (
 )
 
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
+from app.linebot_webhook_extension import WebhookHandlerExtended
 
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.common_reply import common_reply
@@ -25,7 +26,7 @@ logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.W
 application = Flask(__name__, template_folder='templates')
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(CHANNEL_SECRET)
+handler = WebhookHandlerExtended(CHANNEL_SECRET)
 
 GROUP_MAPPING = {
     'C1bebaeaf89242089f0d755d492df6cb6': {
