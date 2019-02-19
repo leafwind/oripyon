@@ -119,6 +119,10 @@ def default(event):
                     if event.message.sticker_id == '12169612':
                         reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
                         line_bot_api.reply_message(event.reply_token, reply)
+                if event.message.package_id == '1353138':
+                    if event.message.sticker_id == '14028005':
+                        reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
     else:
         raise ValueError
     logging.info(f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}：{event.message}")
