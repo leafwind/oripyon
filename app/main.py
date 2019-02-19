@@ -143,14 +143,12 @@ def default(event):
 def handle_message(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
-    elif event.source.type == 'user':
-        source_id = event.source.user_id
     elif event.source.type == 'group':
         source_id = event.source.group_id
     else:
         raise ValueError
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} JoinEvent")
     replies = [TextSendMessage(text=f'安安/ 感謝邀請我進來～')]
     line_bot_api.reply_message(event.reply_token, replies)
 
@@ -159,37 +157,32 @@ def handle_message(event):
 def handle_message(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
-    elif event.source.type == 'user':
-        source_id = event.source.user_id
     elif event.source.type == 'group':
         source_id = event.source.group_id
     else:
         raise ValueError
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
-    replies = [TextSendMessage(text=f'有緣再見～')]
-    line_bot_api.reply_message(event.reply_token, replies)
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} LeaveEvent")
 
 
 @handler.add(MemberJoinEvent)
 def handle_message(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
-    elif event.source.type == 'user':
-        source_id = event.source.user_id
     elif event.source.type == 'group':
         source_id = event.source.group_id
     else:
         raise ValueError
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}")
 
     imgur_url = 'https://i.imgur.com/'
     replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
     replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
                replies_img]
-    user_name = line_bot_api.get_profile(event.source.user_id).display_name
-    replies.append(TextSendMessage(text=f'@{user_name} 新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+    user_ids = [m.user_id for m in event.joined.members]
+    user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
+    replies.append(TextSendMessage(text=f'@{",".join(user_names)} 新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
     line_bot_api.reply_message(event.reply_token, replies)
 
 
@@ -197,16 +190,15 @@ def handle_message(event):
 def handle_message(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
-    elif event.source.type == 'user':
-        source_id = event.source.user_id
     elif event.source.type == 'group':
         source_id = event.source.group_id
     else:
         raise ValueError
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
-    user_name = line_bot_api.get_profile(event.source.user_id).display_name
-    replies = [TextSendMessage(text=f'群友{user_name}失去了夢想。')]
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}")
+    user_ids = [m.user_id for m in event.joined.members]
+    user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
+    replies = [TextSendMessage(text=f'群友{",".join(user_names)}失去了夢想。')]
     line_bot_api.reply_message(event.reply_token, replies)
 
 
