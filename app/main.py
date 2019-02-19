@@ -8,6 +8,7 @@ from linebot import (
 from linebot.exceptions import (
     InvalidSignatureError
 )
+
 from linebot.models import (
     MessageEvent, JoinEvent, LeaveEvent, TextMessage, TextSendMessage, ImageSendMessage
 )
@@ -107,12 +108,7 @@ def handle_message(event):
         raise ValueError
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
-    imgur_url = 'https://i.imgur.com/'
-    replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
-    replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
-               replies_img]
-    replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
-    line_bot_api.reply_message(event.reply_token, replies)
+
 
 
 @handler.add(LeaveEvent)
@@ -127,8 +123,6 @@ def handle_message(event):
         raise ValueError
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
-    replies = [TextSendMessage(text=f'一位群友失去了夢想。')]
-    line_bot_api.reply_message(event.reply_token, replies)
 
 
 @handler.default()
@@ -167,6 +161,16 @@ def default(event):
                         line_bot_api.reply_message(event.reply_token, reply)
     else:
         raise ValueError
+    if event.type == 'memberJoined':
+        imgur_url = 'https://i.imgur.com/'
+        replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
+        replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
+                   replies_img]
+        replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+        line_bot_api.reply_message(event.reply_token, replies)
+    elif event.type == 'memberLeft':
+        replies = [TextSendMessage(text=f'一位群友失去了夢想。')]
+        line_bot_api.reply_message(event.reply_token, replies)
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message}")
 
