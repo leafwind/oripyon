@@ -13,6 +13,7 @@ def poor_chinese():
 
 
 def qq():
+    random.seed(os.urandom(5))
     return f'幫QQ喔 {random.choice(cry_emoji_list)}'
 
 

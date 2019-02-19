@@ -1,11 +1,13 @@
 import random
 import json
 import logging
+import os
 
 tarot_cards = json.load(open('app/tarot.json'))
 
 
 def tarot():
+    random.seed(os.urandom(5))
     card = random.choice(tarot_cards)
     logging.info('%s: %s', card['nameCN'], card['url'])
     return [
@@ -15,6 +17,7 @@ def tarot():
 
 
 def coc_7e_basic(msg):
+    random.seed(os.urandom(5))
     d100 = random.randint(1, 100)  # 1 <= N <= 100
     condition = int(msg.split('<=')[1])
     result = f'克蘇魯的呼喚七版：(1D100<={condition}) 初始結果 → {d100}\n'
@@ -54,6 +57,7 @@ def coc_7e_basic(msg):
 
 
 def nca():
+    random.seed(os.urandom(5))
     d10 = random.randint(1, 10)  # 1 <= N <= 10
     desc_str_map = {
         1: '大失敗\n命中包含自己的友方，由被攻擊方選擇被命中的部位。',
@@ -71,6 +75,7 @@ def nca():
 
 
 def choice(matched_msg):
+    random.seed(os.urandom(5))
     options_str = matched_msg.split('[')[1][:-1]
     options = options_str.split(',')
     result = f'自訂選項：[{",".join(options)}] → {random.choice(options)}'
@@ -78,6 +83,7 @@ def choice(matched_msg):
 
 
 def fortune():
+    random.seed(os.urandom(5))
     dice = random.randint(1, 1000)  # 1 <= N <= 1000
     ans = [
         '大吉だよ！\nやったね⭐︎',
