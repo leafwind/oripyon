@@ -177,6 +177,9 @@ def handle_message(event):
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}")
 
+    # 可怕的象奶儀式
+    if source_id not in ['Cf794cf7dc1970c3fba9122673cf3dcde', 'C498a6c669b4648d8dcb807415554fda1']:
+        return
     imgur_url = 'https://i.imgur.com/'
     replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
     replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
