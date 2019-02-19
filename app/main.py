@@ -141,7 +141,7 @@ def handle_message(event):
         source_id = event.source.group_id
     else:
         raise ValueError(f" unknown event.source.type: {event.source.type}")
-    logging.info(f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}({event.source.user_id})：{event.message.text}")
+    logging.info(f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}：{event.message.text}")
     make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
 
 
