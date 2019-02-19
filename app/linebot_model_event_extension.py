@@ -28,7 +28,7 @@ class MemberJoinEvent(Event):
 
 
 class MemberLeaveEvent(Event):
-    """Webhook MemberJoinEvent.
+    """Webhook MemberLeaveEvent.
 
     https://developers.line.biz/en/reference/messaging-api/#member-left-event
 

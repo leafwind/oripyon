@@ -91,11 +91,52 @@ def callback():
 
     # handle Web hook body
     try:
+        logging.info('body: %s', body)
         handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
 
     return 'OK'
+
+
+@handler.default()
+def default(event):
+    if event.source.type == 'room':
+        source_id = event.source.room_id
+    elif event.source.type == 'user':
+        source_id = event.source.user_id
+    elif event.source.type == 'group':
+        source_id = event.source.group_id
+        if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336':
+            if event.message.type == 'sticker':
+                if event.message.package_id == '1394695':
+                    if event.message.sticker_id == '15335159':
+                        reply = [TextSendMessage(text='EBB 不要躲出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
+                    elif event.message.sticker_id == '15335150':
+                        reply = [TextSendMessage(text='EBB 看屁看出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
+                    elif event.message.sticker_id == '15335129':
+                        reply = [TextSendMessage(text='EBB 笑屁笑出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
+                    elif event.message.sticker_id == '15335126':
+                        reply = [TextSendMessage(text='EBB 不氣不氣出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
+                    elif event.message.sticker_id == '15335128':
+                        reply = [TextSendMessage(text='EBB 不哭不哭出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
+                if event.message.package_id == '1300920':
+                    if event.message.sticker_id == '12169612':
+                        reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
+                if event.message.package_id == '1353138':  # https://store.line.me/stickershop/product/3219988/?ref=Desktop
+                    if event.message.sticker_id == '14028005':
+                        reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
+                        line_bot_api.reply_message(event.reply_token, reply)
+    else:
+        raise ValueError
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message}")
 
 
 @handler.add(JoinEvent)
@@ -163,46 +204,6 @@ def handle_message(event):
     user_name = line_bot_api.get_profile(event.source.user_id).display_name
     replies = [TextSendMessage(text=f'群友{user_name}失去了夢想。')]
     line_bot_api.reply_message(event.reply_token, replies)
-
-
-@handler.default()
-def default(event):
-    if event.source.type == 'room':
-        source_id = event.source.room_id
-    elif event.source.type == 'user':
-        source_id = event.source.user_id
-    elif event.source.type == 'group':
-        source_id = event.source.group_id
-        if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336':
-            if event.message.type == 'sticker':
-                if event.message.package_id == '1394695':
-                    if event.message.sticker_id == '15335159':
-                        reply = [TextSendMessage(text='EBB 不要躲出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                    elif event.message.sticker_id == '15335150':
-                        reply = [TextSendMessage(text='EBB 看屁看出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                    elif event.message.sticker_id == '15335129':
-                        reply = [TextSendMessage(text='EBB 笑屁笑出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                    elif event.message.sticker_id == '15335126':
-                        reply = [TextSendMessage(text='EBB 不氣不氣出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                    elif event.message.sticker_id == '15335128':
-                        reply = [TextSendMessage(text='EBB 不哭不哭出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                if event.message.package_id == '1300920':
-                    if event.message.sticker_id == '12169612':
-                        reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                if event.message.package_id == '1353138':  # https://store.line.me/stickershop/product/3219988/?ref=Desktop
-                    if event.message.sticker_id == '14028005':
-                        reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-    else:
-        raise ValueError
-    logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message}")
 
 
 @handler.add(MessageEvent, message=TextMessage)
