@@ -66,7 +66,7 @@ GROUP_MAPPING = {
         'function': group_reply_working,
     },
     'C770afed112311f3f980291e1e488e0ef': {
-        'name': '魔王城測試',
+        'name': '魔王城',
         'function': group_reply_mao,
     },
     'Cf794cf7dc1970c3fba9122673cf3dcde': {
