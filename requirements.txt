@@ -1,4 +1,4 @@
-line-bot-sdk==1.1.0
+line-bot-sdk
 Flask==0.12.3
 uWSGI==2.0.14
 request
