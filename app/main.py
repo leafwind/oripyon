@@ -13,6 +13,8 @@ from linebot.models import (
     MessageEvent, JoinEvent, LeaveEvent, TextMessage, TextSendMessage, ImageSendMessage
 )
 
+from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
+
 from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from app.common_reply import common_reply
 from app.group_reply import group_reply_test, group_reply_lineage_m, group_reply_maplestory, group_reply_yebai
@@ -110,7 +112,6 @@ def handle_message(event):
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
 
 
-
 @handler.add(LeaveEvent)
 def handle_message(event):
     if event.source.type == 'room':
@@ -123,6 +124,45 @@ def handle_message(event):
         raise ValueError
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+
+
+@handler.add(MemberJoinEvent)
+def handle_message(event):
+    if event.source.type == 'room':
+        source_id = event.source.room_id
+    elif event.source.type == 'user':
+        source_id = event.source.user_id
+    elif event.source.type == 'group':
+        source_id = event.source.group_id
+    else:
+        raise ValueError
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+
+    imgur_url = 'https://i.imgur.com/'
+    replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
+    replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
+               replies_img]
+    user_name = line_bot_api.get_profile(event.source.user_id).display_name
+    replies.append(TextSendMessage(text=f'@{user_name} 新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+    line_bot_api.reply_message(event.reply_token, replies)
+
+
+@handler.add(MemberLeaveEvent)
+def handle_message(event):
+    if event.source.type == 'room':
+        source_id = event.source.room_id
+    elif event.source.type == 'user':
+        source_id = event.source.user_id
+    elif event.source.type == 'group':
+        source_id = event.source.group_id
+    else:
+        raise ValueError
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+    user_name = line_bot_api.get_profile(event.source.user_id).display_name
+    replies = [TextSendMessage(text=f'群友{user_name}失去了夢想。')]
+    line_bot_api.reply_message(event.reply_token, replies)
 
 
 @handler.default()
@@ -161,16 +201,6 @@ def default(event):
                         line_bot_api.reply_message(event.reply_token, reply)
     else:
         raise ValueError
-    if event.type == 'memberJoined':
-        imgur_url = 'https://i.imgur.com/'
-        replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
-        replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
-                   replies_img]
-        replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
-        line_bot_api.reply_message(event.reply_token, replies)
-    elif event.type == 'memberLeft':
-        replies = [TextSendMessage(text=f'一位群友失去了夢想。')]
-        line_bot_api.reply_message(event.reply_token, replies)
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message}")
 
