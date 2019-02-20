@@ -13,3 +13,5 @@ script:
   - pylint -d all -e W0611,W0612,W0613,W0614 --reports=n --msg-template='{msg_id} {path}:{line} {msg} ({symbol})' app/ tests/
 after_success:
   coveralls
+git:
+  submodules: false
