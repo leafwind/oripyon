@@ -89,7 +89,7 @@ def default(event):
 
 
 @handler.add(JoinEvent)
-def handle_message(event):
+def handle_join_event(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
     elif event.source.type == 'group':
@@ -103,7 +103,7 @@ def handle_message(event):
 
 
 @handler.add(LeaveEvent)
-def handle_message(event):
+def handle_leave_event(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
     elif event.source.type == 'group':
@@ -115,7 +115,7 @@ def handle_message(event):
 
 
 @handler.add(MemberJoinEvent)
-def handle_message(event):
+def handle_member_join_event(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
     elif event.source.type == 'group':
@@ -147,7 +147,7 @@ def handle_message(event):
 
 
 @handler.add(MemberLeaveEvent)
-def handle_message(event):
+def handle_member_leave_event(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
     elif event.source.type == 'group':
@@ -162,7 +162,7 @@ def handle_message(event):
 
 
 @handler.add(MessageEvent, message=ImageMessage)
-def handle_message(event):
+def handle_image_message(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
     elif event.source.type == 'group':
@@ -191,7 +191,7 @@ def handle_message(event):
 
 
 @handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
+def handle_text_message(event):
     # logging.info('%s', event.__dict__)
     if event.source.type == 'room':  # 自訂聊天
         source_id = event.source.room_id
