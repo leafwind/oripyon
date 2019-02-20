@@ -213,6 +213,14 @@ def handle_message(event):
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_message(event):
+    if event.source.type == 'room':
+        source_id = event.source.room_id
+    elif event.source.type == 'group':
+        source_id = event.source.group_id
+    elif event.source.type == 'user':
+        source_id = event.source.user_id
+    else:
+        raise ValueError
     uid = event.source.user_id
     image_id = event.message.id
     message_content = line_bot_api.get_message_content(image_id)
@@ -221,13 +229,15 @@ def handle_message(event):
     date_str = date.strftime('%Y%m%d')
     time_str = date.strftime('%H%M%S')
     filename = uuid.uuid4().hex[:3]
-    dir = os.path.join('/var', 'line_image', date_str, uid)
+    dir = os.path.join('/var', 'line_image', date_str, source_id, uid)
     if not os.path.isdir(dir):
         os.makedirs(dir)
     file_path = os.path.join(dir, date_str + time_str + '_' + filename + '.jpg')
     with open(file_path, 'wb') as fd:
         for chunk in message_content.iter_content():
             fd.write(chunk)
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} saved image: {file_path}")
 
 
 @handler.add(MessageEvent, message=TextMessage)
