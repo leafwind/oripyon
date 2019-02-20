@@ -17,6 +17,7 @@ def tarot(source_id):
         # skip card picture for large groups
         replies.append(('image', card['url']))
     replies.append(('text', f'{card["nameCN"]}: {card["conclusion"]}'))
+    return replies
 
 
 def coc_7e_basic(msg):
