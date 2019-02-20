@@ -55,7 +55,8 @@ pattern_mapping = [
         'cmd': tarot_pattern,
         'type': 'search',
         'function': tarot,
-        'multi_type_output': True
+        'multi_type_output': True,
+        'source_as_arg': True
     },
     {
         'cmd': choice_pattern,
@@ -174,6 +175,8 @@ def common_reply(source_id, msg):
             if match:
                 if p.get('matched_as_arg', False):
                     result = p['function'](match.group(0))
+                elif p.get('source_as_arg', False):
+                    result = p['function'](source_id)
                 else:
                     result = p['function']()
                 if p.get('multi_type_output', False):

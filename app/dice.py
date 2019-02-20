@@ -3,17 +3,20 @@ import json
 import logging
 import os
 
+from constants import HUGE_GROUP_IDS
+
 tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
 
 
-def tarot():
+def tarot(source_id):
     random.seed(os.urandom(5))
     card = random.choice(tarot_cards)
     logging.info('%s: %s', card['nameCN'], card['url'])
-    return [
-        ('image', card['url']),
-        ('text', f'{card["nameCN"]}: {card["conclusion"]}')
-    ]
+    replies = []
+    if source_id not in HUGE_GROUP_IDS:
+        # skip card picture for large groups
+        replies.append(('image', card['url']))
+    replies.append(('text', f'{card["nameCN"]}: {card["conclusion"]}'))
 
 
 def coc_7e_basic(msg):
