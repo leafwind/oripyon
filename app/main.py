@@ -221,10 +221,10 @@ def handle_message(event):
     date_str = date.strftime('%Y%m%d')
     time_str = date.strftime('%H%M%S')
     filename = uuid.uuid4().hex[:3]
-    dir = os.path.join(['/var', 'log', 'line_image', date_str, str(uid)])
+    dir = os.path.join('/var', 'log', 'line_image', date_str, uid)
     if not os.path.isdir(dir):
         os.makedirs(dir)
-    file_path = os.path.join([dir, date_str + time_str + '_' + filename + '.jpg'])
+    file_path = os.path.join(dir, date_str + time_str + '_' + filename + '.jpg')
     with open(file_path, 'wb') as fd:
         for chunk in message_content.iter_content():
             fd.write(chunk)
