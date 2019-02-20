@@ -6,3 +6,4 @@ nose
 coverage
 pylint
 pyflakes
+pyyaml

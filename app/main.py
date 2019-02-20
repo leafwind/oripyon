@@ -3,9 +3,9 @@ import logging
 import os
 import time
 import uuid
+import yaml
 
 from flask import Flask, request, abort, render_template
-from line_auth_key import CHANNEL_SECRET, CHANNEL_ACCESS_TOKEN
 from linebot import (
     LineBotApi
 )
@@ -24,6 +24,11 @@ from constants import GROUP_MAPPING
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
 
+
+with open("line_auth_key.yml", 'r') as stream:
+    data = yaml.load(stream)
+    CHANNEL_ACCESS_TOKEN = data['CHANNEL_ACCESS_TOKEN']
+    CHANNEL_SECRET = data['CHANNEL_SECRET']
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandlerExtended(CHANNEL_SECRET)
 

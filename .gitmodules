@@ -1,3 +1,6 @@
 [submodule "taiwan_area_map"]
 	path = taiwan_area_map
 	url = https://github.com/leafwind/taiwan_area_map.git
+[submodule "line-user-info"]
+	path = line-user-info
+	url = https://github.com/leafwind/line-user-info.git
