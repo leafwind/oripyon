@@ -204,15 +204,17 @@ def handle_message(event):
 
 
 def make_reply(_source_type, source_id, msg, reply_token=None):
-    if source_id not in GROUP_MAPPING:
-        return
-
-    reply = GROUP_MAPPING[source_id]['function'](msg)
+    # private reply
+    reply = common_reply(source_id, msg)
     if reply:
         line_bot_api.reply_message(reply_token, reply)
         return
 
-    reply = common_reply(source_id, msg)
+    # group reply
+    if source_id not in GROUP_MAPPING:
+        return
+
+    reply = GROUP_MAPPING[source_id]['function'](msg)
     if reply:
         line_bot_api.reply_message(reply_token, reply)
         return
