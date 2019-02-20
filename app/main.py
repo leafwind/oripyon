@@ -1,5 +1,8 @@
 import logging
-
+import os
+import datetime
+import uuid
+import time
 from flask import Flask, request, abort, render_template
 
 from linebot import (
@@ -10,7 +13,7 @@ from linebot.exceptions import (
 )
 
 from linebot.models import (
-    MessageEvent, JoinEvent, LeaveEvent, TextMessage, TextSendMessage, ImageSendMessage
+    MessageEvent, JoinEvent, LeaveEvent, TextMessage, ImageMessage, TextSendMessage, ImageSendMessage
 )
 
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
@@ -114,34 +117,21 @@ def default(event):
         source_id = event.source.group_id
         if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336' and event.source.user_id == 'U2b7c3a71683ab247b08b1f7845e20df7':
             if event.message.type == 'sticker':
-                if event.message.package_id == '1394695':
-                    if event.message.sticker_id == '15335159':
-                        reply = [TextSendMessage(text='EBB 不要躲出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                    elif event.message.sticker_id == '15335150':
-                        reply = [TextSendMessage(text='EBB 看屁看出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                    elif event.message.sticker_id == '15335129':
-                        reply = [TextSendMessage(text='EBB 笑屁笑出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                    elif event.message.sticker_id == '15335126':
-                        reply = [TextSendMessage(text='EBB 不氣不氣出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                    elif event.message.sticker_id == '15335128':
-                        reply = [TextSendMessage(text='EBB 不哭不哭出來嗨 ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                if event.message.package_id == '1300920':
-                    if event.message.sticker_id == '12169612':
-                        reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                if event.message.package_id == '1353138':  # https://store.line.me/stickershop/product/1353138/?ref=Desktop
-                    if event.message.sticker_id == '14028005':
-                        reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
-                if event.message.package_id == '3219988':  # https://store.line.me/stickershop/product/3219988/?ref=Desktop
-                    if event.message.sticker_id == '35156126':
-                        reply = [TextSendMessage(text='EBB 不要躲出來嗨(換貼圖我還是會學到的！) ヽ(∀ﾟ )人( ﾟ∀)ﾉ')]
-                        line_bot_api.reply_message(event.reply_token, reply)
+                pid = event.message.package_id
+                sid = event.message.sticker_id
+                sticker_mapping = {
+                    ('3219988', '35156126'): '躲',
+                    ('1353138', '14028005'): '躲',
+                    ('1300920', '12169612'): '躲',
+                    ('1394695', '15335159'): '躲',
+                    ('1394695', '15335150'): '看',
+                    ('1394695', '15335129'): '笑',
+                    ('1394695', '15335126'): '氣',
+                    ('1394695', '15335128'): '哭',
+                }
+                if (pid, sid) in sticker_mapping:
+                    reply = [TextSendMessage(text=f"EBB 不要{sticker_mapping['(pid, sid)']}出來嗨ヽ(∀ﾟ )人( ﾟ∀)ﾉ")]
+                    line_bot_api.reply_message(event.reply_token, reply)
     else:
         raise ValueError
     logging.info(
@@ -219,6 +209,23 @@ def handle_message(event):
     # user_ids = [m.user_id for m in event.joined.members]
     # user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
     # replies = [TextSendMessage(text=f'群友{",".join(user_names)}失去了夢想。')]
+
+
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_message(event):
+    uid = event.source.user_id
+    if event.message.content_provider == 'line':
+        image_id = event.message.id
+        message_content = line_bot_api.get_message_content(image_id)
+        now = int(time.time())
+        date = datetime.datetime.utcfromtimestamp(now)
+        date_str = date.strftime('%Y%m%d')
+        time_str = date.strftime('%H%M%S')
+        filename = uuid.uuid4().hex[:3]
+        os.path.join(['/var', 'log', 'line_image', date_str, uid, date_str + time_str + '_' + filename + '.jpg'])
+        with open(f'{uid}', 'wb') as fd:
+            for chunk in message_content.iter_content():
+                fd.write(chunk)
 
 
 @handler.add(MessageEvent, message=TextMessage)
