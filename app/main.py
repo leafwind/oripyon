@@ -214,18 +214,20 @@ def handle_message(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_message(event):
     uid = event.source.user_id
-    if event.message.content_provider == 'line':
-        image_id = event.message.id
-        message_content = line_bot_api.get_message_content(image_id)
-        now = int(time.time())
-        date = datetime.datetime.utcfromtimestamp(now)
-        date_str = date.strftime('%Y%m%d')
-        time_str = date.strftime('%H%M%S')
-        filename = uuid.uuid4().hex[:3]
-        os.path.join(['/var', 'log', 'line_image', date_str, uid, date_str + time_str + '_' + filename + '.jpg'])
-        with open(f'{uid}', 'wb') as fd:
-            for chunk in message_content.iter_content():
-                fd.write(chunk)
+    image_id = event.message.id
+    message_content = line_bot_api.get_message_content(image_id)
+    now = int(time.time())
+    date = datetime.datetime.utcfromtimestamp(now)
+    date_str = date.strftime('%Y%m%d')
+    time_str = date.strftime('%H%M%S')
+    filename = uuid.uuid4().hex[:3]
+    dir = os.path.join(['/var', 'log', 'line_image', date_str, uid])
+    if not os.path.isdir(dir):
+        os.makedirs(dir)
+    file_path = os.path.join([dir, date_str + time_str + '_' + filename + '.jpg'])
+    with open(file_path, 'wb') as fd:
+        for chunk in message_content.iter_content():
+            fd.write(chunk)
 
 
 @handler.add(MessageEvent, message=TextMessage)
