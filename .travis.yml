@@ -2,8 +2,12 @@ dist: xenial
 language: python
 python:
   - "3.7"
+git:
+  # disable auto update all submodules
+  submodules: false
 # command to install dependencies
 before_install:
+  # manually trigger 1 submodule since line-user-info is a private repo and it can be ignored during CI
   - git submodule update --init --recursive taiwan_area_map
 install:
   - pip install -r requirements.txt
@@ -15,5 +19,3 @@ script:
   - pylint -d all -e W0611,W0612,W0613,W0614 --reports=n --msg-template='{msg_id} {path}:{line} {msg} ({symbol})' app/ tests/
 after_success:
   coveralls
-git:
-  submodules: false
