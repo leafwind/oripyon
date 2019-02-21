@@ -3,6 +3,7 @@ Flask==0.12.3
 uWSGI==2.0.14
 request
 pytest
+pytest-cov
 coverage
 pylint
 pyflakes
