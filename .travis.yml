@@ -14,7 +14,7 @@ install:
   - pip install coveralls
 # command to run tests
 script:
-  - nosetests --with-coverage --cover-erase --cover-inclusive --cover-package=app
+  - python -m pytest --cov=./ --cov-config=.coveragerc
   - pyflakes app/ tests/
   - pylint -d all -e W0611,W0612,W0613,W0614 --reports=n --msg-template='{msg_id} {path}:{line} {msg} ({symbol})' app/ tests/
 after_success:

@@ -4,7 +4,7 @@ source venv/bin/activate
 echo "# -------------------"
 echo "# running nosetests"
 echo "# -------------------"
-nosetests --with-coverage --cover-erase --cover-inclusive --cover-package=app
+python -m pytest --cov=./ --cov-config=.coveragerc
 
 echo "# -------------------"
 echo "# pyflakes"
