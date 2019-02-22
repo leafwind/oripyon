@@ -92,8 +92,11 @@ def default(event):
     else:
         raise ValueError
     uid = event.source.user_id
+    user_name = user_info.get(uid, None)
+    if not user_name:
+        user_name = line_bot_api.get_profile(uid).display_name
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_info.get(uid, uid)} ：{event.message}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} ：{event.message}")
 
 
 @handler.add(JoinEvent)
@@ -212,8 +215,11 @@ def handle_text_message(event):
     else:
         raise ValueError(f" unknown event.source.type: {event.source.type}")
     uid = event.source.user_id
+    user_name = user_info.get(uid, None)
+    if not user_name:
+        user_name = line_bot_api.get_profile(uid).display_name
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_info.get(uid, uid)} ：{event.message.text}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} ：{event.message.text}")
     make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
 
 
