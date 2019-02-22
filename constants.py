@@ -41,6 +41,7 @@ GROUP_MAPPING = {
     'C1e38a92f8c7b4ad377df882b9f3bf336': {
         'name': '尼爾主題餐廳',
         'function': group_reply_nier_sino_alice,
+        'log_filename': 'nier_sino_alice',
     },
     'C15c762c0a497d62992c01b42ba9b39d9': {
         'name': '死愛台版交流區',
@@ -53,13 +54,16 @@ GROUP_MAPPING = {
     'C770afed112311f3f980291e1e488e0ef': {
         'name': '魔王城',
         'function': group_reply_mao,
+        'log_filename': 'mao',
     },
     'Cf794cf7dc1970c3fba9122673cf3dcde': {
         'name': '魔王城測試',
         'function': group_reply_mao_test,
+        'log_filename': 'mao_test',
     },
     'C498a6c669b4648d8dcb807415554fda1': {
         'name': 'sslin test',
         'function': group_reply_mao_test,
+        'log_filename': 'mao_test2',
     }
 }

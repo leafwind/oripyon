@@ -1,7 +1,6 @@
 import re
 import os
 import random
-import logging
 
 from linebot.models import (
     TextSendMessage, ImageSendMessage, TemplateSendMessage
@@ -11,7 +10,6 @@ from app.line_templates import make_template_action, make_carousel_column
 from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 from app.emoji_list import cry_emoji_list
-from app.markov_chain import MarkovChat
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 help_find_pattern = re.compile('協尋')
@@ -229,10 +227,6 @@ def group_reply_working(_msg):
     return
 
     
-def group_reply_mao_test(msg):
-    mc = MarkovChat('training/mao_test', chattiness=1)
-    test_output = mc.log(msg)
-    test_output2 = mc.chat(msg)
-    logging.info('test_output: %s, test_output2: %s', test_output, test_output2)
+def group_reply_mao_test(_msg):
     return 
 

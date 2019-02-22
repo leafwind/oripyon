@@ -21,7 +21,7 @@ from app.common_reply import common_reply
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
 from app.linebot_webhook_extension import WebhookHandlerExtended
 from constants import GROUP_MAPPING
-
+from app.markov_chain import MarkovChat
 
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
@@ -256,6 +256,12 @@ def handle_text_message(event):
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
     make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
+
+    if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
+    mc = MarkovChat(os.path.join('./training', GROUP_MAPPING[source_id]['log_filename'], '.txt'), chattiness=1)
+    test_output = mc.log(event.message.text)
+    test_output2 = mc.chat(event.message.text)
+    logging.info('test_output: %s, test_output2: %s', test_output, test_output2)
 
 
 def make_reply(_source_type, source_id, msg, reply_token=None):
