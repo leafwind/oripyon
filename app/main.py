@@ -29,7 +29,8 @@ application = Flask(__name__, template_folder='templates')
 user_info = {}
 user_info_map_file = os.path.join('line-user-info', 'users.json')
 if os.path.exists(user_info_map_file):
-    user_info = json.load(user_info_map_file)
+    with open(user_info_map_file, 'r') as f:
+        user_info = json.load(user_info_map_file)
 
 with open("line_auth_key.yml", 'r') as stream:
     data = yaml.load(stream)
