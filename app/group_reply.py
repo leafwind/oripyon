@@ -232,7 +232,7 @@ def group_reply_working(_msg):
 def group_reply_mao_test(msg):
     mc = MarkovChat('training/mao_test', chattiness=1)
     test_output = mc.log(msg)
-    test_output2 = mc.chain_length(msg)
+    test_output2 = mc.chat(msg)
     logging.info('test_output: %s, test_output2: %s', test_output, test_output2)
     return 
 
