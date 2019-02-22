@@ -8,3 +8,4 @@ coverage
 pylint
 pyflakes
 pyyaml
+jieba
