@@ -9,9 +9,9 @@ python -m pytest --cov=./ --cov-config=.coveragerc
 echo "# -------------------"
 echo "# pyflakes"
 echo "# -------------------"
-pyflakes app/ tests/
+pyflakes app/ tests/ twitch_notify/
 
 echo "# -------------------"
 echo "# pylint"
 echo "# -------------------"
-pylint -d all -e W0611,W0612,W0613,W0614 --reports=n --msg-template='{msg_id} {path}:{line} {msg} ({symbol})' app/ tests/
+pylint -d all -e W0611,W0612,W0613,W0614 --reports=n --msg-template='{msg_id} {path}:{line} {msg} ({symbol})' app/ tests/ twitch_notify/
