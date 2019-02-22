@@ -192,8 +192,9 @@ def handle_sticker_message(event):
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
+    sticker_url = f'https://stickershop.line-scdn.net/stickershop/v1/sticker/{sid}/android/sticker.png'
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (sticker) ({pid}, {sid})")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (sticker) ({pid}, {sid}), url: {sticker_url}")
 
 
 @handler.add(MessageEvent, message=ImageMessage)
