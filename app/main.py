@@ -201,8 +201,15 @@ def handle_image_message(event):
     with open(file_path, 'wb') as fd:
         for chunk in message_content.iter_content():
             fd.write(chunk)
+    uid = event.source.user_id
+    user_name = user_info.get(uid, None)
+    if not user_name:
+        try:
+            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+        except LineBotApiError as e:
+            logging.error('LineBotApiError: %s', e)
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} saved image: {file_path}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (image) saved: {file_path}")
 
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -226,7 +233,7 @@ def handle_text_message(event):
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} ：{event.message.text}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
     make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
 
 
