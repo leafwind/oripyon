@@ -7,8 +7,8 @@ import yaml
 import json
 
 from flask import Flask, request, abort, render_template
-from linebot import (
-    LineBotApi
+from app.linebot_api_extension import (
+    LineBotApiExtension
 )
 from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError
@@ -36,7 +36,7 @@ with open("line_auth_key.yml", 'r') as stream:
     data = yaml.load(stream)
     CHANNEL_ACCESS_TOKEN = data['CHANNEL_ACCESS_TOKEN']
     CHANNEL_SECRET = data['CHANNEL_SECRET']
-line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
+line_bot_api = LineBotApiExtension(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandlerExtended(CHANNEL_SECRET)
 
 
@@ -95,7 +95,7 @@ def default(event):
     user_name = user_info.get(uid, None)
     if not user_name:
         try:
-            user_name = line_bot_api.get_profile(uid).display_name
+            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
@@ -221,7 +221,7 @@ def handle_text_message(event):
     user_name = user_info.get(uid, None)
     if not user_name:
         try:
-            user_name = line_bot_api.get_profile(uid).display_name
+            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
