@@ -23,6 +23,7 @@ from app.linebot_webhook_extension import WebhookHandlerExtended
 from constants import GROUP_MAPPING
 
 
+logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
 
