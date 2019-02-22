@@ -4,6 +4,7 @@ import os
 import time
 import uuid
 import yaml
+import json
 
 from flask import Flask, request, abort, render_template
 from linebot import (
@@ -21,9 +22,14 @@ from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
 from app.linebot_webhook_extension import WebhookHandlerExtended
 from constants import GROUP_MAPPING
 
+
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
 
+user_info = {}
+user_info_map_file = os.path.join('line-user-info', 'users.json')
+if os.path.exists(user_info_map_file):
+    user_info = json.load(user_info_map_file)
 
 with open("line_auth_key.yml", 'r') as stream:
     data = yaml.load(stream)
@@ -84,8 +90,9 @@ def default(event):
                     line_bot_api.reply_message(event.reply_token, reply)
     else:
         raise ValueError
+    uid = event.source.user_id
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_info.get(uid, uid)} ：{event.message}")
 
 
 @handler.add(JoinEvent)
@@ -203,8 +210,9 @@ def handle_text_message(event):
         source_id = event.source.group_id
     else:
         raise ValueError(f" unknown event.source.type: {event.source.type}")
+    uid = event.source.user_id
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {event.source.user_id} ：{event.message.text}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_info.get(uid, uid)} ：{event.message.text}")
     make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
 
 
