@@ -20,9 +20,10 @@ class MarkovChat(object):
 
         self._load_file(self.train_data)
         logging.info("MarkovChat: load %s", self.train_data)
-        for model in additional_train_data:
-            self._load_file(model)
-            logging.info("MarkovChat: load %s", model)
+        if additional_train_data:
+            for model in additional_train_data:
+                self._load_file(model)
+                logging.info("MarkovChat: load %s", model)
 
 
     def _split_message_chinese(self, message):
