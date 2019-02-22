@@ -169,9 +169,9 @@ def handle_sticker_message(event):
         source_id = event.source.user_id
     else:
         raise ValueError
+    pid = event.message.package_id
+    sid = event.message.sticker_id
     if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336' and event.source.user_id == 'U2b7c3a71683ab247b08b1f7845e20df7':
-        pid = event.message.package_id
-        sid = event.message.sticker_id
         sticker_mapping = {
             ('3219988', '35156126'): '躲',
             ('1353138', '14028005'): '躲',
