@@ -14,7 +14,7 @@ from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError
 )
 from linebot.models import (
-    MessageEvent, JoinEvent, LeaveEvent, TextMessage, ImageMessage, TextSendMessage, ImageSendMessage
+    MessageEvent, JoinEvent, LeaveEvent, TextMessage, ImageMessage, TextSendMessage, ImageSendMessage, StickerMessage
 )
 
 from app.common_reply import common_reply
@@ -73,23 +73,6 @@ def default(event):
         source_id = event.source.user_id
     elif event.source.type == 'group':
         source_id = event.source.group_id
-        if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336' and event.source.user_id == 'U2b7c3a71683ab247b08b1f7845e20df7':
-            if event.message.type == 'sticker':
-                pid = event.message.package_id
-                sid = event.message.sticker_id
-                sticker_mapping = {
-                    ('3219988', '35156126'): '躲',
-                    ('1353138', '14028005'): '躲',
-                    ('1300920', '12169612'): '躲',
-                    ('1394695', '15335159'): '躲',
-                    ('1394695', '15335150'): '看',
-                    ('1394695', '15335129'): '笑',
-                    ('1394695', '15335126'): '氣',
-                    ('1394695', '15335128'): '哭',
-                }
-                if (pid, sid) in sticker_mapping:
-                    reply = [TextSendMessage(text=f"EBB 不要{sticker_mapping['(pid, sid)']}出來嗨ヽ(∀ﾟ )人( ﾟ∀)ﾉ")]
-                    line_bot_api.reply_message(event.reply_token, reply)
     else:
         raise ValueError
     uid = event.source.user_id
@@ -100,7 +83,7 @@ def default(event):
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
-        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} ：{event.message}")
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：(default handler){event.message}")
 
 
 @handler.add(JoinEvent)
@@ -174,6 +157,43 @@ def handle_member_leave_event(event):
     # user_ids = [m.user_id for m in event.joined.members]
     # user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
     # replies = [TextSendMessage(text=f'群友{",".join(user_names)}失去了夢想。')]
+
+
+@handler.add(MessageEvent, message=StickerMessage)
+def handle_sticker_message(event):
+    if event.source.type == 'room':
+        source_id = event.source.room_id
+    elif event.source.type == 'group':
+        source_id = event.source.group_id
+    elif event.source.type == 'user':
+        source_id = event.source.user_id
+    else:
+        raise ValueError
+    if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336' and event.source.user_id == 'U2b7c3a71683ab247b08b1f7845e20df7':
+        pid = event.message.package_id
+        sid = event.message.sticker_id
+        sticker_mapping = {
+            ('3219988', '35156126'): '躲',
+            ('1353138', '14028005'): '躲',
+            ('1300920', '12169612'): '躲',
+            ('1394695', '15335159'): '躲',
+            ('1394695', '15335150'): '看',
+            ('1394695', '15335129'): '笑',
+            ('1394695', '15335126'): '氣',
+            ('1394695', '15335128'): '哭',
+        }
+        if (pid, sid) in sticker_mapping:
+            reply = [TextSendMessage(text=f"EBB 不要{sticker_mapping['(pid, sid)']}出來嗨ヽ(∀ﾟ )人( ﾟ∀)ﾉ")]
+            line_bot_api.reply_message(event.reply_token, reply)
+    uid = event.source.user_id
+    user_name = user_info.get(uid, None)
+    if not user_name:
+        try:
+            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+        except LineBotApiError as e:
+            logging.error('LineBotApiError: %s', e)
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (sticker) ({pid}, {sid})")
 
 
 @handler.add(MessageEvent, message=ImageMessage)
