@@ -110,8 +110,8 @@ class MarkovChat(object):
         #if msg.startswith('!') or 'http://' in msg or not msg.count(' '):
         if msg.startswith('!') or 'http://' in msg:
             return
-        if len(msg) < 15:
-            logging.warning("[NOlog] input msg too short({})".format(len(msg)))
+        if len(msg) < 4:
+            logging.warning("input msg too short(len=%s)", len(msg))
             return
 
         with open(self.train_data, 'a+') as fp:
