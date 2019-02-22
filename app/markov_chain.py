@@ -108,7 +108,7 @@ class MarkovChat(object):
             chattiness = self.chattiness
         # speak only when spoken to, or when the spirit moves me
         #if msg.startswith('!') or 'http://' in msg or not msg.count(' '):
-        if msg.startswith('!') or 'http://' in msg:
+        if msg.startswith('!') or 'http://' in msg or 'https://' in msg:
             return
         if len(msg) < 4:
             logging.warning("input msg too short(len=%s)", len(msg))
