@@ -11,12 +11,12 @@ def reservoir_now():
     replies = []
     for reservoir_name in ['翡翠水庫', '石門水庫']:
         r = reservoir_stat[reservoir_name]
-        total = r['baseAvailable']
+        total = float(r['baseAvailable'])
         updated_at = r['updateAt']
-        percentage = float(r['percentage'])
-        diff = float(r['daliyNetflow'])
+        percentage = r['percentage']
+        diff = r['daliyNetflow']
         diff_percentage = diff / total
-        estimated_remain_days = percentage / (diff / total)
+        estimated_remain_days = percentage // (diff / total)
         up_or_down = '上升' if diff < 0 else '下降'
         replies.append((
             'text', f'{reservoir_name} 百分比：{percentage}\n'
