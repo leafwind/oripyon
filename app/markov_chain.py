@@ -173,7 +173,7 @@ class MarkovChat(object):
             pass
         if messages:
             sorted(messages, key=lambda element: element[1], reverse=True)
-            return messages[0](0)
+            return messages[0][0]
         else:
             return ''
 
