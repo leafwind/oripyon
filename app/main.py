@@ -41,6 +41,7 @@ with open("line_auth_key.yml", 'r') as stream:
     CHANNEL_SECRET = data['CHANNEL_SECRET']
 line_bot_api = LineBotApiExtension(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandlerExtended(CHANNEL_SECRET)
+markov_chat_instance_map = {}
 
 
 @application.route('/', methods=['GET', 'POST'])
@@ -260,7 +261,13 @@ def handle_text_message(event):
     make_reply(line_bot_api, source_id, uid, event.message.text, reply_token=event.reply_token)
 
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
-        mc = MarkovChat(os.path.join('./training', GROUP_MAPPING[source_id]['log_filename'] + '.txt'), chattiness=1)
+        if source_id not in markov_chat_instance_map:
+            # new MarkovChat obj
+            mc = MarkovChat(os.path.join('./training', GROUP_MAPPING[source_id]['log_filename'] + '.txt'), chattiness=1)
+            markov_chat_instance_map[source_id] = mc
+        else:
+            # reuse MarkovChat obj to save memory
+            mc = markov_chat_instance_map[source_id]
         log = mc.log(event.message.text, chattiness=1)
         if log:
             log_similarity = Levenshtein.ratio(event.message.text, log)
