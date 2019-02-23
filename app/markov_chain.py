@@ -17,13 +17,13 @@ class MarkovChat(object):
     def __init__(self, train_data, additional_train_data=None, chattiness=0):
         self.train_data = train_data
         self.chattiness = chattiness
-
-        self._load_file(self.train_data)
+        # stop words will be used in load model, so this line should before _load_model
         self.stop_word_list = self._load_stop_word_list('app/data/stopwords.txt')
+        self._load_model(self.train_data)
         logging.info("MarkovChat: load %s", self.train_data)
         if additional_train_data:
             for model in additional_train_data:
-                self._load_file(model)
+                self._load_model(model)
                 logging.info("MarkovChat: load %s", model)
 
 
@@ -213,7 +213,7 @@ class MarkovChat(object):
             return ""
         return "(๑•̀ω•́)ノ" + random.choice(all_msgs)
 
-    def _load_file(self, filename):
+    def _load_model(self, filename):
         try:
             with open(filename, 'r+') as fp:
                 lines = fp.readlines()
