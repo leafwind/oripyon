@@ -5,7 +5,7 @@ import jieba
 
 # https://github.com/fxsjy/jieba/raw/master/extra_dict/dict.txt.big
 # 比預設的字典（三十萬筆）多了二十萬筆，目測加了很多繁體詞彙
-# jieba.set_dictionary('app/data/dict.txt.big')
+jieba.set_dictionary('app/data/dict.txt.zhtw.trimsize')
 
 class MarkovChat(object):
     chain_length = 2
