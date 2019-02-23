@@ -238,6 +238,7 @@ def handle_image_message(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
+    global markov_chat_instance_map
     # logging.info('%s', event.__dict__)
     if event.source.type == 'room':  # 自訂聊天
         source_id = event.source.room_id
