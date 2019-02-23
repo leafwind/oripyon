@@ -274,13 +274,14 @@ def handle_text_message(event):
         if log:
             log_similarity = Levenshtein.ratio(event.message.text, log)
             logging.info('log: %s (sim: %s)', log, log_similarity)
+            if source_id in TEST_GROUP_IDS or random.random() >= 0.9:
+                random.seed(os.urandom(5))
+                line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=random.choice(EMOJI_LIST) + log)])
+
         chat = mc.chat(event.message.text,)
         if chat:
             chat_similarity = Levenshtein.ratio(event.message.text, chat)
             logging.info('chat: %s (sim: %s)', chat, chat_similarity)
-        if source_id in TEST_GROUP_IDS or random.random() >= 0.9:
-            random.seed(os.urandom(5))
-            line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=random.choice(EMOJI_LIST)+log)])
 
 
 def make_reply(source_id, uid, msg, reply_token=None):
