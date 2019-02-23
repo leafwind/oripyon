@@ -4,7 +4,7 @@ import logging
 import jieba
 
 class MarkovChat(object):
-    chain_length = 4
+    chain_length = 2
     #chattiness = 0
     max_words = 25
     MESSAGES_TO_GENERATE = 2
