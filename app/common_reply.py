@@ -203,7 +203,8 @@ def common_reply(line_bot_api, source_id, uid, msg):
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
             user_name = ''
-        reply.format(name=user_name)
+        return [TextSendMessage(text=reply.format(name=user_name))]
+
     if msg == last_msg.get(source_id, None):
         logging.info('偵測到重複，準備推齊')
         repeated_diff_ts = now - replied_time.get((source_id, msg), 0)
