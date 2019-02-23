@@ -146,8 +146,9 @@ class MarkovChat(object):
                     continue
 
             if len(best_message.split()) <= 1:
-                logging.info("skip, only 1 word (%s)", best_message)
-                continue
+                # pass since not suitable for chinese
+                pass
+                # logging.info("skip, only 1 word (%s)", best_message)
             elif len(best_message) < 5:
                 logging.info("skip, less then 5 char (%s)", best_message)
                 continue
