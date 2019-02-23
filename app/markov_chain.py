@@ -1,4 +1,5 @@
 from collections import defaultdict, deque
+import os
 import random
 import logging
 import jieba
@@ -7,6 +8,12 @@ import Levenshtein
 # https://github.com/fxsjy/jieba/raw/master/extra_dict/dict.txt.big
 # 比預設的字典（三十萬筆）多了二十萬筆，目測加了很多繁體詞彙
 jieba.set_dictionary('app/data/dict.txt.zhtw.trimsize')
+
+
+def _load_stop_word_list(file_path):
+    stop_word_list = [line.strip() for line in open(file_path, 'r').readlines()]
+    return stop_word_list
+
 
 class MarkovChat(object):
     chain_length = 2
@@ -23,18 +30,13 @@ class MarkovChat(object):
         self.train_data = train_data
         self.chattiness = chattiness
         # stop words will be used in load model, so this line should before _load_model
-        self.stop_word_list = self._load_stop_word_list('app/data/stopwords.txt')
+        self.stop_word_list = _load_stop_word_list('app/data/stopwords.txt')
         self._load_model(self.train_data)
         logging.info("MarkovChat: load %s", self.train_data)
         if additional_train_data:
             for model in additional_train_data:
                 self._load_model(model)
                 logging.info("MarkovChat: load %s", model)
-
-
-    def _load_stop_word_list(self, file_path):
-        stop_word_list = [line.strip() for line in open(file_path, 'r').readlines()]
-        return stop_word_list
 
 
     def _simple_split_message_chinese(self, message):
@@ -120,9 +122,7 @@ class MarkovChat(object):
         #return ' '.join(gen_words).strip('\x02 ')
         return output
 
-    def log(self, msg, chattiness=None):
-        if not chattiness:
-            chattiness = self.chattiness
+    def log(self, msg, _chattiness=None):
         # speak only when spoken to, or when the spirit moves me
         #if msg.startswith('!') or 'http://' in msg or not msg.count(' '):
         if msg.startswith('!') or 'http://' in msg or 'https://' in msg:
@@ -169,8 +169,6 @@ class MarkovChat(object):
 
         self._incremental_train(msg)
 
-        if random.random() >= chattiness:
-            pass
         if messages:
             sorted(messages, key=lambda element: element[1], reverse=True)
             return messages[0][0]
@@ -188,11 +186,13 @@ class MarkovChat(object):
             self.rtable[rkey].append(words[-1])
 
     def random_chat(self):
+        random.seed(os.urandom(5))
         key = random.choice(self.rtable.keys())
         words = key.split(self.separator)
         return self._generate_message(words)
 
     def chat(self, msg):
+        random.seed(os.urandom(5))
         msg = msg.lower()
         words = list(self._simple_split_message_chinese(msg))
         logging.info('chat: %s', words)
@@ -225,7 +225,7 @@ class MarkovChat(object):
         all_msgs = [m for m in all_msgs if m.lower() not in msg]
         if not all_msgs:
             return ""
-        return "(๑•̀ω•́)ノ" + random.choice(all_msgs)
+        return random.choice(all_msgs)
 
     def _load_model(self, filename):
         try:

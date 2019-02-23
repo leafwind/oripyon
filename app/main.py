@@ -5,6 +5,7 @@ import time
 import uuid
 import yaml
 import json
+import random
 
 from flask import Flask, request, abort, render_template
 import Levenshtein
@@ -22,7 +23,7 @@ from linebot.models import (
 from app.common_reply import common_reply
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
 from app.linebot_webhook_extension import WebhookHandlerExtended
-from constants import GROUP_MAPPING
+from constants import GROUP_MAPPING, EMOJI_LIST
 from app.markov_chain import MarkovChat
 
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
@@ -277,8 +278,10 @@ def handle_text_message(event):
         if chat:
             chat_similarity = Levenshtein.ratio(event.message.text, chat)
             logging.info('chat: %s (sim: %s)', chat, chat_similarity)
-        if source_id == 'Cf794cf7dc1970c3fba9122673cf3dcde':
-            line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=log)])
+        # if source_id == 'Cf794cf7dc1970c3fba9122673cf3dcde':
+        if random.random() >= 0.9:
+            random.seed(os.urandom(5))
+            line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=random.choice(EMOJI_LIST)+log)])
 
 
 def make_reply(line_bot_api, source_id, uid, msg, reply_token=None):
