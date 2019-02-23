@@ -6,7 +6,11 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 
-from app.dice import fortune, tarot, nca, choice, coc_7e_basic
+from linebot.exceptions import (
+    LineBotApiError
+)
+
+from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card
 from app.finance import exchange_rate
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help, tzguguaning
 from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status
@@ -165,7 +169,7 @@ def build_complex_msg(result):
     return complex_msg
 
 
-def common_reply(source_id, msg):
+def common_reply(line_bot_api, source_id, uid, msg):
     now = int(time.time())
     for p in pattern_mapping:
         if p['type'] == 'equal':
@@ -192,6 +196,14 @@ def common_reply(source_id, msg):
         else:
             raise ValueError(f" unknown pattern type: {p['type']}")
 
+    if msg.startswith('何老師抽卡'):
+        reply = draw_card()
+        try:
+            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+        except LineBotApiError as e:
+            logging.error('LineBotApiError: %s', e)
+            user_name = ''
+        reply.format(name=user_name)
     if msg == last_msg.get(source_id, None):
         logging.info('偵測到重複，準備推齊')
         repeated_diff_ts = now - replied_time.get((source_id, msg), 0)

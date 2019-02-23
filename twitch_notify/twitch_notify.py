@@ -1,7 +1,6 @@
 """
 polling twitch api and notify line if streaming online
 """
-import threading
 import time
 import json
 import logging
@@ -106,17 +105,3 @@ if __name__ == "__main__":
     logging.info('start')
     sl = StreamLister()
     sl.run()
-    # try:
-    #     logging.info('start')
-    #     sl = StreamLister()
-    #     t = threading.Thread(target=sl.run)
-    #     t.start()
-    #     while True:
-    #         time.sleep(0.5)
-    #         logging.info('sleeing..')
-    # except Exception as e:
-    #     logging.exception('exception: %s', e)
-    # finally:
-    #     logging.info("exit")
-    #     sl.terminate()  # Signal termination
-    #     t.join()

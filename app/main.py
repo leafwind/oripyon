@@ -257,7 +257,7 @@ def handle_text_message(event):
             logging.error('LineBotApiError: %s', e)
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
-    make_reply(event.source.type, source_id, event.message.text, reply_token=event.reply_token)
+    make_reply(line_bot_api, source_id, uid, event.message.text, reply_token=event.reply_token)
 
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
         mc = MarkovChat(os.path.join('./training', GROUP_MAPPING[source_id]['log_filename'] + '.txt'), chattiness=1)
@@ -273,9 +273,9 @@ def handle_text_message(event):
             line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=chat)])
 
 
-def make_reply(_source_type, source_id, msg, reply_token=None):
+def make_reply(line_bot_api, source_id, uid, msg, reply_token=None):
     # private reply
-    reply = common_reply(source_id, msg)
+    reply = common_reply(line_bot_api, source_id, uid, msg)
     if reply:
         line_bot_api.reply_message(reply_token, reply)
         return

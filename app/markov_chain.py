@@ -140,7 +140,7 @@ class MarkovChat(object):
 
             # 生成五次句子，沒有比原本長的就丟掉，然後再選最長的
             best_message = ''
-            for i in range(self.MESSAGES_TO_GENERATE):
+            for _ in range(self.MESSAGES_TO_GENERATE):
                 generated = self._generate_message(words)
                 logging.info("jeiba '%s' => '%s'", " ".join(words), generated)
                 if generated in msg:

@@ -3,9 +3,16 @@ import json
 import logging
 import os
 
-from constants import HUGE_GROUP_IDS
+
+from constants import HUGE_GROUP_IDS, TEACHER_HO
 
 tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
+
+
+def draw_card():
+    random.seed(os.urandom(5))
+    msg = random.choice(TEACHER_HO)
+    return msg
 
 
 def tarot(source_id):
