@@ -278,8 +278,7 @@ def handle_text_message(event):
         if chat:
             chat_similarity = Levenshtein.ratio(event.message.text, chat)
             logging.info('chat: %s (sim: %s)', chat, chat_similarity)
-        # if source_id == 'Cf794cf7dc1970c3fba9122673cf3dcde':
-        if random.random() >= 0.9:
+        if source_id == 'Cf794cf7dc1970c3fba9122673cf3dcde' or random.random() >= 0.9:
             random.seed(os.urandom(5))
             line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=random.choice(EMOJI_LIST)+log)])
 
