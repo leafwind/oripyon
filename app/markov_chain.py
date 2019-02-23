@@ -19,7 +19,7 @@ class MarkovChat(object):
         self.chattiness = chattiness
 
         self._load_file(self.train_data)
-        self.stop_word_list = self._load_stop_word_list('./data/stopwords.txt')
+        self.stop_word_list = self._load_stop_word_list('app/data/stopwords.txt')
         logging.info("MarkovChat: load %s", self.train_data)
         if additional_train_data:
             for model in additional_train_data:
