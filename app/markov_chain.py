@@ -7,7 +7,7 @@ class MarkovChat(object):
     chain_length = 2
     #chattiness = 0
     max_words = 25
-    messages_to_generate = 5
+    MESSAGES_TO_GENERATE = 5
     separator = '\x01'
     stop_word = '\x02'
     ltable = defaultdict(list)
@@ -121,27 +121,32 @@ class MarkovChat(object):
         for words in self._split_message_chinese(msg):
             # if we should say something, generate some messages based on what
             # was just said and select the longest, then add it to the list
+
+            # 生成五次句子，沒有比原本長的就丟掉，然後再選最長的
             best_message = ''
-            for i in range(self.messages_to_generate):
+            for i in range(self.MESSAGES_TO_GENERATE):
                 generated = self._generate_message(words)
-                print("jeiba '{}' => '{}'".format(" ".join(words), generated))
+                logging.info("jeiba '%s' => '%s'", " ".join(words), generated)
                 if generated in msg:
-                    #logging.warning("just substring, skip")
+                    logging.info("skip, just substring")
                     continue
                 if len(generated) > len(best_message):
                     best_message = generated
                 else:
-                    logging.warning("predicted msg len({}) = {} <= len({}) = {}, skip".format(generated, len(generated), best_message, len(best_message)))
+                    logging.info(
+                        "predicted msg length %s(%s) <= %s(%s), skip",
+                        generated, len(generated), best_message, len(best_message)
+                    )
                     continue
 
-            if len(best_message.split()) <= 1: # skip 1 word output
-                logging.warning("only 1 word")
+            if len(best_message.split()) <= 1:
+                logging.info("skip, only 1 word (%s)", best_message)
                 continue
-            elif len(best_message) < 5*3: # skip output which is < 5 chinese characters
-                logging.warning("output too short")
+            elif len(best_message) < 5:
+                logging.info("skip, less then 5 char (%s)", best_message)
                 continue
             elif random.random() >= chattiness:
-                logging.warning("I don't want to chat so I won't append '{}' to candidate".format(best_message))
+                logging.info("skip, chattiness (%s) (%s)", chattiness, best_message)
                 continue
             else:
                 messages.append(best_message)
