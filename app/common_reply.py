@@ -12,7 +12,7 @@ from linebot.exceptions import (
 
 from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card
 from app.finance import exchange_rate
-from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help, tzguguaning
+from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help, tzguguaning, daughter_red
 from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status
 
 
@@ -31,6 +31,7 @@ coc_7e_skill_pattern = re.compile(
 gurulingpo_pattern = re.compile(r'咕嚕靈波')
 mahoshoujo_pattern = re.compile(r'魔法少女')
 tzguguaning_pattern = re.compile(r'慈孤觀音')
+daughter_red_pattern = re.compile(r'女兒紅')
 why_pattern = re.compile(r'請問為什麼')
 help_pattern = re.compile(r'/help', re.IGNORECASE)
 poor_chinese_pattern = re.compile(r'爛中文')
@@ -143,6 +144,12 @@ pattern_mapping = [
         'type': 'search',
         'function': tzguguaning
     },
+    {
+        'cmd': daughter_red_pattern,
+        'type': 'search',
+        'function': daughter_red
+    },
+
     {
         'cmd': help_pattern,
         'type': 'search',
