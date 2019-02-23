@@ -259,9 +259,9 @@ def handle_text_message(event):
 
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
         mc = MarkovChat(os.path.join('./training', GROUP_MAPPING[source_id]['log_filename'] + '.txt'), chattiness=1)
-        test_output = mc.log(event.message.text, chattiness=1)
-        test_output2 = mc.chat(event.message.text,)
-        logging.info('test_output: %s, test_output2: %s', test_output, test_output2)
+        log = mc.log(event.message.text, chattiness=1)
+        chat = mc.chat(event.message.text,)
+        logging.info('test_output: %s, test_output2: %s', log, chat)
         if False:
             line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=test_output)])
 
