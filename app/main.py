@@ -7,6 +7,8 @@ import yaml
 import json
 
 from flask import Flask, request, abort, render_template
+import Levenshtein
+
 from app.linebot_api_extension import (
     LineBotApiExtension
 )
@@ -260,8 +262,11 @@ def handle_text_message(event):
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
         mc = MarkovChat(os.path.join('./training', GROUP_MAPPING[source_id]['log_filename'] + '.txt'), chattiness=1)
         log = mc.log(event.message.text, chattiness=1)
+        log_similarity = Levenshtein.ratio(event.message.text, log)
+        logging.info('log: %s (sim: %s)', log, log_similarity)
         chat = mc.chat(event.message.text,)
-        logging.info('log: %s, chat: %s', log, chat)
+        chat_similarity = Levenshtein.ratio(event.message.text, chat)
+        logging.info('chat: %s (sim: %s)', chat, chat_similarity)
         if False:
             line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=test_output)])
 

@@ -76,7 +76,7 @@ class MarkovChat(object):
     def _generate_message(self, seed):
         gen_words = deque(seed)
 
-        for i in range(self.max_words//2):
+        for _ in range(self.max_words//2):
             lwords = gen_words[0], gen_words[1]
             rwords = gen_words[-2], gen_words[-1]
             lkey = self.separator.join(lwords).lower()
@@ -187,11 +187,12 @@ class MarkovChat(object):
         return self._generate_message(words)
 
     def chat(self, msg):
+        msg = msg.lower()
         words = list(self._simple_split_message_chinese(msg))
         logging.info('chat: %s', words)
         if len(words) == 1:
             keys = []
-            word = words[0].lower()
+            word = words[0]
             for k, v in self.rtable.items():
                 if k.endswith(word):
                     keys.extend(v)
@@ -200,7 +201,7 @@ class MarkovChat(object):
                 words.append(k)
         if len(words) == 1:
             keys = []
-            word = words[0].lower()
+            word = words[0]
             for k, v in self.ltable.items():
                 if k.startswith(word):
                     keys.extend(v)
@@ -215,7 +216,6 @@ class MarkovChat(object):
             messages = [self._generate_message(ctx) for _ in range(3)]
             all_msgs.extend(messages)
 
-        msg = msg.lower()
         all_msgs = [m for m in all_msgs if m.lower() not in msg]
         if not all_msgs:
             return ""
