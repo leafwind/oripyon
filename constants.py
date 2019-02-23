@@ -25,6 +25,7 @@ GROUP_MAPPING = {
     'C1bebaeaf89242089f0d755d492df6cb6': {
         'name': '測試群組',
         'function': group_reply_test,
+        'log_filename': 'powpow_test',
     },
     'C690e08d2fb900d5bbd873e103d500b92': {
         'name': '皇家御貓園',
@@ -54,6 +55,7 @@ GROUP_MAPPING = {
     'C15c762c0a497d62992c01b42ba9b39d9': {
         'name': '死愛台版交流區',
         'function': group_reply_taiwan_sino_alice,
+        'log_filename': 'sinoalice_tw',
     },
     'Cbc420349e56f3bae5d5f46fafb0ac5cb': {
         'name': '社畜人生的煩惱',
