@@ -147,7 +147,8 @@ pattern_mapping = [
     {
         'cmd': daughter_red_pattern,
         'type': 'search',
-        'function': daughter_red
+        'function': daughter_red,
+        'multi_type_output': True
     },
 
     {
