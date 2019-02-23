@@ -20,4 +20,4 @@ def get_exchange_rate():
 
 def get_reservoir_stat():
     r = requests.get('https://www.taiwanstat.com/waters/latest')
-    return r.json()
+    return r.json()[0]
