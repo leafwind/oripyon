@@ -4,10 +4,10 @@ import logging
 import jieba
 
 class MarkovChat(object):
-    chain_length = 2
+    chain_length = 4
     #chattiness = 0
     max_words = 25
-    MESSAGES_TO_GENERATE = 5
+    MESSAGES_TO_GENERATE = 2
     separator = '\x01'
     stop_word = '\x02'
     ltable = defaultdict(list)
@@ -145,17 +145,18 @@ class MarkovChat(object):
             elif len(best_message) < 5:
                 logging.info("skip, less then 5 char (%s)", best_message)
                 continue
-            elif random.random() >= chattiness:
-                logging.info("skip, chattiness (%s) (%s)", chattiness, best_message)
-                continue
             else:
                 messages.append(best_message)
                 logging.info("append '{}' to candidate".format(best_message))
 
         self._incremental_train(msg)
 
+        if random.random() >= chattiness:
+            pass
         if messages:
             return random.choice(messages)
+        else:
+            return ''
 
     def _incremental_train(self, msg):
         for words in self._split_message_chinese(msg):
