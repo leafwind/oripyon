@@ -141,32 +141,30 @@ class MarkovChat(object):
 
             # 生成五次句子，沒有比原本長的就丟掉，然後再選最不相似的
             best_message = msg
+            best_similarity = 1.0
             for _ in range(self.MESSAGES_TO_GENERATE):
                 generated = self._generate_message(words)
                 logging.info("jeiba '%s' => '%s'", " ".join(words), generated)
                 if generated in msg:
                     logging.info("skip, just substring")
                     continue
-                sim_generated = Levenshtein.ratio(msg, generated)
-                sim_best_message = Levenshtein.ratio(msg, best_message)
-                if sim_generated < sim_best_message:
+                generated_similarity = Levenshtein.ratio(msg, generated)
+                best_similarity = Levenshtein.ratio(msg, best_message)
+                if generated_similarity < best_similarity:
                     best_message = generated
+                    best_similarity = generated_similarity
                 else:
                     logging.info(
                         "predicted msg similarity %s(%s) >= %s(%s), skip",
-                        generated, sim_generated, best_message, sim_best_message
+                        generated, generated_similarity, best_message, best_similarity
                     )
                     continue
 
-            if len(best_message.split()) <= 1:
-                # pass since not suitable for chinese
-                pass
-                # logging.info("skip, only 1 word (%s)", best_message)
-            elif len(best_message) < 5:
+            if len(best_message) < 5:
                 logging.info("skip, less then 5 char (%s)", best_message)
                 continue
             else:
-                messages.append(best_message)
+                messages.append((best_message, best_similarity))
                 logging.info("append '{}' to candidate".format(best_message))
 
         self._incremental_train(msg)
@@ -174,7 +172,8 @@ class MarkovChat(object):
         if random.random() >= chattiness:
             pass
         if messages:
-            return random.choice(messages)
+            sorted(messages, key=lambda element: element[1], reverse=True)
+            return messages[0](0)
         else:
             return ''
 
