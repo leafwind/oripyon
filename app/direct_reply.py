@@ -26,6 +26,10 @@ def why():
     return f'因為{random.choice(wtf_reasons.reasons)}。'
 
 
+def tzguguaning():
+    return '恭迎慈孤觀音⎝༼ ◕д ◕ ༽⎠\n渡世靈顯四方⎝༼ ◕д ◕ ༽⎠'
+
+
 def gurulingpo():
     s = '''
 *``･*+。

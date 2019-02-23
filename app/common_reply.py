@@ -8,7 +8,7 @@ from linebot.models import (
 
 from app.dice import fortune, tarot, nca, choice, coc_7e_basic
 from app.finance import exchange_rate
-from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help
+from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help, tzguguaning
 from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status
 
 
@@ -26,6 +26,7 @@ coc_7e_skill_pattern = re.compile(
     """, re.VERBOSE | re.IGNORECASE)
 gurulingpo_pattern = re.compile(r'咕嚕靈波')
 mahoshoujo_pattern = re.compile(r'魔法少女')
+tzguguaning_pattern = re.compile(r'慈孤觀音')
 why_pattern = re.compile(r'請問為什麼')
 help_pattern = re.compile(r'/help', re.IGNORECASE)
 poor_chinese_pattern = re.compile(r'爛中文')
@@ -132,6 +133,11 @@ pattern_mapping = [
         'cmd': why_pattern,
         'type': 'search',
         'function': why
+    },
+    {
+        'cmd': tzguguaning_pattern,
+        'type': 'search',
+        'function': tzguguaning
     },
     {
         'cmd': help_pattern,
