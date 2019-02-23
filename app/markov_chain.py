@@ -3,6 +3,10 @@ import random
 import logging
 import jieba
 
+# https://github.com/fxsjy/jieba/raw/master/extra_dict/dict.txt.big
+# 比預設的字典（三十萬筆）多了二十萬筆，目測加了很多繁體詞彙
+jieba.set_dictionary('app/data/dict.txt.big')
+
 class MarkovChat(object):
     chain_length = 2
     #chattiness = 0
@@ -33,18 +37,12 @@ class MarkovChat(object):
 
 
     def _simple_split_message_chinese(self, message):
-        # https://github.com/fxsjy/jieba/raw/master/extra_dict/dict.txt.big
-        # 比預設的字典（三十萬筆）多了二十萬筆，目測加了很多繁體詞彙
-        jieba.set_dictionary('app/data/dict.txt.big')
         words_generator = jieba.cut(message, cut_all=False)
         words = [w for w in words_generator if w not in self.stop_word_list]
         return words
 
 
     def _split_message_chinese(self, message):
-        # https://github.com/fxsjy/jieba/raw/master/extra_dict/dict.txt.big
-        # 比預設的字典（三十萬筆）多了二十萬筆，目測加了很多繁體詞彙
-        jieba.set_dictionary('app/data/dict.txt.big')
         words_generator = jieba.cut(message, cut_all=False)
         words = [w for w in words_generator if w not in self.stop_word_list]
         if len(words) > self.chain_length:
