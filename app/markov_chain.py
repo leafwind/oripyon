@@ -180,8 +180,8 @@ class MarkovChat(object):
         words = key.split(self.separator)
         return self._generate_message(words)
 
-    def chat(self, context):
-        words = context.split()
+    def chat(self, msg):
+        words = self._split_message_chinese(msg)
         if len(words) == 1:
             keys = []
             word = words[0].lower()
@@ -208,8 +208,8 @@ class MarkovChat(object):
             messages = [self._generate_message(ctx) for _ in range(3)]
             all_msgs.extend(messages)
 
-        ctx = context.lower()
-        all_msgs = [m for m in all_msgs if m.lower() not in ctx]
+        msg = msg.lower()
+        all_msgs = [m for m in all_msgs if m.lower() not in msg]
         if not all_msgs:
             return ""
         return "(๑•̀ω•́)ノ" + random.choice(all_msgs)
