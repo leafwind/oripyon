@@ -2,6 +2,7 @@ from collections import defaultdict, deque
 import random
 import logging
 import jieba
+import Levenshtein
 
 # https://github.com/fxsjy/jieba/raw/master/extra_dict/dict.txt.big
 # 比預設的字典（三十萬筆）多了二十萬筆，目測加了很多繁體詞彙
@@ -138,7 +139,7 @@ class MarkovChat(object):
             # if we should say something, generate some messages based on what
             # was just said and select the longest, then add it to the list
 
-            # 生成五次句子，沒有比原本長的就丟掉，然後再選最長的
+            # 生成五次句子，沒有比原本長的就丟掉，然後再選最不相似的
             best_message = ''
             for _ in range(self.MESSAGES_TO_GENERATE):
                 generated = self._generate_message(words)
@@ -146,12 +147,14 @@ class MarkovChat(object):
                 if generated in msg:
                     logging.info("skip, just substring")
                     continue
-                if len(generated) > len(best_message):
+                sim_generated = Levenshtein.ratio(msg, generated)
+                sim_best_message = Levenshtein.ratio(msg, best_message)
+                if sim_generated < sim_best_message:
                     best_message = generated
                 else:
                     logging.info(
-                        "predicted msg length %s(%s) <= %s(%s), skip",
-                        generated, len(generated), best_message, len(best_message)
+                        "predicted msg similarity %s(%s) >= %s(%s), skip",
+                        generated, sim_generated, best_message, sim_best_message
                     )
                     continue
 
