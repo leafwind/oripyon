@@ -262,7 +262,7 @@ def handle_text_message(event):
         test_output = mc.log(event.message.text, chattiness=0.2)
         test_output2 = mc.chat(event.message.text,)
         logging.info('test_output: %s, test_output2: %s', test_output, test_output2)
-        if test_output:
+        if False:
             line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=test_output)])
 
 
