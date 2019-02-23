@@ -19,6 +19,7 @@ class MarkovChat(object):
         self.chattiness = chattiness
 
         self._load_file(self.train_data)
+        self.stop_word_list = self._load_stop_word_list('./data/stopwords.txt')
         logging.info("MarkovChat: load %s", self.train_data)
         if additional_train_data:
             for model in additional_train_data:
@@ -26,9 +27,14 @@ class MarkovChat(object):
                 logging.info("MarkovChat: load %s", model)
 
 
+    def _load_stop_word_list(self, file_path):
+        stop_word_list = [line.strip() for line in open(file_path, 'r').readlines()]
+        return stop_word_list
+
+
     def _split_message_chinese(self, message):
         words_generator = jieba.cut(message, cut_all=False)
-        words = [w for w in words_generator]
+        words = [w for w in words_generator if w not in self.stop_word_list]
         if len(words) > self.chain_length:
             words.append(self.stop_word)
             words = [self.stop_word, self.stop_word] + words
