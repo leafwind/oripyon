@@ -9,6 +9,7 @@ import logging
 import yaml
 import requests
 
+logging.getLogger().setLevel(logging.INFO)
 
 with open("./secret.yml", 'r') as stream:
     _data = yaml.load(stream)
@@ -24,11 +25,12 @@ def notify(data):
         'Authorization': 'Bearer ' + LINE_NOTIFY_SECRET,
         "content-type": 'application/x-www-form-urlencoded'
     }
-    requests.post(
+    r = requests.post(
         'https://notify-api.line.me/api/notify',
         headers=line_notify_headers, data=data
     )
-
+    payload = json.loads(r.text)
+    logging.info('%s', payload)
 
 stream_set = set()
 def twitch_stream_notify():
@@ -58,6 +60,7 @@ def twitch_stream_notify():
         }
     }
     payload = json.loads(r.text)
+    logging.info('%s', payload)
     new_stream_set = set()
     if payload['_total'] > 0:
         for streamer in payload['streams']:
@@ -100,15 +103,20 @@ class StreamLister:
 
 
 if __name__ == "__main__":
+    logging.info('start')
     sl = StreamLister()
-    t = threading.Thread(target=sl.run)
-    try:
-        t.start()
-        while True:
-            time.sleep(0.5)
-    except Exception as e:
-        logging.exception('exception: %s', e)
-    finally:
-        logging.info("exit")
-        sl.terminate()  # Signal termination
-        t.join()
+    sl.run()
+    # try:
+    #     logging.info('start')
+    #     sl = StreamLister()
+    #     t = threading.Thread(target=sl.run)
+    #     t.start()
+    #     while True:
+    #         time.sleep(0.5)
+    #         logging.info('sleeing..')
+    # except Exception as e:
+    #     logging.exception('exception: %s', e)
+    # finally:
+    #     logging.info("exit")
+    #     sl.terminate()  # Signal termination
+    #     t.join()
