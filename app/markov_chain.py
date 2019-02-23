@@ -182,6 +182,7 @@ class MarkovChat(object):
 
     def chat(self, msg):
         words = list(self._split_message_chinese(msg))
+        logging.info('chat: %s', words)
         if len(words) == 1:
             keys = []
             word = words[0].lower()
