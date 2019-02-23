@@ -16,3 +16,8 @@ def get_exchange_rate():
     r = requests.get('https://tw.rter.info/capi.php')
     mapping = r.json()
     return mapping
+
+
+def get_reservoir_stat():
+    r = requests.get('https://www.taiwanstat.com/waters/latest')
+    return r.json

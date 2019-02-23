@@ -13,7 +13,7 @@ from linebot.exceptions import (
 from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card
 from app.finance import exchange_rate
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, bot_help, tzguguaning, daughter_red
-from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status
+from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status, reservoir_now
 
 
 # equivalent to:
@@ -95,6 +95,12 @@ pattern_mapping = [
         'cmd': '空品',
         'type': 'equal',
         'function': aqi_now
+    },
+    {
+        'cmd': '水庫',
+        'type': 'equal',
+        'function': reservoir_now,
+        'multi_type_output': True
     },
     {
         'cmd': aqi_predict_pattern,

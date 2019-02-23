@@ -17,7 +17,8 @@ from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError
 )
 from linebot.models import (
-    MessageEvent, JoinEvent, LeaveEvent, TextMessage, ImageMessage, TextSendMessage, ImageSendMessage, StickerMessage
+    MessageEvent, JoinEvent, LeaveEvent, FollowEvent,
+    TextMessage, ImageMessage, TextSendMessage, ImageSendMessage, StickerMessage
 )
 
 from app.common_reply import common_reply
@@ -88,6 +89,20 @@ def default(event):
             logging.error('LineBotApiError: %s', e)
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：(default handler){event.message}")
+
+
+@handler.add(FollowEvent)
+def handle_follow_event(event):
+    if event.source.type == 'room':
+        source_id = event.source.room_id
+    elif event.source.type == 'group':
+        source_id = event.source.group_id
+    else:
+        raise ValueError
+    logging.info(
+        f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} JoinEvent")
+    replies = [TextSendMessage(text=f'安安/ 感謝邀請我進來～')]
+    line_bot_api.reply_message(event.reply_token, replies)
 
 
 @handler.add(JoinEvent)

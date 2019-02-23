@@ -1,9 +1,30 @@
 import logging
 import time
 from datetime import datetime
-from app.util import get_short_url
+from app.util import get_short_url, get_reservoir_stat
 from app import predict_AQI
 from taiwan_area_map.query_area import query_area
+
+
+def reservoir_now():
+    reservoir_stat = get_reservoir_stat()
+    replies = []
+    for reservoir_name in ['翡翠水庫', '石門水庫']:
+        r = reservoir_stat[reservoir_name]
+        total = r['baseAvailable']
+        updated_at = r['updateAt']
+        percentage = float(r['percentage'])
+        diff = float(r['daliyNetflow'])
+        diff_percentage = diff / total
+        estimated_remain_days = percentage / (diff / total)
+        up_or_down = '上升' if diff < 0 else '下降'
+        replies.append((
+            'text', f'{reservoir_name} 百分比：{percentage}\n'
+                f'昨日水量{up_or_down}：{diff_percentage}% 預測剩餘天數：{estimated_remain_days}天 \n'
+                f'更新時間：{updated_at}'
+        ))
+    replies.append(('text', '其他水庫資訊請參考 https://water.taiwanstat.com/'))
+    return
 
 
 def weather_now():
