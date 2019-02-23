@@ -140,7 +140,7 @@ class MarkovChat(object):
             # was just said and select the longest, then add it to the list
 
             # 生成五次句子，沒有比原本長的就丟掉，然後再選最不相似的
-            best_message = ''
+            best_message = msg
             for _ in range(self.MESSAGES_TO_GENERATE):
                 generated = self._generate_message(words)
                 logging.info("jeiba '%s' => '%s'", " ".join(words), generated)
