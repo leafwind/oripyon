@@ -262,13 +262,15 @@ def handle_text_message(event):
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
         mc = MarkovChat(os.path.join('./training', GROUP_MAPPING[source_id]['log_filename'] + '.txt'), chattiness=1)
         log = mc.log(event.message.text, chattiness=1)
-        log_similarity = Levenshtein.ratio(event.message.text, log)
-        logging.info('log: %s (sim: %s)', log, log_similarity)
+        if log:
+            log_similarity = Levenshtein.ratio(event.message.text, log)
+            logging.info('log: %s (sim: %s)', log, log_similarity)
         chat = mc.chat(event.message.text,)
-        chat_similarity = Levenshtein.ratio(event.message.text, chat)
-        logging.info('chat: %s (sim: %s)', chat, chat_similarity)
+        if chat:
+            chat_similarity = Levenshtein.ratio(event.message.text, chat)
+            logging.info('chat: %s (sim: %s)', chat, chat_similarity)
         if False:
-            line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=test_output)])
+            line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=chat)])
 
 
 def make_reply(_source_type, source_id, msg, reply_token=None):
