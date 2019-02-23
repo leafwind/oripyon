@@ -260,7 +260,7 @@ def handle_text_message(event):
             logging.error('LineBotApiError: %s', e)
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
-    make_reply(line_bot_api, source_id, uid, event.message.text, reply_token=event.reply_token)
+    make_reply(source_id, uid, event.message.text, reply_token=event.reply_token)
 
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
         if source_id not in markov_chat_instance_map:
@@ -270,7 +270,7 @@ def handle_text_message(event):
         else:
             # reuse MarkovChat obj to save memory
             mc = markov_chat_instance_map[source_id]
-        log = mc.log(event.message.text, chattiness=1)
+        log = mc.log(event.message.text)
         if log:
             log_similarity = Levenshtein.ratio(event.message.text, log)
             logging.info('log: %s (sim: %s)', log, log_similarity)
@@ -284,7 +284,7 @@ def handle_text_message(event):
             line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=random.choice(EMOJI_LIST)+log)])
 
 
-def make_reply(line_bot_api, source_id, uid, msg, reply_token=None):
+def make_reply(source_id, uid, msg, reply_token=None):
     # private reply
     reply = common_reply(line_bot_api, source_id, uid, msg)
     if reply:
