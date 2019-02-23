@@ -24,7 +24,7 @@ def reservoir_now():
                 f'更新時間：{updated_at}'
         ))
     replies.append(('text', '其他水庫資訊請參考 https://water.taiwanstat.com/'))
-    return
+    return replies
 
 
 def weather_now():
