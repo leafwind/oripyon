@@ -269,7 +269,7 @@ def handle_text_message(event):
         if chat:
             chat_similarity = Levenshtein.ratio(event.message.text, chat)
             logging.info('chat: %s (sim: %s)', chat, chat_similarity)
-        if False:
+        if source_id == 'Cf794cf7dc1970c3fba9122673cf3dcde':
             line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=chat)])
 
 
