@@ -197,13 +197,13 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
                     replies = ['是我的！！']
     elif '雞排' in msg and '吃' in msg:
         replies = ['我也要吃 (๑´ڡ`๑)']
-    elif msg.startswith('抽男 '):
+    elif msg.startswith('抽男'):
         replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(male_list)}呢！']
-    elif msg.startswith('抽女 '):
+    elif msg.startswith('抽女'):
         replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(female_list)}呢！']
-    elif msg.startswith('抽不明 '):
+    elif msg.startswith('抽不明'):
         replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(asexual_list)}呢！']
-    elif msg.startswith('抽全部 '):
+    elif msg.startswith('抽全部'):
         replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(all_list)}呢！']
     elif '死愛資料庫' in msg:
         replies = ['https://sinoalice.game-db.tw/']
@@ -215,7 +215,7 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
         replies = ['\n'.join(id_list)]
     else:
         pass
-    if msg == '抽女友':
+    if msg.startswith('抽女友'):
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
         except LineBotApiError as e:
