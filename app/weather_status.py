@@ -20,7 +20,7 @@ def reservoir_now():
             estimated_remain_days = percentage // diff_percentage
             up_or_down = '上升' if diff < 0 else '下降'
             replies.append((
-                'text', f'{reservoir_name} 百分比：{percentage}\n'
+                'text', f'{reservoir_name} 百分比：{percentage:.2f}\n'
                     f'昨日水量{up_or_down}：{diff_percentage:.2f}% 預測剩餘天數：{estimated_remain_days}天\n'
                     f'更新時間：{updated_at}'
             ))
