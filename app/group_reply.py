@@ -221,7 +221,7 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
             user_name = ''
-        target_name = random.choice(RANDOM_GF.keys())
+        target_name = random.choice(list(RANDOM_GF))
         url = RANDOM_GF[target_name]['url']
         msg = f'{user_name}真可憐呢沒有女友，不哭不哭，給你一個{target_name}的左手聞香(´;ω;`)ヾ(･∀･`)'
         return [
