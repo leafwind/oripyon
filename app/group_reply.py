@@ -22,7 +22,7 @@ help_find_pattern = re.compile('協尋')
 
 
 RANDOM_GF = {}
-random_gf_file = os.path.join('line-user-info', 'RANDOM_GF.json')
+random_gf_file = os.path.join('line-user-info', 'random_gf.json')
 if os.path.exists(random_gf_file):
     with open(random_gf_file, 'r') as f:
         RANDOM_GF = json.load(f)
