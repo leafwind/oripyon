@@ -24,7 +24,8 @@ from linebot.models import (
 from app.common_reply import common_reply
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
 from app.linebot_webhook_extension import WebhookHandlerExtended
-from constants import GROUP_MAPPING, EMOJI_LIST, TEST_GROUP_IDS
+from constants import GROUP_MAPPING, TEST_GROUP_IDS
+from app.emoji_list import KAOMOJI_LIST
 from app.markov_chain import MarkovChat
 
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
@@ -159,9 +160,6 @@ def handle_member_join_event(event):
         replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
         replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
                    replies_img]
-        # user_ids = [m.user_id for m in event.joined.members]
-        # user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
-        # replies.append(TextSendMessage(text=f'@{",".join(user_names)} 新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
         replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
     elif source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336':
         replies = [TextSendMessage(text=f'安安～這裡是清新優質群組，每天有很多車班可以上車學習，願大家都能很快考到駕照～')]
@@ -180,9 +178,6 @@ def handle_member_leave_event(event):
         raise ValueError
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} 有人退群囉")
-    # user_ids = [m.user_id for m in event.joined.members]
-    # user_names = [line_bot_api.get_profile(uid).display_name for uid in user_ids]
-    # replies = [TextSendMessage(text=f'群友{",".join(user_names)}失去了夢想。')]
 
 
 @handler.add(MessageEvent, message=StickerMessage)
@@ -301,7 +296,7 @@ def handle_text_message(event):
             logging.info('log: %s (sim: %s)', log, log_similarity)
             if source_id in TEST_GROUP_IDS or random.random() >= 0.97:
                 random.seed(os.urandom(5))
-                line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=random.choice(EMOJI_LIST) + log)])
+                line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=random.choice(KAOMOJI_LIST) + log)])
 
         chat = mc.chat(event.message.text,)
         if chat:

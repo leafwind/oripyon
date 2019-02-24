@@ -1,7 +1,7 @@
 import random
 import os
 from app import wtf_reasons
-from app.emoji_list import cry_emoji_list
+from app.emoji_list import CRY_EMOJI_LIST
 
 
 def pier_girl():
@@ -33,7 +33,7 @@ def poor_chinese():
 
 def qq():
     random.seed(os.urandom(5))
-    return f'幫QQ喔 {random.choice(cry_emoji_list)}'
+    return f'幫QQ喔 {random.choice(CRY_EMOJI_LIST)}'
 
 
 def mahoshoujo():

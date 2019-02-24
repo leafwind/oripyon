@@ -15,7 +15,6 @@ from linebot.exceptions import (
 from app.line_templates import make_template_action, make_carousel_column
 from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
-from app.emoji_list import cry_emoji_list
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 help_find_pattern = re.compile('協尋')
@@ -29,13 +28,6 @@ if os.path.exists(random_gf_file):
 
 
 def group_reply_test(_line_bot_api, _source_id, _uid, msg):
-    if msg == '!hinet':
-        image_message = ImageSendMessage(
-            original_content_url='https://i.imgur.com/BFTQEnG.png',
-            preview_image_url='https://i.imgur.com/BFTQEnG.png',
-        )
-        return [image_message]
-
     leafwind_photo_url = \
         'https://static-cdn.jtvnw.net/jtv_user_pictures/panel-145336656-image-e9329cd5f8f44a76-320-320.png'
     kaori_photo_url = \
