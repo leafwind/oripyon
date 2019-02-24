@@ -137,9 +137,8 @@ def group_reply_taiwan_sino_alice(msg):
 def group_reply_nier_sino_alice(msg):
     msg = msg.lower()
     wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB', '初雪', '鈴']
-    unwanted_list = ['生哥', '阿生']
-    male_list = ['生哥', '芙芙', '性迪', '阿星', '肉肉', '肉凱', '糕連']
-    female_list = ['名字', '盼盼', '四姐', 'EBB', '初雪', '鈴♡', '凝凝', '楓楓', 'A婭']
+    male_list = ['芙芙', '性迪', '阿星', '肉肉', '肉凱', '糕連']
+    female_list = ['名字', '盼盼', '四姐', 'EBB', '初雪', '鈴♡', '凝凝', '楓楓', '丸丸']
     asexual_list = ['丶丶', '丿丿', '樹樹', '兔比', '小葵', '雞排', 'Momo']
     all_list = male_list + female_list + asexual_list
     id_list = [
@@ -182,13 +181,6 @@ def group_reply_nier_sino_alice(msg):
                     replies = ['不要潛水出來嗨 ヽ(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)人(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)ﾉ']
                 else:
                     replies = ['是我的！！']
-
-        for name in unwanted_list:
-            if name in msg:
-                if random.random() >= 0.2:
-                    replies = ['好阿給你。']
-                else:
-                    replies = ['只、只能借你一下喔...']
     elif '雞排' in msg and '吃' in msg:
         replies = ['我也要吃 (๑´ڡ`๑)']
     elif msg.startswith('抽男 '):
