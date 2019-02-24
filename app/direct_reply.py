@@ -4,6 +4,16 @@ from app import wtf_reasons
 from app.emoji_list import cry_emoji_list
 
 
+def pier_girl():
+    random.seed(os.urandom(5))
+    return random.choice(
+        [
+            'https://www.youtube.com/watch?v=BoD4yCTXTCU',
+            'https://www.youtube.com/watch?v=M-MT0z6ac7g'
+        ]
+    )
+
+
 def girlfriend():
     return [('image', 'https://i.imgur.com/g6WRWrk.jpg')]
 

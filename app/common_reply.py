@@ -13,7 +13,7 @@ from linebot.exceptions import (
 from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card
 from app.finance import exchange_rate
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
-    bot_help, tzguguaning, daughter_red, girlfriend
+    bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
 from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status, reservoir_now
 
 
@@ -97,6 +97,11 @@ pattern_mapping = [
         'cmd': '空品',
         'type': 'equal',
         'function': aqi_now
+    },
+    {
+        'cmd': '碼頭姑娘',
+        'type': 'equal',
+        'function': pier_girl
     },
     {
         'cmd': '水庫',
