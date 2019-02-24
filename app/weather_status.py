@@ -26,7 +26,7 @@ def reservoir_now():
             ))
         except ValueError:
             replies.append((
-                'text', f'{reservoir_name} 百分比：{percentage}\n 昨日水量變化無法讀取，無法預測剩餘天數\n'
+                'text', f'{reservoir_name} 百分比：{percentage:.1f}%\n 昨日水量變化無法讀取，無法預測剩餘天數\n'
                     f'更新時間：{updated_at}'
             ))
 
