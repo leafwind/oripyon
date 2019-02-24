@@ -32,10 +32,10 @@ logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.W
 application = Flask(__name__, template_folder='templates')
 
 user_info = {}
-user_info_map_file = os.path.join('line-user-info', 'users.json')
-if os.path.exists(user_info_map_file):
-    with open(user_info_map_file, 'r') as f:
-        user_info = json.load(f)
+USER_INFO_MAP_FILE = os.path.join('line-user-info', 'users.json')
+if os.path.exists(USER_INFO_MAP_FILE):
+    with open(USER_INFO_MAP_FILE, 'r') as _f:
+        user_info = json.load(_f)
 
 with open("line_auth_key.yml", 'r') as stream:
     data = yaml.load(stream)
@@ -44,6 +44,12 @@ with open("line_auth_key.yml", 'r') as stream:
 line_bot_api = LineBotApiExtension(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandlerExtended(CHANNEL_SECRET)
 markov_chat_instance_map = {}
+
+
+def write_temp_user_mapping(uid, user_name):
+    temp_map_file = os.path.join('line-user-info', 'users_temp.txt')
+    with open(temp_map_file, 'w') as f:
+        f.write(f'對應：\"{uid}\": \"{user_name}\"\n')
 
 
 @application.route('/', methods=['GET', 'POST'])
@@ -85,7 +91,7 @@ def default(event):
     if not user_name:
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            logging.info(f'對應：\"{uid}\": \"{user_name}\"')
+            write_temp_user_mapping(uid, user_name)
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
@@ -210,7 +216,7 @@ def handle_sticker_message(event):
     if not user_name:
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            logging.info(f'對應：\"{uid}\": \"{user_name}\"')
+            write_temp_user_mapping(uid, user_name)
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     sticker_url = f'https://stickershop.line-scdn.net/stickershop/v1/sticker/{sid}/android/sticker.png'
@@ -248,7 +254,7 @@ def handle_image_message(event):
     if not user_name:
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            logging.info(f'對應：\"{uid}\": \"{user_name}\"')
+            write_temp_user_mapping(uid, user_name)
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
@@ -274,7 +280,7 @@ def handle_text_message(event):
     if not user_name:
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            logging.info(f'對應：\"{uid}\": \"{user_name}\"')
+            write_temp_user_mapping(uid, user_name)
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
