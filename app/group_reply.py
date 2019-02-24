@@ -150,9 +150,9 @@ def group_reply_taiwan_sino_alice(_line_bot_api, _source_id, _uid, msg):
 def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     msg = msg.lower()
     random.seed(os.urandom(5))
-    wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB', '初雪', '鈴']
+    wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB', '鈴']
     male_list = ['芙芙', '性迪', '阿星', '肉肉', '肉凱', '糕連']
-    female_list = ['名字', '盼盼', '四姐', 'EBB', '初雪', '鈴♡', '凝凝', '楓楓', '丸丸']
+    female_list = ['名字', '盼盼', '四姐', 'EBB', '鈴♡', '凝凝', '楓楓', '丸丸']
     asexual_list = ['丶丶', '丿丿', '樹樹', '兔比', '小葵', '雞排', 'Momo']
     all_list = male_list + female_list + asexual_list
     id_list = [
