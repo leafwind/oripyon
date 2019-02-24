@@ -221,11 +221,19 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
             user_name = ''
-        target_name = random.choice(list(RANDOM_GF))
+        # drop the user itself
+        candidates = RANDOM_GF  # copy a new obj
+        for i, c in enumerate(candidates):
+            if c['uid'] == uid:
+                logging.info(f'{user_name} 丟掉自己 {c["name"]}')
+                candidates.pop(i)
+                break
+        target = random.choice(list(candidates))
+        target_name = RANDOM_GF[target]['name']
         url = RANDOM_GF[target_name]['url']
         msg = f'{user_name}真可憐呢沒有女友，不哭不哭(´;ω;`)ヾ(･∀･`)\n給你一個{target_name}的左手聞香'
-        if 'custom_msg' in RANDOM_GF[target_name]:
-            msg += f'\n{RANDOM_GF[target_name]["custom_msg"]}'
+        if 'custom_msg' in target:
+            msg += f'\n{target["custom_msg"]}'
         return [
             ImageSendMessage(original_content_url=url, preview_image_url=url),
             TextSendMessage(text=msg)
