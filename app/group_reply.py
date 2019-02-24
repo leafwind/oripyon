@@ -223,7 +223,9 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
             user_name = ''
         target_name = random.choice(list(RANDOM_GF))
         url = RANDOM_GF[target_name]['url']
-        msg = f'{user_name}真可憐呢沒有女友，不哭不哭，給你一個{target_name}的左手聞香(´;ω;`)ヾ(･∀･`)'
+        msg = f'{user_name}真可憐呢沒有女友，不哭不哭(´;ω;`)ヾ(･∀･`)\n給你一個{target_name}的左手聞香'
+        if 'custom_msg' in RANDOM_GF[target_name]:
+            msg += f'\n{RANDOM_GF[target_name]["custom_msg"]}'
         return [
             ImageSendMessage(original_content_url=url, preview_image_url=url),
             TextSendMessage(text=msg)
