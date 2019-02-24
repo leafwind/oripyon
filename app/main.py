@@ -85,7 +85,7 @@ def default(event):
     if not user_name:
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            logging.info(f'對應：{uid} -> {user_name}')
+            logging.info(f'對應：\"{uid}\": \"{user_name}\"')
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
@@ -210,7 +210,7 @@ def handle_sticker_message(event):
     if not user_name:
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            logging.info(f'對應：{uid} -> {user_name}')
+            logging.info(f'對應：\"{uid}\": \"{user_name}\"')
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     sticker_url = f'https://stickershop.line-scdn.net/stickershop/v1/sticker/{sid}/android/sticker.png'
@@ -248,7 +248,7 @@ def handle_image_message(event):
     if not user_name:
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            logging.info(f'對應：{uid} -> {user_name}')
+            logging.info(f'對應：\"{uid}\": \"{user_name}\"')
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
@@ -274,7 +274,7 @@ def handle_text_message(event):
     if not user_name:
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            logging.info(f'對應：{uid} -> {user_name}')
+            logging.info(f'對應：\"{uid}\": \"{user_name}\"')
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s', e)
     logging.info(
