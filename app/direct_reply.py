@@ -5,7 +5,7 @@ from app.emoji_list import cry_emoji_list
 
 
 def girlfriend():
-    return [('image', 'https://imgur.com/g6WRWrk')]
+    return [('image', 'https://i.imgur.com/g6WRWrk.jpg')]
 
 
 def daughter_red():
