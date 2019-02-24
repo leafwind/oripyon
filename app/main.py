@@ -299,7 +299,7 @@ def handle_text_message(event):
         if log:
             log_similarity = Levenshtein.ratio(event.message.text, log)
             logging.info('log: %s (sim: %s)', log, log_similarity)
-            if source_id in TEST_GROUP_IDS or random.random() >= 0.9:
+            if source_id in TEST_GROUP_IDS or random.random() >= 0.97:
                 random.seed(os.urandom(5))
                 line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=random.choice(EMOJI_LIST) + log)])
 

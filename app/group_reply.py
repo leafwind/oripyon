@@ -184,19 +184,7 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     if '我的' in msg or '誰的' in msg:
         for name in wanted_list:
             if name in msg:
-                if name == '盼盼':
-                    if random.random() >= 0.2:
-                        replies = [f'已經是她們會長的形狀了 {random.choice(cry_emoji_list)}']
-                    else:
-                        replies = ['拿杖敲爆你的腦殼 O-(///￣皿￣)⊃━☆ﾟ.*･｡']
-                elif name in ['四姐', '四姊']:
-                    replies = ['永遠單身的小秘書 (●´ω｀●)ゞ']
-                elif name == 'EBB':
-                    replies = ['不要潛水出來嗨 ヽ(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)人(∀ﾟ )人(ﾟ∀ﾟ)人( ﾟ∀)ﾉ']
-                else:
-                    replies = ['是我的！！']
-    elif '雞排' in msg and '吃' in msg:
-        replies = ['我也要吃 (๑´ڡ`๑)']
+                replies = ['是我的！！']
     elif msg.startswith('抽男'):
         replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(male_list)}呢！']
     elif msg.startswith('抽女'):
