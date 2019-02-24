@@ -1,9 +1,15 @@
 import re
 import os
 import random
+import json
+import logging
 
 from linebot.models import (
     TextSendMessage, ImageSendMessage, TemplateSendMessage
+)
+
+from linebot.exceptions import (
+    LineBotApiError
 )
 
 from app.line_templates import make_template_action, make_carousel_column
@@ -15,7 +21,14 @@ maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 help_find_pattern = re.compile('協尋')
 
 
-def group_reply_test(msg):
+RANDOM_GF = {}
+random_gf_file = os.path.join('line-user-info', 'RANDOM_GF.json')
+if os.path.exists(random_gf_file):
+    with open(random_gf_file, 'r') as f:
+        RANDOM_GF = json.load(f)
+
+
+def group_reply_test(_line_bot_api, _source_id, _uid, msg):
     if msg == '!hinet':
         image_message = ImageSendMessage(
             original_content_url='https://i.imgur.com/BFTQEnG.png',
@@ -64,11 +77,11 @@ def group_reply_test(msg):
     return []
 
 
-def group_reply_lineage_m(_msg):
+def group_reply_lineage_m(_line_bot_api, _source_id, _uid, _msg):
     return []
 
 
-def group_reply_maplestory(msg):
+def group_reply_maplestory(_line_bot_api, _source_id, _uid, msg):
     if '小路占卜' in msg:
         global maple_phrase
         random.seed(os.urandom(5))
@@ -79,7 +92,7 @@ def group_reply_maplestory(msg):
         return []
 
 
-def group_reply_yebai(msg):
+def group_reply_yebai(_line_bot_api, _source_id, _uid, msg):
     if help_find_pattern.search(msg):
         image_message = ImageSendMessage(
             original_content_url='https://i.imgur.com/ksIHMn6.jpg',
@@ -91,7 +104,7 @@ def group_reply_yebai(msg):
         ]
 
 
-def group_reply_mao_sino_alice(msg):
+def group_reply_mao_sino_alice(_line_bot_api, _source_id, _uid, msg):
     replies = None
     if '小米米' in msg:
         replies = ['綁起來電擊烤焦爆香切段上菜（¯﹃¯）']
@@ -117,7 +130,7 @@ def group_reply_mao_sino_alice(msg):
         return []
 
 
-def group_reply_taiwan_sino_alice(msg):
+def group_reply_taiwan_sino_alice(_line_bot_api, _source_id, _uid, msg):
     replies = None
     if '死愛資料庫' in msg:
         replies = ['https://sinoalice.game-db.tw/']
@@ -134,8 +147,9 @@ def group_reply_taiwan_sino_alice(msg):
         return []
 
 
-def group_reply_nier_sino_alice(msg):
+def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     msg = msg.lower()
+    random.seed(os.urandom(5))
     wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB', '初雪', '鈴']
     male_list = ['芙芙', '性迪', '阿星', '肉肉', '肉凱', '糕連']
     female_list = ['名字', '盼盼', '四姐', 'EBB', '初雪', '鈴♡', '凝凝', '楓楓', '丸丸']
@@ -201,26 +215,38 @@ def group_reply_nier_sino_alice(msg):
         replies = ['\n'.join(id_list)]
     else:
         pass
-
+    if msg == '抽女友':
+        try:
+            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+        except LineBotApiError as e:
+            logging.error('LineBotApiError: %s', e)
+            user_name = ''
+        target_name = random.choice(RANDOM_GF.keys())
+        url = RANDOM_GF[target_name]['url']
+        msg = f'{user_name}真可憐呢沒有女友，不哭不哭，給你一個{target_name}的左手聞香(´;ω;`)ヾ(･∀･`)'
+        return [
+            ImageSendMessage(original_content_url=url, preview_image_url=url),
+            TextSendMessage(text=msg)
+        ]
     if replies:
         return [TextSendMessage(text=r) for r in replies]
     else:
         return []
 
-def group_reply_luna(msg):
+def group_reply_luna(_line_bot_api, _source_id, _uid, msg):
     if '涼哥' in msg:
         return [TextSendMessage(text='正直善良又誠懇、不會說話卻實在')]
     return
 
 
-def group_reply_mao(_msg):
+def group_reply_mao(_line_bot_api, _source_id, _uid, _msg):
     return
 
 
-def group_reply_working(_msg):
+def group_reply_working(_line_bot_api, _source_id, _uid, _msg):
     return
 
     
-def group_reply_mao_test(_msg):
+def group_reply_mao_test(_line_bot_api, _source_id, _uid, _msg):
     return 
 

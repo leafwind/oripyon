@@ -310,7 +310,7 @@ def make_reply(source_id, uid, msg, reply_token=None):
     if source_id not in GROUP_MAPPING:
         return
 
-    reply = GROUP_MAPPING[source_id]['function'](msg)
+    reply = GROUP_MAPPING[source_id]['function'](line_bot_api, source_id, uid, msg)
     if reply:
         line_bot_api.reply_message(reply_token, reply)
         return
