@@ -229,8 +229,8 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
                 candidates.pop(i)
                 break
         target = random.choice(list(candidates))
-        target_name = RANDOM_GF[target]['name']
-        url = RANDOM_GF[target_name]['url']
+        target_name = target['name']
+        url = target['url']
         msg = f'{user_name}真可憐呢沒有女友，不哭不哭(´;ω;`)ヾ(･∀･`)\n給你一個{target_name}的左手聞香'
         if 'custom_msg' in target:
             msg += f'\n{target["custom_msg"]}'
