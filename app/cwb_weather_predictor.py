@@ -1,8 +1,7 @@
 import logging
+import sqlite3
 import time
 from datetime import datetime
-
-import sqlite3
 
 from constants import CWB_DB_PATH
 

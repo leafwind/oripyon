@@ -1,8 +1,7 @@
-import random
 import json
 import logging
 import os
-
+import random
 
 from constants import HUGE_GROUP_IDS, TEACHER_HO
 

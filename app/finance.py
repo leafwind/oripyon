@@ -1,5 +1,6 @@
-from datetime import datetime
 import calendar
+from datetime import datetime
+
 from app.util import get_exchange_rate
 
 

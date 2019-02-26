@@ -1,21 +1,19 @@
+import logging
 import re
 import time
-import logging
-
-from linebot.models import (
-    TextSendMessage, ImageSendMessage
-)
 
 from linebot.exceptions import (
     LineBotApiError
 )
+from linebot.models import (
+    TextSendMessage, ImageSendMessage
+)
 
 from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card
-from app.finance import exchange_rate
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
     bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
+from app.finance import exchange_rate
 from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status, reservoir_now
-
 
 # equivalent to:
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)

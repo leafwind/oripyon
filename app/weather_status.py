@@ -1,8 +1,9 @@
 import logging
 import time
 from datetime import datetime
-from app.util import get_short_url, get_reservoir_stat
+
 from app import predict_AQI
+from app.util import get_short_url, get_reservoir_stat
 from taiwan_area_map.query_area import query_area
 
 

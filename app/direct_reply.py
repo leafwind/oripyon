@@ -1,5 +1,6 @@
-import random
 import os
+import random
+
 from app import wtf_reasons
 from app.emoji_list import CRY_EMOJI_LIST
 

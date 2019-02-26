@@ -1,18 +1,14 @@
 import datetime
+import json
 import logging
 import os
+import random
 import time
 import uuid
-import yaml
-import json
-import random
 
-from flask import Flask, request, abort, render_template
 import Levenshtein
-
-from app.linebot_api_extension import (
-    LineBotApiExtension
-)
+import yaml
+from flask import Flask, request, abort, render_template
 from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError
 )
@@ -22,11 +18,14 @@ from linebot.models import (
 )
 
 from app.common_reply import common_reply
+from app.emoji_list import KAOMOJI_LIST
+from app.linebot_api_extension import (
+    LineBotApiExtension
+)
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
 from app.linebot_webhook_extension import WebhookHandlerExtended
-from constants import GROUP_MAPPING, TEST_GROUP_IDS
-from app.emoji_list import KAOMOJI_LIST
 from app.markov_chain import MarkovChat
+from constants import GROUP_MAPPING, TEST_GROUP_IDS
 
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)

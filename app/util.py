@@ -1,5 +1,6 @@
-import requests
 import logging
+
+import requests
 
 
 def get_short_url(target_url):

@@ -1,19 +1,18 @@
-import re
-import os
-import random
 import json
 import logging
-
-from linebot.models import (
-    TextSendMessage, ImageSendMessage, TemplateSendMessage
-)
+import os
+import random
+import re
 
 from linebot.exceptions import (
     LineBotApiError
 )
+from linebot.models import (
+    TextSendMessage, ImageSendMessage, TemplateSendMessage
+)
 
-from app.line_templates import make_template_action, make_carousel_column
 from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
+from app.line_templates import make_template_action, make_carousel_column
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase

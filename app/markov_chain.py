@@ -1,9 +1,10 @@
-from collections import defaultdict, deque
+import logging
 import os
 import random
-import logging
-import jieba
+from collections import defaultdict, deque
+
 import Levenshtein
+import jieba
 
 # https://github.com/fxsjy/jieba/raw/master/extra_dict/dict.txt.big
 # 比預設的字典（三十萬筆）多了二十萬筆，目測加了很多繁體詞彙

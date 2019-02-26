@@ -1,7 +1,6 @@
-from linebot.http_client import HttpClient, RequestsHttpClient
 from linebot.api import LineBotApi
+from linebot.http_client import HttpClient, RequestsHttpClient
 from linebot.models.responses import Profile
-
 
 
 class LineBotApiExtension(LineBotApi):
