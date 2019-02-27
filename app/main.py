@@ -49,7 +49,7 @@ markov_chat_instance_map = {}
 def write_temp_user_mapping(uid, user_name):
     temp_map_file = os.path.join('line-user-info', 'users_temp.txt')
     with open(temp_map_file, 'a') as f:
-        f.write(f'對應：\"{uid}\": \"{user_name}\"\n')
+        f.write(f'\"{uid}\": \"{user_name}\",\n')
 
 
 @application.route('/', methods=['GET', 'POST'])
