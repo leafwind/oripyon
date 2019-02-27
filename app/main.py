@@ -160,8 +160,6 @@ def handle_member_join_event(event):
         replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
                    replies_img]
         replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
-    elif source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336':
-        replies = [TextSendMessage(text=f'安安～這裡是清新優質群組，每天有很多車班可以上車學習，願大家都能很快考到駕照～')]
     else:
         return
     line_bot_api.reply_message(event.reply_token, replies)

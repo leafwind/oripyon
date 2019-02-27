@@ -140,12 +140,6 @@ def group_reply_taiwan_sino_alice(_line_bot_api, _source_id, _uid, msg):
 
 def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     msg = msg.lower()
-    random.seed(os.urandom(5))
-    wanted_list = ['頓頓', '名字', '雞排', '來來', '盼盼', '四姐', '四姊', 'EBB', '鈴']
-    male_list = ['芙芙', '性迪', '阿星', '肉肉', '肉凱', '糕連']
-    female_list = ['名字', '盼盼', '四姐', 'EBB', '鈴♡', '凝凝', '楓楓', '丸丸']
-    asexual_list = ['丶丶', '丿丿', '樹樹', '兔比', '小葵', '雞排', 'Momo']
-    all_list = male_list + female_list + asexual_list
     id_list = [
         '四姊 963028424',
         '頓頓 208404895',
@@ -172,19 +166,7 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
         '莉芙溫 467287876'
     ]
     replies = None
-    if '我的' in msg or '誰的' in msg:
-        for name in wanted_list:
-            if name in msg:
-                replies = ['是我的！！']
-    elif msg.startswith('抽男'):
-        replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(male_list)}呢！']
-    elif msg.startswith('抽女'):
-        replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(female_list)}呢！']
-    elif msg.startswith('抽不明'):
-        replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(asexual_list)}呢！']
-    elif msg.startswith('抽全部'):
-        replies = [f'(੭•̀ω•́)੭ 恭喜你，是{random.choice(all_list)}呢！']
-    elif '死愛資料庫' in msg:
+    if '死愛資料庫' in msg:
         replies = ['https://sinoalice.game-db.tw/']
     elif '狗糧' == msg:
         replies = ['07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼']
@@ -195,6 +177,7 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     else:
         pass
     if msg.startswith('抽女友'):
+        random.seed(os.urandom(5))
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
         except LineBotApiError as e:
@@ -222,9 +205,7 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     else:
         return []
 
-def group_reply_luna(_line_bot_api, _source_id, _uid, msg):
-    if '涼哥' in msg:
-        return [TextSendMessage(text='正直善良又誠懇、不會說話卻實在')]
+def group_reply_luna(_line_bot_api, _source_id, _uid, _msg):
     return
 
 
