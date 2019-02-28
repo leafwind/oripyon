@@ -16,7 +16,6 @@ HUGE_GROUP_IDS = [
 
 TEST_GROUP_IDS = [
     'C1bebaeaf89242089f0d755d492df6cb6',
-    'Cf794cf7dc1970c3fba9122673cf3dcde',
     'C498a6c669b4648d8dcb807415554fda1',
 ]
 
