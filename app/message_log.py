@@ -12,7 +12,7 @@ def check_or_create_table_line_cmd_count():
     create_sql = f'''
         CREATE TABLE IF NOT EXISTS {TABLE_LINE_CMD_COUNT}
         (
-            group_id text, user_id text, cmd text, ts int, count int
+            group_id text, user_id text, cmd text, ts int, count int,
             PRIMARY KEY (group_id, user_id, cmd, ts)
         )
     '''.format(TABLE_LINE_CMD_COUNT=TABLE_LINE_CMD_COUNT)
