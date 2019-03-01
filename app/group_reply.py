@@ -25,6 +25,12 @@ if os.path.exists(random_gf_file):
     with open(random_gf_file, 'r') as f:
         RANDOM_GF = json.load(f)
 
+RANDOM_LEG = {}
+random_leg_file = os.path.join('line-user-info', 'random_leg.json')
+if os.path.exists(random_leg_file):
+    with open(random_leg_file, 'r') as f:
+        RANDOM_LEG = json.load(f)
+
 
 def group_reply_test(_line_bot_api, _source_id, _uid, msg):
     leafwind_photo_url = \
@@ -194,6 +200,30 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
         target_name = target['name']
         url = target['url']
         msg = f'{user_name}真可憐呢沒有女友，不哭不哭(´;ω;`)ヾ(･∀･`)\n給你一個{target_name}的左手聞香'
+        if 'custom_msg' in target:
+            msg += f'\n{target["custom_msg"]}'
+        return [
+            ImageSendMessage(original_content_url=url, preview_image_url=url),
+            TextSendMessage(text=msg)
+        ]
+    elif msg.startswith('抽腿'):
+        random.seed(os.urandom(5))
+        try:
+            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+        except LineBotApiError as e:
+            logging.error('LineBotApiError: %s', e)
+            user_name = ''
+        # drop the user itself
+        candidates = RANDOM_LEG  # copy a new obj
+        for i, c in enumerate(candidates):
+            if c['uid'] == uid:
+                logging.info(f'{user_name} 丟掉自己 {c["name"]}')
+                candidates.pop(i)
+                break
+        target = random.choice(list(candidates))
+        target_name = target['name']
+        url = target['url']
+        msg = f'{user_name}給你一個{target_name}的腿腿，開舔！'
         if 'custom_msg' in target:
             msg += f'\n{target["custom_msg"]}'
         return [
