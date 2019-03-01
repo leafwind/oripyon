@@ -209,38 +209,8 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
             TextSendMessage(text=msg)
         ]
     elif msg.startswith('抽腿'):
-        # 限制指令數量
-        check_or_create_table_line_cmd_count()
-        today_count = query_line_cmd_count(source_id, uid, 'draw_leg')
-        if today_count > 1:
-            return [
-                TextSendMessage(text='今日次數(1)用完了，請等待凌晨四點重置')
-            ]
-        insert_line_cmd_count(source_id, uid, 'draw_leg', int(time.time()))
-
-        random.seed(os.urandom(5))
-        try:
-            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-        except LineBotApiError as e:
-            logging.error('LineBotApiError: %s', e)
-            user_name = ''
-        # drop the user itself
-        candidates = RANDOM_LEG  # copy a new obj
-        for i, c in enumerate(candidates):
-            if c['uid'] == uid:
-                logging.info(f'{user_name} 丟掉自己 {c["name"]}')
-                candidates.pop(i)
-                break
-        target = random.choice(list(candidates))
-        target_name = target['name']
-        url = target['url']
-        msg = f'{user_name}給你一個{target_name}的腿腿，開舔！'
-        if 'custom_msg' in target:
-            msg += f'\n{target["custom_msg"]}'
-        return [
-            ImageSendMessage(original_content_url=url, preview_image_url=url),
-            TextSendMessage(text=msg)
-        ]
+        replies = draw_leg(line_bot_api, source_id, uid, msg)
+        return replies
     if replies:
         return [TextSendMessage(text=r) for r in replies]
     else:
@@ -250,44 +220,8 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
 def group_reply_4_and_pan(line_bot_api, source_id, uid, msg):
     msg = msg.lower()
     if msg.startswith('抽腿'):
-        try:
-            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-        except LineBotApiError as e:
-            logging.error('LineBotApiError: %s', e)
-            user_name = ''
-        # 限制指令數量
-        check_or_create_table_line_cmd_count()
-        today_count = query_line_cmd_count(source_id, uid, 'draw_leg')
-        logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
-        if today_count > 0:
-            return [
-                TextSendMessage(text='今日次數(1)用完了，請等待凌晨四點重置')
-            ]
-        insert_line_cmd_count(source_id, uid, 'draw_leg', int(time.time()))
-
-        random.seed(os.urandom(5))
-        try:
-            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-        except LineBotApiError as e:
-            logging.error('LineBotApiError: %s', e)
-            user_name = ''
-        # drop the user itself
-        candidates = RANDOM_LEG  # copy a new obj
-        for i, c in enumerate(candidates):
-            if c['uid'] == uid:
-                logging.info(f'{user_name} 丟掉自己 {c["name"]}')
-                candidates.pop(i)
-                break
-        target = random.choice(list(candidates))
-        target_name = target['name']
-        url = target['url']
-        msg = f'{user_name}給你一個{target_name}的腿腿，開舔！'
-        if 'custom_msg' in target:
-            msg += f'\n{target["custom_msg"]}'
-        return [
-            ImageSendMessage(original_content_url=url, preview_image_url=url),
-            TextSendMessage(text=msg)
-        ]
+        replies = draw_leg(line_bot_api, source_id, uid, msg)
+        return replies
 
 def group_reply_luna(_line_bot_api, _source_id, _uid, _msg):
     return
@@ -304,6 +238,46 @@ def group_reply_working(_line_bot_api, _source_id, _uid, _msg):
 def group_reply_mao_test(_line_bot_api, _source_id, _uid, _msg):
     return
 
+
+def draw_leg(line_bot_api, source_id, uid, msg):
+    try:
+        user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+    except LineBotApiError as e:
+        logging.error('LineBotApiError: %s', e)
+        user_name = ''
+    # 限制指令數量
+    check_or_create_table_line_cmd_count()
+    today_count = query_line_cmd_count(source_id, uid, 'draw_leg')
+    logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
+    if today_count > 0:
+        return [
+            TextSendMessage(text='今日次數(1)用完了，請等待凌晨四點重置')
+        ]
+    insert_line_cmd_count(source_id, uid, 'draw_leg', int(time.time()))
+
+    random.seed(os.urandom(5))
+    try:
+        user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+    except LineBotApiError as e:
+        logging.error('LineBotApiError: %s', e)
+        user_name = ''
+    # drop the user itself
+    candidates = RANDOM_LEG  # copy a new obj
+    for i, c in enumerate(candidates):
+        if c['uid'] == uid:
+            logging.info(f'{user_name} 丟掉自己 {c["name"]}')
+            candidates.pop(i)
+            break
+    target = random.choice(list(candidates))
+    target_name = target['name']
+    url = target['url']
+    msg = f'{user_name}給你一個{target_name}的腿腿，開舔！'
+    if 'custom_msg' in target:
+        msg += f'\n{target["custom_msg"]}'
+    return [
+        ImageSendMessage(original_content_url=url, preview_image_url=url),
+        TextSendMessage(text=msg)
+    ]
 
 GROUP_MAPPING = {
     'C1bebaeaf89242089f0d755d492df6cb6': {
