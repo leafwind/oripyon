@@ -27,10 +27,10 @@ def insert_line_cmd_count(group_id, user_id, cmd, ts):
     conn = sqlite3.connect(LINE_DB_PATH)
     c = conn.cursor()
     insert_sql = f'''
-        INSERT OR REPLACE INTO {TABLE_LINE_CMD_COUNT} VALUES (\':group_id\', \':user_id\', \':cmd\', :ts);
+        INSERT OR REPLACE INTO {TABLE_LINE_CMD_COUNT} VALUES (:group_id, :user_id, :cmd, :ts);
     '''.format(TABLE_LINE_CMD_COUNT=TABLE_LINE_CMD_COUNT)
     logging.info(f'''
-            INSERT OR REPLACE INTO {TABLE_LINE_CMD_COUNT} VALUES (\'{group_id}\', \'{user_id}\', \'{cmd}\', {ts});
+            INSERT OR REPLACE INTO {TABLE_LINE_CMD_COUNT} VALUES ({group_id}, {user_id}, {cmd}, {ts});
         ''')
     c.execute(insert_sql, {'group_id': group_id, 'user_id': user_id, 'cmd': cmd, 'ts': ts})
     conn.commit()
@@ -45,11 +45,11 @@ def query_line_cmd_count(group_id, user_id, cmd, date_line_diff_ts=-4*3600):
     last_date_line_ts = now - today_ts_till_now
     query_sql = f'''
         SELECT COUNT(1) AS count FROM {TABLE_LINE_CMD_COUNT}
-        WHERE group_id=\':group_id\' AND user_id=\':user_id\' AND cmd=\':cmd\' AND ts>:last_date_line_ts
+        WHERE group_id=:group_id AND user_id=:user_id AND cmd=:cmd AND ts>:last_date_line_ts
     '''.format(TABLE_LINE_CMD_COUNT=TABLE_LINE_CMD_COUNT)
     logging.info(f'''
         SELECT COUNT(1) AS count FROM {TABLE_LINE_CMD_COUNT}
-        WHERE group_id=\'{group_id}\' AND user_id=\'{user_id}\' AND cmd=\'{cmd}\' AND ts>{last_date_line_ts}''')
+        WHERE group_id={group_id} AND user_id={user_id} AND cmd={cmd} AND ts>{last_date_line_ts}''')
     c.execute(query_sql,
               {'group_id': group_id,
                'user_id': user_id,
