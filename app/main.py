@@ -25,7 +25,8 @@ from app.linebot_api_extension import (
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
 from app.linebot_webhook_extension import WebhookHandlerExtended
 from app.markov_chain import MarkovChat
-from constants import GROUP_MAPPING, TEST_GROUP_IDS
+from constants import TEST_GROUP_IDS
+from app.group_reply import GROUP_MAPPING
 
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
