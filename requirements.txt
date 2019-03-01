@@ -10,3 +10,4 @@ pyflakes
 pyyaml
 jieba
 python-Levenshtein
+sqlite3

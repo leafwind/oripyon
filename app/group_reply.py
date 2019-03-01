@@ -3,6 +3,7 @@ import logging
 import os
 import random
 import re
+import time
 
 from linebot.exceptions import (
     LineBotApiError
@@ -13,6 +14,7 @@ from linebot.models import (
 
 from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
 from app.line_templates import make_template_action, make_carousel_column
+from app.message_log import check_or_create_table_line_cmd_count, insert_line_cmd_count, query_line_cmd_count
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
@@ -207,6 +209,15 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
             TextSendMessage(text=msg)
         ]
     elif msg.startswith('抽腿'):
+        # 限制指令數量
+        check_or_create_table_line_cmd_count()
+        today_count = query_line_cmd_count(source_id, uid, 'draw_leg')
+        if today_count > 1:
+            return [
+                TextSendMessage(text='今日次數(1)用完了，請等待凌晨四點重置')
+            ]
+        insert_line_cmd_count(source_id, uid, 'draw_leg', int(time.time()))
+
         random.seed(os.urandom(5))
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
@@ -234,6 +245,43 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
         return [TextSendMessage(text=r) for r in replies]
     else:
         return []
+
+
+def group_reply_4_and_pan(line_bot_api, source_id, uid, msg):
+    msg = msg.lower()
+    if msg.startswith('抽腿'):
+        # 限制指令數量
+        check_or_create_table_line_cmd_count()
+        today_count = query_line_cmd_count(source_id, uid, 'draw_leg')
+        if today_count > 1:
+            return [
+                TextSendMessage(text='今日次數(1)用完了，請等待凌晨四點重置')
+            ]
+        insert_line_cmd_count(source_id, uid, 'draw_leg', int(time.time()))
+
+        random.seed(os.urandom(5))
+        try:
+            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+        except LineBotApiError as e:
+            logging.error('LineBotApiError: %s', e)
+            user_name = ''
+        # drop the user itself
+        candidates = RANDOM_LEG  # copy a new obj
+        for i, c in enumerate(candidates):
+            if c['uid'] == uid:
+                logging.info(f'{user_name} 丟掉自己 {c["name"]}')
+                candidates.pop(i)
+                break
+        target = random.choice(list(candidates))
+        target_name = target['name']
+        url = target['url']
+        msg = f'{user_name}給你一個{target_name}的腿腿，開舔！'
+        if 'custom_msg' in target:
+            msg += f'\n{target["custom_msg"]}'
+        return [
+            ImageSendMessage(original_content_url=url, preview_image_url=url),
+            TextSendMessage(text=msg)
+        ]
 
 def group_reply_luna(_line_bot_api, _source_id, _uid, _msg):
     return

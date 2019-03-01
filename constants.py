@@ -1,6 +1,6 @@
 from app.group_reply import group_reply_test, group_reply_luna, group_reply_yebai, group_reply_maplestory, \
     group_reply_lineage_m, group_reply_mao_sino_alice, group_reply_nier_sino_alice, group_reply_taiwan_sino_alice, \
-    group_reply_working, group_reply_mao, group_reply_mao_test
+    group_reply_working, group_reply_mao, group_reply_mao_test, group_reply_4_and_pan
 
 CWB_DB_PATH = '/var/sqlite/cwb.db'
 
@@ -18,6 +18,11 @@ TEST_GROUP_IDS = [
     'C1bebaeaf89242089f0d755d492df6cb6',
     'C498a6c669b4648d8dcb807415554fda1',
 ]
+
+LINE_DB_PATH = '/var/sqlite/line.db'
+
+TABLE_LINE_MSG_COUNT = 'msg_count'
+TABLE_LINE_CMD_COUNT = 'cmd_count'
 
 
 GROUP_MAPPING = {
@@ -50,6 +55,10 @@ GROUP_MAPPING = {
         'name': '尼爾主題餐廳',
         'function': group_reply_nier_sino_alice,
         'log_filename': 'nier_sino_alice',
+    },
+    'Ce1ab51b1e9be1f69edf765e77ef43a49': {
+        'name': '四姊與盼盼',
+        'function': group_reply_4_and_pan,
     },
     'C15c762c0a497d62992c01b42ba9b39d9': {
         'name': '死愛台版交流區',
