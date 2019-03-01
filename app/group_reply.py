@@ -250,9 +250,15 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
 def group_reply_4_and_pan(line_bot_api, source_id, uid, msg):
     msg = msg.lower()
     if msg.startswith('抽腿'):
+        try:
+            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+        except LineBotApiError as e:
+            logging.error('LineBotApiError: %s', e)
+            user_name = ''
         # 限制指令數量
         check_or_create_table_line_cmd_count()
         today_count = query_line_cmd_count(source_id, uid, 'draw_leg')
+        logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
         if today_count > 1:
             return [
                 TextSendMessage(text='今日次數(1)用完了，請等待凌晨四點重置')
