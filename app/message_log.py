@@ -12,7 +12,7 @@ def check_or_create_table_line_cmd_count():
     create_sql = f'''
         CREATE TABLE IF NOT EXISTS {TABLE_LINE_CMD_COUNT}
         (
-            group_id text, user_id text, cmd text, ts int, count int,
+            group_id text, user_id text, cmd text, ts int,
             PRIMARY KEY (group_id, user_id, cmd, ts)
         )
     '''.format(TABLE_LINE_CMD_COUNT=TABLE_LINE_CMD_COUNT)
@@ -42,7 +42,7 @@ def query_line_cmd_count(group_id, user_id, cmd, date_line_diff_ts=-4*3600):
     today_ts_till_now = (now - date_line_diff_ts) % 86400
     last_date_line_ts = now - today_ts_till_now
     query_sql = f'''
-        SELECT SUM(count) AS count FROM {TABLE_LINE_CMD_COUNT}
+        SELECT COUNT(1) AS count FROM {TABLE_LINE_CMD_COUNT}
         WHERE group_id=:group_id AND user_id=:user_id AND cmd=:cmd AND ts>:last_date_line_ts
     '''.format(TABLE_LINE_CMD_COUNT=TABLE_LINE_CMD_COUNT)
     logging.info(query_sql)
