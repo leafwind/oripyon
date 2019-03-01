@@ -259,7 +259,7 @@ def group_reply_4_and_pan(line_bot_api, source_id, uid, msg):
         check_or_create_table_line_cmd_count()
         today_count = query_line_cmd_count(source_id, uid, 'draw_leg')
         logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
-        if today_count > 1:
+        if today_count > 0:
             return [
                 TextSendMessage(text='今日次數(1)用完了，請等待凌晨四點重置')
             ]

@@ -29,7 +29,9 @@ def insert_line_cmd_count(group_id, user_id, cmd, ts):
     insert_sql = f'''
         INSERT OR REPLACE INTO {TABLE_LINE_CMD_COUNT} VALUES (\':group_id\', \':user_id\', \':cmd\', :ts);
     '''.format(TABLE_LINE_CMD_COUNT=TABLE_LINE_CMD_COUNT)
-    logging.info(insert_sql)
+    logging.info(f'''
+            INSERT OR REPLACE INTO {TABLE_LINE_CMD_COUNT} VALUES (\'{group_id}\', \'{user_id}\', \'{cmd}\', {ts});
+        ''')
     c.execute(insert_sql, {'group_id': group_id, 'user_id': user_id, 'cmd': cmd, 'ts': ts})
     conn.commit()
     conn.close()

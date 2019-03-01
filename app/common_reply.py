@@ -229,14 +229,14 @@ def common_reply(line_bot_api, source_id, uid, msg):
             user_name = ''
         return [TextSendMessage(text=reply.format(name=user_name))]
 
-    if msg == last_msg.get(source_id, None):
-        logging.info('偵測到重複，準備推齊')
-        repeated_diff_ts = now - replied_time.get((source_id, msg), 0)
-        if repeated_diff_ts > 600:
-            logging.info(f'{msg} 上次重複已經超過 {repeated_diff_ts} 秒，執行推齊！')
-            replied_time[(source_id, msg)] = now
-            return [TextSendMessage(text=msg)]
-        else:
-            logging.info(f'{msg} 上次重複在 {repeated_diff_ts} 秒內，不推齊')
+    # if msg == last_msg.get(source_id, None):
+    #     logging.info('偵測到重複，準備推齊')
+    #     repeated_diff_ts = now - replied_time.get((source_id, msg), 0)
+    #     if repeated_diff_ts > 600:
+    #         logging.info(f'{msg} 上次重複已經超過 {repeated_diff_ts} 秒，執行推齊！')
+    #         replied_time[(source_id, msg)] = now
+    #         return [TextSendMessage(text=msg)]
+    #     else:
+    #         logging.info(f'{msg} 上次重複在 {repeated_diff_ts} 秒內，不推齊')
     last_msg[source_id] = msg
     return []
