@@ -52,7 +52,7 @@ def query_line_cmd_count(group_id, user_id, cmd, date_line_diff_ts=-4*3600):
                'cmd': cmd,
                'last_date_line_ts': last_date_line_ts})
     (count,) = c.fetchone()
-    count = int(count)
+    count = int(count) if count else 0
     conn.commit()
     conn.close()
     return count
