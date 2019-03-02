@@ -103,52 +103,42 @@ def group_reply_yebai(_line_bot_api, _source_id, _uid, msg):
         ]
 
 
-def group_reply_mao_sino_alice(_line_bot_api, _source_id, _uid, msg):
+def _group_reply_sino_alice_base(msg):
     replies = []
-    if '小米米' in msg:
-        replies = ['綁起來電擊烤焦爆香切段上菜（¯﹃¯）']
-    elif '2050' in msg:
-        replies = [
-            '兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡',
-            '睡你麻痺起來嗨ヽ(`Д´)ノ',
-        ]
-    elif '夢魘順序' in msg:
-        replies = ['sky降攻 -> 普爾加防 -> 米米(工讀生)黑腕 -> 芙溫妖精王 -> 邱御豪降防']
-    elif '死愛資料庫' in msg:
-        replies = ['https://sinoalice.game-db.tw/']
+    if '死愛資料庫' == msg:
+        replies = [TextSendMessage(text='https://sinoalice.game-db.tw/')]
     elif '狗糧' == msg:
-        replies = ['07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼']
+        replies = [TextSendMessage(text='07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼')]
     elif '素材' == msg:
-        replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
+        replies = [TextSendMessage(text='武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼')]
     else:
         pass
+    return replies
+
+
+def group_reply_mao_sino_alice(_line_bot_api, _source_id, _uid, msg):
+    if '小米米' in msg:
+        replies = [TextSendMessage(text='綁起來電擊烤焦爆香切段上菜（¯﹃¯）')]
+    elif '2050' in msg:
+        replies = [
+            TextSendMessage(text='兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'),
+            TextSendMessage(text='睡你麻痺起來嗨ヽ(`Д´)ノ'),
+        ]
+    elif '夢魘順序' in msg:
+        replies = [TextSendMessage(text='sky降攻 -> 普爾加防 -> 芙溫妖精王-> 米米(工讀生)黑腕  -> 邱御豪降防')]
+    else:
+        replies = _group_reply_sino_alice_base(msg)
     return replies
 
 
 def group_reply_taiwan_sino_alice(_line_bot_api, _source_id, _uid, msg):
-    replies = []
-    if '死愛資料庫' in msg:
-        replies = ['https://sinoalice.game-db.tw/']
-    elif '狗糧' == msg:
-        replies = ['07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼']
-    elif '素材' == msg:
-        replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
-    else:
-        pass
+    replies = _group_reply_sino_alice_base(msg)
     return replies
 
 
 def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
-    msg = msg.lower()
-    replies = []
-    if '死愛資料庫' in msg:
-        replies = ['https://sinoalice.game-db.tw/']
-    elif '狗糧' == msg:
-        replies = ['07:30, 12:00, 19:30, 22:30, 01:00 持續半小時 ／人◕ ‿‿ ◕人＼']
-    elif '素材' == msg:
-        replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
-    elif msg.startswith('id對照表'):
-        replies = ['\n'.join(SINOALICE_NIER_ID_LIST)]
+    if msg.lower().startswith('id對照表'):
+        replies = [TextSendMessage(text='\n'.join(SINOALICE_NIER_ID_LIST))]
     elif msg.startswith('抽女友'):
         user_name = get_user_name(line_bot_api, source_id, uid)
         replies = draw_gf(source_id, uid, user_name)
@@ -156,12 +146,11 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
         user_name = get_user_name(line_bot_api, source_id, uid)
         replies = draw_leg(source_id, uid, user_name)
     else:
-        pass
+        replies = _group_reply_sino_alice_base(msg)
     return replies
 
 
 def group_reply_4_and_pan(line_bot_api, source_id, uid, msg):
-    msg = msg.lower()
     replies = group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg)
     return replies
 
