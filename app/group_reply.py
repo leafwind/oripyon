@@ -19,7 +19,7 @@ from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 help_find_pattern = re.compile('協尋')
-
+from constants import SINOALICE_NIER_ID_LIST
 
 RANDOM_GF = {}
 random_gf_file = os.path.join('line-user-info', 'random_gf.json')
@@ -104,7 +104,7 @@ def group_reply_yebai(_line_bot_api, _source_id, _uid, msg):
 
 
 def group_reply_mao_sino_alice(_line_bot_api, _source_id, _uid, msg):
-    replies = None
+    replies = []
     if '小米米' in msg:
         replies = ['綁起來電擊烤焦爆香切段上菜（¯﹃¯）']
     elif '2050' in msg:
@@ -122,15 +122,11 @@ def group_reply_mao_sino_alice(_line_bot_api, _source_id, _uid, msg):
         replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
     else:
         pass
-
-    if replies:
-        return [TextSendMessage(text=r) for r in replies]
-    else:
-        return []
+    return replies
 
 
 def group_reply_taiwan_sino_alice(_line_bot_api, _source_id, _uid, msg):
-    replies = None
+    replies = []
     if '死愛資料庫' in msg:
         replies = ['https://sinoalice.game-db.tw/']
     elif '狗糧' == msg:
@@ -139,41 +135,12 @@ def group_reply_taiwan_sino_alice(_line_bot_api, _source_id, _uid, msg):
         replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
     else:
         pass
-
-    if replies:
-        return [TextSendMessage(text=r) for r in replies]
-    else:
-        return []
+    return replies
 
 
 def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     msg = msg.lower()
-    id_list = [
-        '四姊 963028424',
-        '頓頓 208404895',
-        'stCarP 329543491',
-        '夜貓先生 832644419',
-        '撇撇 121381885',
-        '楓楓 694730233',
-        '西門(愛睏狼) 403332013',
-        '10(Lan Shawn) 372629712',
-        '火腿通粉(肉凱) 589363711',
-        '肉肉 220242535',
-        'redyee 866447142',
-        'ひまわり(小葵) 906443893',
-        '群草(Bosco) 820394786',
-        '微風輕語(微笑) 519184032',
-        '我才不告訴你累(陳俊傑) 494857518',
-        '群青(盼盼) 243719941',
-        '獄剎(呂立升) 284290895',
-        '\名字/ 807235479',
-        '冬瓜拿鐵 469089830',
-        'ハツキ 844936402',
-        '多多綠少了多多(米卡狗) 376103475',
-        '丸子u(采薇丸) 295185564',
-        '莉芙溫 467287876'
-    ]
-    replies = None
+    replies = []
     if '死愛資料庫' in msg:
         replies = ['https://sinoalice.game-db.tw/']
     elif '狗糧' == msg:
@@ -181,47 +148,23 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     elif '素材' == msg:
         replies = ['武器(風)：一、三、六\n武器(火)：二、四、日\n武器(水)：三、五、日\n防具：二、四、六\n金幣：一、五、六 ／人◕ ‿‿ ◕人＼']
     elif msg.startswith('id對照表'):
-        replies = ['\n'.join(id_list)]
+        replies = ['\n'.join(SINOALICE_NIER_ID_LIST)]
+    elif msg.startswith('抽女友'):
+        user_name = get_user_name(line_bot_api, source_id, uid)
+        replies = draw_gf(source_id, uid, user_name)
+    elif msg.startswith('抽腿'):
+        user_name = get_user_name(line_bot_api, source_id, uid)
+        replies = draw_leg(source_id, uid, user_name)
     else:
         pass
-    if msg.startswith('抽女友'):
-        random.seed(os.urandom(5))
-        try:
-            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-        except LineBotApiError as e:
-            logging.error('LineBotApiError: %s', e)
-            user_name = ''
-        # drop the user itself
-        candidates = RANDOM_GF  # copy a new obj
-        for i, c in enumerate(candidates):
-            if c['uid'] == uid:
-                logging.info(f'{user_name} 丟掉自己 {c["name"]}')
-                candidates.pop(i)
-                break
-        target = random.choice(list(candidates))
-        target_name = target['name']
-        url = target['url']
-        msg = f'{user_name}真可憐呢沒有女友，不哭不哭(´;ω;`)ヾ(･∀･`)\n給你一個{target_name}的左手聞香'
-        if 'custom_msg' in target:
-            msg += f'\n{target["custom_msg"]}'
-        return [
-            ImageSendMessage(original_content_url=url, preview_image_url=url),
-            TextSendMessage(text=msg)
-        ]
-    elif msg.startswith('抽腿'):
-        replies = draw_leg(line_bot_api, source_id, uid, msg)
-        return replies
-    if replies:
-        return [TextSendMessage(text=r) for r in replies]
-    else:
-        return []
+    return replies
 
 
 def group_reply_4_and_pan(line_bot_api, source_id, uid, msg):
     msg = msg.lower()
-    if msg.startswith('抽腿'):
-        replies = draw_leg(line_bot_api, source_id, uid, msg)
-        return replies
+    replies = group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg)
+    return replies
+
 
 def group_reply_luna(_line_bot_api, _source_id, _uid, _msg):
     return
@@ -239,36 +182,65 @@ def group_reply_mao_test(_line_bot_api, _source_id, _uid, _msg):
     return
 
 
-def draw_leg(line_bot_api, source_id, uid, msg):
+def get_user_name(line_bot_api, source_id, uid):
     try:
         user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
     except LineBotApiError as e:
         logging.error('LineBotApiError: %s', e)
         user_name = ''
+    return user_name
+
+
+def random_choice_except_key(from_dict, except_key):
+    # drop the user itself
+    random.seed(os.urandom(5))
+    candidates = from_dict  # copy a new obj
+    for i, c in enumerate(candidates):
+        if c['uid'] == except_key:
+            logging.info(f'丟掉自己 {c["name"]}')
+            candidates.pop(i)
+            break
+    target = random.choice(list(candidates))
+    return target
+
+
+def draw_gf(source_id, uid, user_name):
+    # 限制指令數量
+    check_or_create_table_line_cmd_count()
+    today_count = query_line_cmd_count(source_id, uid, 'draw_hand')
+    logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
+    DRAW_HAND_DAILY_LIMIT = 3
+    if today_count >= DRAW_HAND_DAILY_LIMIT:
+        return [
+            TextSendMessage(text=f'今日次數({DRAW_HAND_DAILY_LIMIT})用完了，請等待凌晨四點重置')
+        ]
+    insert_line_cmd_count(source_id, uid, 'draw_hand', int(time.time()))
+    # 抽
+    target = random_choice_except_key(RANDOM_GF, uid)
+    target_name = target['name']
+    url = target['url']
+    msg = f'{user_name}真可憐呢沒有女友，不哭不哭(´;ω;`)ヾ(･∀･`)\n給你一個{target_name}的左手聞香'
+    if 'custom_msg' in target:
+        msg += f'\n{target["custom_msg"]}'
+    return [
+        ImageSendMessage(original_content_url=url, preview_image_url=url),
+        TextSendMessage(text=msg)
+    ]
+
+
+def draw_leg(source_id, uid, user_name):
     # 限制指令數量
     check_or_create_table_line_cmd_count()
     today_count = query_line_cmd_count(source_id, uid, 'draw_leg')
     logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
-    if today_count > 0:
+    DRAW_LEG_DAILY_LIMIT = 1
+    if today_count >= DRAW_LEG_DAILY_LIMIT:
         return [
-            TextSendMessage(text='今日次數(1)用完了，請等待凌晨四點重置')
+            TextSendMessage(text=f'今日次數({DRAW_LEG_DAILY_LIMIT})用完了，請等待凌晨四點重置')
         ]
     insert_line_cmd_count(source_id, uid, 'draw_leg', int(time.time()))
-
-    random.seed(os.urandom(5))
-    try:
-        user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-    except LineBotApiError as e:
-        logging.error('LineBotApiError: %s', e)
-        user_name = ''
-    # drop the user itself
-    candidates = RANDOM_LEG  # copy a new obj
-    for i, c in enumerate(candidates):
-        if c['uid'] == uid:
-            logging.info(f'{user_name} 丟掉自己 {c["name"]}')
-            candidates.pop(i)
-            break
-    target = random.choice(list(candidates))
+    # 抽
+    target = random_choice_except_key(RANDOM_LEG, uid)
     target_name = target['name']
     url = target['url']
     msg = f'{user_name}給你一個{target_name}的腿腿，開舔！'

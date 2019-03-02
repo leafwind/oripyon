@@ -1,6 +1,5 @@
 import logging
 import re
-import time
 
 from linebot.exceptions import (
     LineBotApiError
@@ -194,7 +193,6 @@ def build_complex_msg(result):
 
 
 def common_reply(line_bot_api, source_id, uid, msg):
-    now = int(time.time())
     for p in pattern_mapping:
         if p['type'] == 'equal':
             if msg == p['cmd']:
@@ -230,6 +228,7 @@ def common_reply(line_bot_api, source_id, uid, msg):
         return [TextSendMessage(text=reply.format(name=user_name))]
 
     # if msg == last_msg.get(source_id, None):
+    #     now = int(time.time())
     #     logging.info('偵測到重複，準備推齊')
     #     repeated_diff_ts = now - replied_time.get((source_id, msg), 0)
     #     if repeated_diff_ts > 600:
