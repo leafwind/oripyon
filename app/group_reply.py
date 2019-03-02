@@ -188,7 +188,6 @@ def random_choice_except_key(from_dict, except_key):
         if c['uid'] == except_key:
             logging.info(f'丟掉自己 {c["name"]}')
             candidates.pop(i)
-            break
     target = random.choice(list(candidates))
     return target
 
