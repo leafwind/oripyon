@@ -4,7 +4,7 @@ polling twitch api and notify line if streaming online
 import time
 import json
 import logging
-
+import datetime
 import yaml
 import requests
 
@@ -59,6 +59,7 @@ def twitch_stream_notify():
         }
     }
     payload = json.loads(r.text)
+    logging.info('%s', datetime.datetime.now())
     logging.info('%s', payload)
     new_stream_set = set()
     if payload['_total'] > 0:
@@ -97,8 +98,13 @@ class StreamLister:
         :return:
         """
         while self._running:
-            twitch_stream_notify()
-            time.sleep(15)
+            try:
+                twitch_stream_notify()      
+            except Exception as e:
+                logging.exception("type(e): %s, str(e): %s", type(e), str(e))
+            finally:
+                time.sleep(15)
+            
 
 
 if __name__ == "__main__":
