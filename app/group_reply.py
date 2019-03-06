@@ -151,6 +151,9 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     elif msg.startswith('抽腿'):
         user_name = get_user_name(line_bot_api, source_id, uid)
         replies = draw_leg(source_id, uid, user_name)
+    elif msg.startswith('抽鎖骨'):
+        user_name = get_user_name(line_bot_api, source_id, uid)
+        replies = draw_collarbone(source_id, uid, user_name)
     else:
         replies = _group_reply_sino_alice_base(msg)
     return replies
