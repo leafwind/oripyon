@@ -217,7 +217,7 @@ def handle_sticker_message(event):
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}({uid}) (sticker) ({pid}, {sid}), url: {sticker_url}")
 
 
-@handler.add(MessageEvent, message=ImageMessage, AudioMessage)
+@handler.add(MessageEvent, message=[ImageMessage,AudioMessage])
 def handle_image_message(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
