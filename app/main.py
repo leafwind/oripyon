@@ -14,7 +14,7 @@ from linebot.exceptions import (
 )
 from linebot.models import (
     MessageEvent, JoinEvent, LeaveEvent, FollowEvent,
-    TextMessage, ImageMessage, TextSendMessage, ImageSendMessage, StickerMessage
+    TextMessage, ImageMessage, AudioMessage, TextSendMessage, ImageSendMessage, StickerMessage
 )
 
 from app.common_reply import common_reply
@@ -217,7 +217,7 @@ def handle_sticker_message(event):
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}({uid}) (sticker) ({pid}, {sid}), url: {sticker_url}")
 
 
-@handler.add(MessageEvent, message=ImageMessage)
+@handler.add(MessageEvent, message=ImageMessage, AudioMessage)
 def handle_image_message(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
@@ -228,8 +228,7 @@ def handle_image_message(event):
     else:
         raise ValueError
     uid = event.source.user_id
-    image_id = event.message.id
-    message_content = line_bot_api.get_message_content(image_id)
+    message_content = line_bot_api.get_message_content(event.message.id)
     now = int(time.time())
     date = datetime.datetime.utcfromtimestamp(now)
     date_str = date.strftime('%Y%m%d')
@@ -238,7 +237,13 @@ def handle_image_message(event):
     dir_path = os.path.join('/var', 'line_image', date_str, source_id, uid)
     if not os.path.isdir(dir_path):
         os.makedirs(dir_path)
-    file_path = os.path.join(dir_path, date_str + time_str + '_' + filename + '.jpg')
+    if event.message.type == 'image':
+        extension = 'jpg'
+    elif event.message.type == 'audio':
+        extension = 'aac'
+    else:
+        raise TypeError
+    file_path = os.path.join(dir_path, date_str + time_str + '_' + filename + '.' + extension)
     with open(file_path, 'wb') as fd:
         for chunk in message_content.iter_content():
             fd.write(chunk)
