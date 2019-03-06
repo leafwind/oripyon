@@ -33,6 +33,12 @@ if os.path.exists(random_leg_file):
     with open(random_leg_file, 'r') as f:
         RANDOM_LEG = json.load(f)
 
+RANDOM_COLLARBONE = {}
+random_collarbone_file = os.path.join('line-user-info', 'random_collarbone.json')
+if os.path.exists(random_collarbone_file):
+    with open(random_collarbone_file, 'r') as f:
+        RANDOM_COLLARBONE = json.load(f)
+
 
 def group_reply_test(_line_bot_api, _source_id, _uid, msg):
     leafwind_photo_url = \
@@ -238,6 +244,31 @@ def draw_leg(source_id, uid, user_name):
         ImageSendMessage(original_content_url=url, preview_image_url=url),
         TextSendMessage(text=msg)
     ]
+
+
+def draw_collarbone(source_id, uid, user_name):
+    # 限制指令數量
+    check_or_create_table_line_cmd_count()
+    today_count = query_line_cmd_count(source_id, uid, 'draw_collarbone')
+    logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
+    DRAW_COLLARBONE_DAILY_LIMIT = 1
+    if today_count >= DRAW_COLLARBONE_DAILY_LIMIT:
+        return [
+            TextSendMessage(text=f'今日次數({DRAW_COLLARBONE_DAILY_LIMIT})用完了，請等待凌晨四點重置')
+        ]
+    insert_line_cmd_count(source_id, uid, 'draw_collarbone', int(time.time()))
+    # 抽
+    target = random_choice_except_key(RANDOM_COLLARBONE, uid)
+    target_name = target['name']
+    url = target['url']
+    msg = f'{user_name}給你一個{target_name}的鎖骨，開舔！'
+    if 'custom_msg' in target:
+        msg += f'\n{target["custom_msg"]}'
+    return [
+        ImageSendMessage(original_content_url=url, preview_image_url=url),
+        TextSendMessage(text=msg)
+    ]
+
 
 GROUP_MAPPING = {
     'C1bebaeaf89242089f0d755d492df6cb6': {
