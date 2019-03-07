@@ -130,6 +130,16 @@ def group_reply_mao_sino_alice(_line_bot_api, _source_id, _uid, msg):
             TextSendMessage(text='兩洞伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'),
             TextSendMessage(text='睡你麻痺起來嗨ヽ(`Д´)ノ'),
         ]
+    elif '2150' in msg:
+        replies = [
+            TextSendMessage(text='兩么伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'),
+            TextSendMessage(text='普爾喵子睡你麻痺起來嗨ヽ(`Д´)ノ'),
+        ]
+    elif '2250' in msg:
+        replies = [
+            TextSendMessage(text='二二伍洞，部隊起床｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡'),
+            TextSendMessage(text='芙溫睡你麻痺起來嗨ヽ(`Д´)ノ'),
+        ]
     elif '夢魘順序' in msg:
         replies = [TextSendMessage(text='sky降攻 -> 普爾加防 -> 芙溫妖精王-> 米米(工讀生)黑腕  -> 邱御豪降防')]
     else:
