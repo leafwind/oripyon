@@ -278,6 +278,7 @@ def handle_text_message(event):
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
     make_reply(source_id, uid, event.message.text, reply_token=event.reply_token)
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
+        pass
         # log_filename = GROUP_MAPPING[source_id]['log_filename'] + '.txt'
         # chat(line_bot_api, event.reply_token, source_id, event.msg.text, log_filename)
 
