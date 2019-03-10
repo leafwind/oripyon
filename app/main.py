@@ -2,11 +2,9 @@ import datetime
 import json
 import logging
 import os
-import random
 import time
 import uuid
 
-import Levenshtein
 import yaml
 from flask import Flask, request, abort, render_template
 from linebot.exceptions import (
@@ -18,15 +16,12 @@ from linebot.models import (
 )
 
 from app.common_reply import common_reply
-from app.emoji_list import KAOMOJI_LIST
+from app.group_reply import GROUP_MAPPING
 from app.linebot_api_extension import (
     LineBotApiExtension
 )
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
 from app.linebot_webhook_extension import WebhookHandlerExtended
-from app.markov_chain import MarkovChat
-from constants import TEST_GROUP_IDS
-from app.group_reply import GROUP_MAPPING
 
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
@@ -44,7 +39,6 @@ with open("line_auth_key.yml", 'r') as stream:
     CHANNEL_SECRET = data['CHANNEL_SECRET']
 line_bot_api = LineBotApiExtension(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandlerExtended(CHANNEL_SECRET)
-markov_chat_instance_map = {}
 
 
 def write_temp_user_mapping(uid, user_name):
@@ -261,7 +255,6 @@ def handle_image_message(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
-    global markov_chat_instance_map
     # logging.info('%s', event.__dict__)
     if event.source.type == 'room':  # 自訂聊天
         source_id = event.source.room_id
@@ -284,27 +277,9 @@ def handle_text_message(event):
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
     make_reply(source_id, uid, event.message.text, reply_token=event.reply_token)
-
-    # if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
-    #     if source_id not in markov_chat_instance_map:
-    #         # new MarkovChat obj
-    #         mc = MarkovChat(os.path.join('./training', GROUP_MAPPING[source_id]['log_filename'] + '.txt'), chattiness=1)
-    #         markov_chat_instance_map[source_id] = mc
-    #     else:
-    #         # reuse MarkovChat obj to save memory
-    #         mc = markov_chat_instance_map[source_id]
-    #     log = mc.log(event.message.text)
-    #     if log:
-    #         log_similarity = Levenshtein.ratio(event.message.text, log)
-    #         logging.info('log: %s (sim: %s)', log, log_similarity)
-    #         if source_id in TEST_GROUP_IDS:
-    #             random.seed(os.urandom(5))
-    #             line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=random.choice(KAOMOJI_LIST) + log)])
-    #
-    #     chat = mc.chat(event.message.text,)
-    #     if chat:
-    #         chat_similarity = Levenshtein.ratio(event.message.text, chat)
-    #         logging.info('chat: %s (sim: %s)', chat, chat_similarity)
+    if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
+        # log_filename = GROUP_MAPPING[source_id]['log_filename'] + '.txt'
+        # chat(line_bot_api, event.reply_token, source_id, event.msg.text, log_filename)
 
 
 def make_reply(source_id, uid, msg, reply_token=None):
