@@ -132,7 +132,7 @@ pattern_mapping = [
     },
     {
         'cmd': panpan_pattern,
-        'type': 'search',
+        'type': 'equal',
         'function': pan_pan
     },
     {
