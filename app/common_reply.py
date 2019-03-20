@@ -8,7 +8,7 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 
-from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card
+from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
     bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
 from app.finance import exchange_rate
@@ -34,6 +34,7 @@ girlfriend_pattern = re.compile(r'求女(朋)?友')
 why_pattern = re.compile(r'請問為什麼')
 help_pattern = re.compile(r'/help', re.IGNORECASE)
 poor_chinese_pattern = re.compile(r'爛中文')
+panpan_pattern = re.compile(r'撩妹')
 qq_pattern = re.compile(r'幫qq', re.IGNORECASE)
 nca_pattern = re.compile(r'^nca', re.IGNORECASE)
 aqi_predict_pattern = re.compile(r'^空品預測\s+.+')
@@ -128,6 +129,11 @@ pattern_mapping = [
         'cmd': poor_chinese_pattern,
         'type': 'search',
         'function': poor_chinese
+    },
+    {
+        'cmd': panpan_pattern,
+        'type': 'search',
+        'function': pan_pan
     },
     {
         'cmd': qq_pattern,

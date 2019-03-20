@@ -3,7 +3,7 @@ import logging
 import os
 import random
 
-from constants import HUGE_GROUP_IDS, TEACHER_HO
+from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES
 
 tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
 
@@ -11,6 +11,12 @@ tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
 def draw_card():
     random.seed(os.urandom(5))
     msg = random.choice(TEACHER_HO)
+    return msg
+
+
+def pan_pan():
+    random.seed(os.urandom(5))
+    msg = random.choice(PAN_SENTENCES)
     return msg
 
 
