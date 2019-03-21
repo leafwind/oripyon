@@ -34,7 +34,7 @@ girlfriend_pattern = re.compile(r'求女(朋)?友')
 why_pattern = re.compile(r'請問為什麼')
 help_pattern = re.compile(r'/help', re.IGNORECASE)
 poor_chinese_pattern = re.compile(r'爛中文')
-panpan_pattern = re.compile(r'撩妹')
+panpan_pattern = re.compile(r'^撩妹')
 qq_pattern = re.compile(r'幫qq', re.IGNORECASE)
 nca_pattern = re.compile(r'^nca', re.IGNORECASE)
 aqi_predict_pattern = re.compile(r'^空品預測\s+.+')
@@ -132,7 +132,7 @@ pattern_mapping = [
     },
     {
         'cmd': panpan_pattern,
-        'type': 'equal',
+        'type': 'search',
         'function': pan_pan
     },
     {
