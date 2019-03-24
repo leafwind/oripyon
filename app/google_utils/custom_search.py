@@ -19,6 +19,7 @@ def get_google_custom_search_result(query_string, num=100, search_type='image'):
     api_url += f'&searchType={search_type}'
     api_url += f'&q={query_string}'
     api_url += f'&cx=013563099022526892869:vdjdigrv2sm'
+    logging.info(api_url)
     r = requests.get(api_url)
     logging.info(r.json())
     items = r.json()['data']['items']
