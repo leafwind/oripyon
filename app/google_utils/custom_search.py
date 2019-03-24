@@ -19,7 +19,8 @@ def get_google_custom_search_result(query_string, num=100, search_type='image'):
     api_url += f'&q={query_string}'
     api_url += f'&cx=013563099022526892869:vdjdigrv2sm'
     r = requests.get(api_url)
-    items = r.json()['items']
+    logging.info(r.json())
+    items = r.json()['data']['items']
     images = [(i['title'], i['link']) for i in items]
     if r.status_code == 200:
         return images
