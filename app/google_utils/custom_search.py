@@ -22,7 +22,7 @@ def get_google_custom_search_result(query_string, num=10, search_type='image'):
     logging.info(api_url)
     r = requests.get(api_url)
     items = r.json()['items']
-    images = [(i['title'], i['link']) for i in items]
+    images = [(i['title'], i['link']) for i in items if i['link'].startswith('https')]
     if r.status_code == 200:
         return images
     else:
@@ -30,6 +30,7 @@ def get_google_custom_search_result(query_string, num=10, search_type='image'):
 
 
 def google_search_image(msg):
+    msg = " ".join(msg.split())
     query = msg.split(' ')[1]
     random.seed(os.urandom(5))
     images = get_google_custom_search_result(query)
