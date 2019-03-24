@@ -18,7 +18,7 @@ def draw_cat():
     list_of_lists = worksheet.get_all_values()
     list_of_lists = list_of_lists[1:]
     row = random.choice(list_of_lists)
-    replies = [('image', row[0]), ('text', f'{row[1]}：{row[2]}')]
+    replies = [('image', row[0]), ('text', row[1])]
     return replies
 
 
