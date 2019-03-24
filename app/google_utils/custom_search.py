@@ -28,7 +28,7 @@ def get_google_custom_search_result(query_string, num=10, search_type='image'):
     elif 'error' in result:
         if 'errors' in result['error']:
             if 'reason' in result['error']['errors'][0]:
-                if result['error']['errors']['reason'] == 'dailyLimitExceeded':
+                if result['error']['errors'][0]['reason'] == 'dailyLimitExceeded':
                     images = [('Google 一天一百次免費用完了...QQ', 'https://i.imgur.com/bvNKRTz.jpg')]
                     return images
         else:
