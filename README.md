@@ -31,7 +31,8 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 
 # Development
 
-- build environment with python 3.7: `./scripts/build_venv.sh`
+- build environment
+  - python 3.7 and requirements: `./scripts/build_venv.sh`
 - init and update submodule: `git submodule update --init --recursive`
 
 ## Restart uwsgi to apply code change

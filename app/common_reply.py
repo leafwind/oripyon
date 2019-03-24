@@ -7,7 +7,7 @@ from linebot.exceptions import (
 from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
-
+from app.google_utils.custom_search import google_search_image
 from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
     bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
@@ -33,6 +33,7 @@ tzguguaning_pattern = re.compile(r'慈孤觀音')
 daughter_red_pattern = re.compile(r'女兒紅')
 girlfriend_pattern = re.compile(r'求女(朋)?友')
 why_pattern = re.compile(r'請問為什麼')
+google_custom_search_pattern = re.compile(r'^找圖\s+.+')
 help_pattern = re.compile(r'/help', re.IGNORECASE)
 poor_chinese_pattern = re.compile(r'爛中文')
 panpan_pattern = re.compile(r'^撩妹')
@@ -64,6 +65,13 @@ pattern_mapping = [
         'function': tarot,
         'multi_type_output': True,
         'source_as_arg': True
+    },
+    {
+        'cmd': google_custom_search_pattern,
+        'type': 'search',
+        'function': google_search_image,
+        'multi_type_output': True,
+        'matched_as_arg': True
     },
     {
         'cmd': draw_cat_pattern,
