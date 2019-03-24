@@ -16,8 +16,9 @@ def draw_cat():
     sh = gss_client.open_by_key(GSPREAD_KEY_CAT)
     worksheet = sh.get_worksheet(0)
     list_of_lists = worksheet.get_all_values()
+    logging.info(list_of_lists)
     row = random.choice(list_of_lists)
-    replies = [('image', row[0]), ('text', row[1])]
+    replies = [('image', row[0]), ('text', f'{row[1]}：{row[2]}')]
     return replies
 
 
