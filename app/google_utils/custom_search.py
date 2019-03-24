@@ -8,7 +8,8 @@ import requests
 from constants import GOOGLE_API_KEY_PATH
 
 with open(GOOGLE_API_KEY_PATH, 'r') as _f:
-    API_KEY = json.load(_f)
+    data = json.load(_f)
+    API_KEY = data['API_KEY']
 
 def get_google_custom_search_result(query_string, num=100, search_type='image'):
     global API_KEY
