@@ -10,3 +10,5 @@ pyflakes
 pyyaml
 jieba
 python-Levenshtein
+gspread
+oauth2client

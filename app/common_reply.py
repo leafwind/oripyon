@@ -8,7 +8,7 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 
-from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan
+from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
     bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
 from app.finance import exchange_rate
@@ -18,6 +18,7 @@ from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aq
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
 fortune_pattern = re.compile(r'運勢')
 tarot_pattern = re.compile(r'塔羅')
+draw_cat_pattern = re.compile(r'抽貓')
 coc_7e_basic_pattern = re.compile(
     r"""^cc            # start with cc
         (\(-?[12]\))?  # optional (n), -2 <= n <= 2
@@ -63,6 +64,12 @@ pattern_mapping = [
         'function': tarot,
         'multi_type_output': True,
         'source_as_arg': True
+    },
+    {
+        'cmd': draw_cat_pattern,
+        'type': 'search',
+        'function': draw_cat,
+        'multi_type_output': True
     },
     {
         'cmd': choice_pattern,

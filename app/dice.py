@@ -3,9 +3,21 @@ import logging
 import os
 import random
 
-from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES
+from app.utils.gspread_util import auth_gss_client
+from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT, AUTH_JSON_PATH
 
 tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
+
+
+def draw_cat():
+    gss_scopes = ['https://spreadsheets.google.com/feeds']
+    gss_client = auth_gss_client(AUTH_JSON_PATH, gss_scopes)
+    sh = gss_client.open_by_key(GSPREAD_KEY_CAT)
+    worksheet = sh.get_worksheet(0)
+    list_of_lists = worksheet.get_all_values()
+    row = random.choice(list_of_lists)
+    replies = [('image', row[0]), ('text', row[1])]
+    return replies
 
 
 def draw_card():
