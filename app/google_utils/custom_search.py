@@ -11,7 +11,7 @@ with open(GOOGLE_API_KEY_PATH, 'r') as _f:
     data = json.load(_f)
     API_KEY = data['API_KEY']
 
-def get_google_custom_search_result(query_string, num=50, search_type='image'):
+def get_google_custom_search_result(query_string, num=10, search_type='image'):
     global API_KEY
     api_url = 'https://www.googleapis.com/customsearch/v1'
     api_url += f'?key={API_KEY}'
