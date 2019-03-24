@@ -30,7 +30,8 @@ def get_google_custom_search_result(query_string, num=100, search_type='image'):
         logging.error(r.status_code)
 
 
-def google_search_image(query):
+def google_search_image(msg):
+    query = msg.split(' ')[1]
     random.seed(os.urandom(5))
     images = get_google_custom_search_result(query)
     image = random.choice(images)
