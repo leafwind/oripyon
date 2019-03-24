@@ -21,12 +21,23 @@ def get_google_custom_search_result(query_string, num=10, search_type='image'):
     api_url += f'&cx=013563099022526892869:vdjdigrv2sm'
     logging.info(api_url)
     r = requests.get(api_url)
-    items = r.json()['items']
-    images = [(i['title'], i['link']) for i in items if i['link'].startswith('https')]
-    if r.status_code == 200:
+    result = r.json()
+    if 'items' in result:
+        images = [(i['title'], i['link']) for i in result if i['link'].startswith('https')]
         return images
-    else:
-        logging.error(r.status_code)
+    elif 'error' in result:
+        if 'errors' in result['error']:
+            if 'reason' in result['error']['errors']:
+                if result['error']['errors']['reason'] == 'dailyLimitExceeded':
+                    images = [('Google 一天一百次免費用完了...QQ', 'https://i.imgur.com/bvNKRTz.jpg')]
+                    return images
+        else:
+            images = [('發生某種問題QQ', 'https://i.imgur.com/kqfL1bN.jpg')]
+            logging.error(result)
+            return images
+    images = [('發生某種問題QQ', 'https://i.imgur.com/kqfL1bN.jpg')]
+    logging.error(result)
+    return images
 
 
 def google_search_image(msg):
