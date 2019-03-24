@@ -10,6 +10,7 @@ tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
 
 
 def draw_cat():
+    random.seed(os.urandom(5))
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(AUTH_JSON_PATH, gss_scopes)
     sh = gss_client.open_by_key(GSPREAD_KEY_CAT)
