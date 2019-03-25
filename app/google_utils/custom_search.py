@@ -23,7 +23,7 @@ def get_google_custom_search_result(query_string, num=10, search_type='image'):
     r = requests.get(api_url)
     result = r.json()
     if 'items' in result:
-        images = [(i['title'], i['link']) for i in result if i['link'].startswith('https')]
+        images = [(i['title'], i['link']) for i in result['items'] if i['link'].startswith('https')]
         return images
     elif 'error' in result:
         if 'errors' in result['error']:
