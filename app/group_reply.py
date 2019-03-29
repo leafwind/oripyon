@@ -3,7 +3,6 @@ import logging
 import os
 import random
 import re
-import time
 
 from linebot.exceptions import (
     LineBotApiError
@@ -14,7 +13,6 @@ from linebot.models import (
 
 from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
 from app.line_templates import make_template_action, make_carousel_column
-from app.message_log import check_or_create_table_line_cmd_count, insert_line_cmd_count, query_line_cmd_count
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
@@ -155,15 +153,6 @@ def group_reply_taiwan_sino_alice(_line_bot_api, _source_id, _uid, msg):
 def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     if msg.lower().startswith('id對照表'):
         replies = [TextSendMessage(text='\n'.join(SINOALICE_NIER_ID_LIST))]
-    elif msg.startswith('抽女友'):
-        user_name = get_user_name(line_bot_api, source_id, uid)
-        replies = draw_gf(source_id, uid, user_name)
-    elif msg.startswith('抽腿'):
-        user_name = get_user_name(line_bot_api, source_id, uid)
-        replies = draw_leg(source_id, uid, user_name)
-    elif msg.startswith('抽鎖骨'):
-        user_name = get_user_name(line_bot_api, source_id, uid)
-        replies = draw_collarbone(source_id, uid, user_name)
     else:
         replies = _group_reply_sino_alice_base(msg)
     return replies
@@ -209,78 +198,6 @@ def random_choice_except_key(from_dict, except_key):
             candidates.pop(i)
     target = random.choice(list(candidates))
     return target
-
-
-def draw_gf(source_id, uid, user_name):
-    # 限制指令數量
-    check_or_create_table_line_cmd_count()
-    today_count = query_line_cmd_count(source_id, uid, 'draw_hand')
-    logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
-    DRAW_HAND_DAILY_LIMIT = 3
-    if today_count >= DRAW_HAND_DAILY_LIMIT:
-        return [
-            TextSendMessage(text=f'今日次數({DRAW_HAND_DAILY_LIMIT})用完了，請等待凌晨四點重置')
-        ]
-    insert_line_cmd_count(source_id, uid, 'draw_hand', int(time.time()))
-    # 抽
-    target = random_choice_except_key(RANDOM_GF, uid)
-    target_name = target['name']
-    url = target['url']
-    msg = f'{user_name}真可憐呢沒有女友，不哭不哭(´;ω;`)ヾ(･∀･`)\n給你一個{target_name}的左手聞香'
-    if 'custom_msg' in target:
-        msg += f'\n{target["custom_msg"]}'
-    return [
-        ImageSendMessage(original_content_url=url, preview_image_url=url),
-        TextSendMessage(text=msg)
-    ]
-
-
-def draw_leg(source_id, uid, user_name):
-    # 限制指令數量
-    check_or_create_table_line_cmd_count()
-    today_count = query_line_cmd_count(source_id, uid, 'draw_leg')
-    logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
-    DRAW_LEG_DAILY_LIMIT = 1
-    if today_count >= DRAW_LEG_DAILY_LIMIT:
-        return [
-            TextSendMessage(text=f'今日次數({DRAW_LEG_DAILY_LIMIT})用完了，請等待凌晨四點重置')
-        ]
-    insert_line_cmd_count(source_id, uid, 'draw_leg', int(time.time()))
-    # 抽
-    target = random_choice_except_key(RANDOM_LEG, uid)
-    target_name = target['name']
-    url = target['url']
-    msg = f'{user_name}給你一個{target_name}的腿腿，開舔！'
-    if 'custom_msg' in target:
-        msg += f'\n{target["custom_msg"]}'
-    return [
-        ImageSendMessage(original_content_url=url, preview_image_url=url),
-        TextSendMessage(text=msg)
-    ]
-
-
-def draw_collarbone(source_id, uid, user_name):
-    # 限制指令數量
-    check_or_create_table_line_cmd_count()
-    today_count = query_line_cmd_count(source_id, uid, 'draw_collarbone')
-    logging.info(f'{user_name} 今天已經抽了 {today_count} 次')
-    DRAW_COLLARBONE_DAILY_LIMIT = 1
-    if today_count >= DRAW_COLLARBONE_DAILY_LIMIT:
-        return [
-            TextSendMessage(text=f'今日次數({DRAW_COLLARBONE_DAILY_LIMIT})用完了，請等待凌晨四點重置')
-        ]
-    insert_line_cmd_count(source_id, uid, 'draw_collarbone', int(time.time()))
-    # 抽
-    target = random_choice_except_key(RANDOM_COLLARBONE, uid)
-    target_name = target['name']
-    url = target['url']
-    msg = f'{user_name}給你一個{target_name}的鎖骨，開舔！'
-    if 'custom_msg' in target:
-        msg += f'\n{target["custom_msg"]}'
-    return [
-        ImageSendMessage(original_content_url=url, preview_image_url=url),
-        TextSendMessage(text=msg)
-    ]
 
 
 GROUP_MAPPING = {
