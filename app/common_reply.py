@@ -251,6 +251,9 @@ def common_reply(line_bot_api, source_id, uid, msg):
     if msg == '暗鬼任務':
         reply = '素材兌換建議: https://forum.gamer.com.tw/C.php?bsn=31743&snA=3472&tnum=2 \n 詳細攻略（殘體）: http://sinoalice.weebly.com/30097245152626339740middot2021921153.html'
         return [TextSendMessage(text=reply)]
+    elif msg == '收集任務':
+        reply = '4/18 開始 http://sinoalice.weebly.com/30097245152626339740middot2591034255.html'
+        return [TextSendMessage(text=reply)]
 
     # if msg == last_msg.get(source_id, None):
     #     now = int(time.time())
