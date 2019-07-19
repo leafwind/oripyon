@@ -9,7 +9,8 @@ GOOGLE_AUTH_JSON_PATH = 'auth.json'
 GSPREAD_KEY_CAT = '1hGBdRj9yoJrGIcAuQe8KInAVo9bygyV9C7wVHze5dcI'
 
 HUGE_GROUP_IDS = [
-    'C770afed112311f3f980291e1e488e0ef'
+    'C770afed112311f3f980291e1e488e0ef',
+    'Cfbbdac072c508472fd3acc9ac8fa7adc'
 ]
 
 
