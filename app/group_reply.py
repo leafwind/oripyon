@@ -249,6 +249,11 @@ GROUP_MAPPING = {
         'function': group_reply_mao,
         'log_filename': 'mao',
     },
+    'Cfbbdac072c508472fd3acc9ac8fa7adc': {
+        'name': '二代魔王城',
+        'function': group_reply_mao,
+        'log_filename': 'mao',
+    },
     'Cf794cf7dc1970c3fba9122673cf3dcde': {
         'name': '魔王城測試',
         'function': group_reply_mao_test,
