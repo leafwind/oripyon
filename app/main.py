@@ -152,7 +152,7 @@ def handle_member_join_event(event):
         'C498a6c669b4648d8dcb807415554fda1'
     ]:
         imgur_url = 'https://i.imgur.com/'
-        replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'kuHrYI6.jpg']
+        replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'srpzgjG.jpg']
         replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
                    replies_img]
         replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
