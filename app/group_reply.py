@@ -145,11 +145,6 @@ def group_reply_mao_sino_alice(_line_bot_api, _source_id, _uid, msg):
     return replies
 
 
-def group_reply_taiwan_sino_alice(_line_bot_api, _source_id, _uid, msg):
-    replies = _group_reply_sino_alice_base(msg)
-    return replies
-
-
 def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     if msg.lower().startswith('id對照表'):
         replies = [TextSendMessage(text='\n'.join(SINOALICE_NIER_ID_LIST))]
@@ -238,11 +233,6 @@ GROUP_MAPPING = {
     'Ce1ab51b1e9be1f69edf765e77ef43a49': {
         'name': '四姊與盼盼',
         'function': group_reply_4_and_pan,
-    },
-    'C15c762c0a497d62992c01b42ba9b39d9': {
-        'name': '死愛台版交流區',
-        'function': group_reply_taiwan_sino_alice,
-        'log_filename': 'sinoalice_tw',
     },
     'Cbc420349e56f3bae5d5f46fafb0ac5cb': {
         'name': '社畜人生的煩惱',

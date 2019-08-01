@@ -277,10 +277,22 @@ def handle_text_message(event):
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
     make_reply(source_id, uid, event.message.text, reply_token=event.reply_token)
+
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
-        pass
-        # log_filename = GROUP_MAPPING[source_id]['log_filename'] + '.txt'
-        # chat(line_bot_api, event.reply_token, source_id, event.msg.text, log_filename)
+        log_filename = GROUP_MAPPING[source_id]['log_filename'] + '.txt'
+    else:
+        log_filename = source_id + '.txt'
+
+    dir_path = os.path.join('/var', 'line_log')
+    if not os.path.isdir(dir_path):
+        os.makedirs(dir_path)
+
+    with open(os.path.join(dir_path, log_filename), 'a+') as fp:
+        now = int(time.time())
+        date = datetime.datetime.utcfromtimestamp(now)
+        time_str = date.strftime('%Y%m%d:%H%M%S')
+        fp.write(f"{time_str} {user_name}：{event.message.text}\n")
+    # chat(line_bot_api, event.reply_token, source_id, event.msg.text, log_filename)
 
 
 def make_reply(source_id, uid, msg, reply_token=None):
