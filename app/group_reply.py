@@ -248,11 +248,6 @@ GROUP_MAPPING = {
         'name': '社畜人生的煩惱',
         'function': group_reply_working,
     },
-    'C770afed112311f3f980291e1e488e0ef': {
-        'name': '魔王城',
-        'function': group_reply_mao,
-        'log_filename': 'mao',
-    },
     'Cfbbdac072c508472fd3acc9ac8fa7adc': {
         'name': '二代魔王城',
         'function': group_reply_mao,
@@ -262,11 +257,6 @@ GROUP_MAPPING = {
         'name': '魔王城測試',
         'function': group_reply_mao_test,
         'log_filename': 'mao_test',
-    },
-    'C498a6c669b4648d8dcb807415554fda1': {
-        'name': 'sslin test',
-        'function': group_reply_mao_test,
-        'log_filename': 'mao_test2',
     },
     'Cead15d583326d8cfc28d06d98308b009': {
         'name': '陌陌小閣',

@@ -146,7 +146,6 @@ def handle_member_join_event(event):
 
     # 可怕的象奶儀式
     if source_id in [
-        'C770afed112311f3f980291e1e488e0ef',
         'Cfbbdac072c508472fd3acc9ac8fa7adc',
         'Cf794cf7dc1970c3fba9122673cf3dcde',
         'C498a6c669b4648d8dcb807415554fda1'
