@@ -273,7 +273,7 @@ def handle_text_message(event):
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
             write_temp_user_mapping(uid, user_name)
         except LineBotApiError as e:
-            logging.error('LineBotApiError: %s', e)
+            logging.error('LineBotApiError: %s, source_id: %s, uid: %s', e, source_id, uid)
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
     make_reply(source_id, uid, event.message.text, reply_token=event.reply_token)
