@@ -287,9 +287,10 @@ def handle_text_message(event):
     if not os.path.isdir(dir_path):
         os.makedirs(dir_path)
 
-    with open(os.path.join(dir_path, log_filename), 'a+') as fp:
+    with open(os.path.join(dir_path, log_filename), 'a') as fp:
         now = int(time.time())
         date = datetime.datetime.utcfromtimestamp(now)
+        date = date + datetime.timedelta(hours=8)
         time_str = date.strftime('%Y%m%d:%H%M%S')
         fp.write(f"{time_str} {user_name}：{event.message.text}\n")
     # chat(line_bot_api, event.reply_token, source_id, event.msg.text, log_filename)
