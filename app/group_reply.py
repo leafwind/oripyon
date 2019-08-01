@@ -178,6 +178,10 @@ def group_reply_momo_loft(_line_bot_api, _source_id, _uid, _msg):
     return
 
 
+def group_reply_schumi_user(_line_bot_api, _source_id, _uid, _msg):
+    return
+
+
 def get_user_name(line_bot_api, source_id, uid):
     try:
         user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
@@ -212,10 +216,12 @@ GROUP_MAPPING = {
     'C25add4301bc790a641e07b02b868a9b7': {
         'name': '葉白',
         'function': group_reply_yebai,
+        'log_filename': 'yebai',
     },
     'C0cd56d37156c5ad3fe04b702624d50dd': {
         'name': '小路北七群',
         'function': group_reply_maplestory,
+        'log_filename': 'maplestory',
     },
     'C966396824051cbb00e35af7b4123a0a5': {
         'name': '天堂老司機',
@@ -224,6 +230,7 @@ GROUP_MAPPING = {
     'Cfb6a76351d112834244144a1cd4f0f57': {
         'name': '死愛魔王城',
         'function': group_reply_mao_sino_alice,
+        'log_filename': 'mao_sino_alice',
     },
     'C1e38a92f8c7b4ad377df882b9f3bf336': {
         'name': '尼爾主題餐廳',
@@ -252,5 +259,10 @@ GROUP_MAPPING = {
         'name': '陌陌小閣',
         'function': group_reply_momo_loft,
         'log_filename': 'momo_loft',
+    },
+    'C043a2d61209065726c7aae4ef4c748a0': {
+        'name': '朽瞇使用者',
+        'function': group_reply_schumi_user,
+        'log_filename': 'schumi_user',
     }
 }
