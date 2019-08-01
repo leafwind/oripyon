@@ -272,6 +272,11 @@ def handle_text_message(event):
         try:
             user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
             write_temp_user_mapping(uid, user_name)
+        except LineBotApiError:
+            pass  # try room member profile
+        try:
+            user_name = line_bot_api.get_room_member_profile(source_id, uid).display_name
+            write_temp_user_mapping(uid, user_name)
         except LineBotApiError as e:
             logging.error('LineBotApiError: %s, source_id: %s, uid: %s', e, source_id, uid)
     logging.info(
