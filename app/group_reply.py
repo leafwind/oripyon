@@ -179,6 +179,10 @@ def group_reply_mao_test(_line_bot_api, _source_id, _uid, _msg):
     return
 
 
+def group_reply_momo_loft(_line_bot_api, _source_id, _uid, _msg):
+    return
+
+
 def get_user_name(line_bot_api, source_id, uid):
     try:
         user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
@@ -263,5 +267,10 @@ GROUP_MAPPING = {
         'name': 'sslin test',
         'function': group_reply_mao_test,
         'log_filename': 'mao_test2',
+    },
+    'Cead15d583326d8cfc28d06d98308b009': {
+        'name': '陌陌小閣',
+        'function': group_reply_momo_loft,
+        'log_filename': 'momo_loft',
     }
 }
