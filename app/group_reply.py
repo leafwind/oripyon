@@ -244,6 +244,7 @@ GROUP_MAPPING = {
     'Cbc420349e56f3bae5d5f46fafb0ac5cb': {
         'name': '社畜人生的煩惱',
         'function': group_reply_working,
+        'log_filename': 'worker_life',
     },
     'Cfbbdac072c508472fd3acc9ac8fa7adc': {
         'name': '二代魔王城',
