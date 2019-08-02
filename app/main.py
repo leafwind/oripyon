@@ -308,26 +308,41 @@ def handle_text_message(event):
     # chat(line_bot_api, event.reply_token, source_id, event.msg.text, log_filename)
 
 
-def make_reply(source_id, uid, msg, reply_token=None):
-    # private reply
-    reply = common_reply(line_bot_api, source_id, uid, msg)
+def get_announcement(source_id):
     # common reply 塞公告
     check_or_create_table_line_announcement_log()
     max_ts = query_line_announcement_log(source_id)
     now_ts = int(time.time())
-    if max_ts == 0 or (now_ts//86400 != max_ts//86400 and now_ts - max_ts > 12*3600):
-        announcement_file = os.path.join('./announcement.json')
-        if os.path.exists(announcement_file):
-            with open(announcement_file, 'r') as f:
-                announcement = json.load(f)
-            date_begin = datetime.datetime.strptime(announcement[0]['date_begin'], '%Y-%m-%d')
-            date_end = datetime.datetime.strptime(announcement[0]['date_end'], '%Y-%m-%d')
-            begin_ts = time.mktime(date_begin.timetuple())
-            end_ts = time.mktime(date_end.timetuple())
-            if begin_ts < now_ts < end_ts:
-                announcement_content = announcement[0]['content']
-                reply.append(TextSendMessage(text=announcement_content))
-                insert_line_announcement_log(source_id, now_ts)
+    announcement_file = os.path.join('./announcement.json')
+    if now_ts//86400 == max_ts//86400:
+        # same day, skip
+        return None
+    elif now_ts - max_ts <= 12*3600:
+        # not over 12 hrs
+        return None
+    elif not os.path.exists(announcement_file):
+        return None
+    else:
+        with open(announcement_file, 'r') as f:
+            announcement = json.load(f)
+        date_begin = datetime.datetime.strptime(announcement[0]['date_begin'], '%Y-%m-%d')
+        date_end = datetime.datetime.strptime(announcement[0]['date_end'], '%Y-%m-%d')
+        begin_ts = time.mktime(date_begin.timetuple())
+        end_ts = time.mktime(date_end.timetuple())
+        if begin_ts < now_ts < end_ts:
+            announcement_text = announcement[0]['content']
+            insert_line_announcement_log(source_id, now_ts)
+            return announcement_text
+        else:
+            return None
+
+
+def make_reply(source_id, uid, msg, reply_token=None):
+    # private reply
+    reply = common_reply(line_bot_api, source_id, uid, msg)
+    announcement_text = get_announcement(source_id)
+    if announcement_text:
+        reply.append(TextSendMessage(text=announcement_text))
     if reply:
         line_bot_api.reply_message(reply_token, reply)
         return
