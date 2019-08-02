@@ -330,9 +330,9 @@ def get_announcement(source_id):
         begin_ts = time.mktime(date_begin.timetuple())
         end_ts = time.mktime(date_end.timetuple())
         if begin_ts < now_ts < end_ts:
-            announcement_text = announcement[0]['content']
+            announcement_text_list = announcement[0]['content']
             insert_line_announcement_log(source_id, now_ts)
-            return announcement_text
+            return announcement_text_list
         else:
             return None
 
@@ -340,9 +340,10 @@ def get_announcement(source_id):
 def make_reply(source_id, uid, msg, reply_token=None):
     # private reply
     reply = common_reply(line_bot_api, source_id, uid, msg)
-    announcement_text = get_announcement(source_id)
-    if announcement_text:
-        reply.append(TextSendMessage(text=announcement_text))
+    announcement_text_list = get_announcement(source_id)
+    if announcement_text_list:
+        for text in announcement_text_list:
+            reply.append(TextSendMessage(text=text))
     if reply:
         line_bot_api.reply_message(reply_token, reply)
         return
