@@ -117,7 +117,11 @@ def handle_join_event(event):
         raise ValueError
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} JoinEvent")
-    replies = [TextSendMessage(text=f'安安/ 感謝邀請我進來～')]
+    replies = [
+        TextSendMessage(text=f'安安/ 感謝邀請我進來～／人◕ ‿‿ ◕人＼'),
+        TextSendMessage(text=f'為了確保您了解隱私方面的疑慮，請先閱讀使用須知，另外使用手冊也在同一處 https://oripyon.weebly.com'),
+        TextSendMessage(text=f'請務必也加飼育員為好友 https://line.me/R/ti/p/%40026hfcxi ，這樣功能更動或維修時才能通知你喔！'),
+    ]
     line_bot_api.reply_message(event.reply_token, replies)
 
 
