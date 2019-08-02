@@ -320,7 +320,11 @@ def make_reply(source_id, uid, msg, reply_token=None):
         if os.path.exists(announcement_file):
             with open(announcement_file, 'r') as f:
                 announcement = json.load(f)
-            if int(announcement[0]['date_begin']) < now_ts < int(announcement[0]['date_end']):
+            date_begin = datetime.datetime.strptime(announcement[0]['date_begin'], '%Y-%m-%d')
+            date_end = datetime.datetime.strptime(announcement[0]['date_end'], '%Y-%m-%d')
+            begin_ts = time.mktime(date_begin.timetuple())
+            end_ts = time.mktime(date_end.timetuple())
+            if begin_ts < now_ts < end_ts:
                 announcement_content = announcement[0]['content']
                 reply.append(TextSendMessage(text=announcement_content))
                 insert_line_announcement_log(source_id, now_ts)
