@@ -15,6 +15,8 @@ from linebot.models import (
     TextMessage, ImageMessage, AudioMessage, TextSendMessage, ImageSendMessage, StickerMessage
 )
 
+from announcement_log import check_or_create_table_line_announcement_log, \
+    insert_line_announcement_log, query_line_announcement_log
 from app.common_reply import common_reply
 from app.group_reply import GROUP_MAPPING
 from app.linebot_api_extension import (
@@ -121,6 +123,7 @@ def handle_join_event(event):
         TextSendMessage(text=f'安安/ 感謝邀請我進來～／人◕ ‿‿ ◕人＼'),
         TextSendMessage(text=f'為了確保您了解隱私方面的疑慮，請先閱讀使用須知，另外使用手冊也在同一處 https://oripyon.weebly.com'),
         TextSendMessage(text=f'請務必也加飼育員為好友 https://line.me/R/ti/p/%40026hfcxi ，這樣功能更動或維修時才能通知你喔！'),
+        TextSendMessage(text=f'如果有些功能無法使用，可能是因為你沒有申請的關係，也請私訊飼育員詢問。'),
     ]
     line_bot_api.reply_message(event.reply_token, replies)
 
@@ -308,6 +311,19 @@ def handle_text_message(event):
 def make_reply(source_id, uid, msg, reply_token=None):
     # private reply
     reply = common_reply(line_bot_api, source_id, uid, msg)
+    # common reply 塞公告
+    check_or_create_table_line_announcement_log()
+    max_ts = query_line_announcement_log(source_id)
+    now_ts = int(time.time())
+    if max_ts == 0 or (now_ts//86400 != max_ts//86400 and now_ts - max_ts > 12*3600):
+        announcement_file = os.path.join('./announcement.json')
+        if os.path.exists(announcement_file):
+            with open(announcement_file, 'r') as f:
+                announcement = json.load(f)
+            if announcement[0]['date_begin'] < now_ts < announcement[0]['date_end']:
+                announcement_content = announcement[0]['content']
+                reply.append(TextSendMessage(text=announcement_content))
+                insert_line_announcement_log(source_id, now_ts)
     if reply:
         line_bot_api.reply_message(reply_token, reply)
         return

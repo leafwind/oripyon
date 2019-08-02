@@ -22,6 +22,7 @@ LINE_DB_PATH = '/var/sqlite/line.db'
 
 TABLE_LINE_MSG_COUNT = 'msg_count'
 TABLE_LINE_CMD_COUNT = 'cmd_count'
+TABLE_LINE_ANNOUNCEMENT_LOG = 'announcement_log'
 
 TEACHER_HO = [
     '{name}先生，我有錄起來喔！',
