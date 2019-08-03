@@ -44,6 +44,8 @@ def find_schumi():
         weights.append(float(w))
         population.append(text)
     text = random.choices(population=population, weights=weights, k=1)
+    logging.info(text)
+    logging.info(type(text))
     replies = [('text', text)]
     return replies
 
