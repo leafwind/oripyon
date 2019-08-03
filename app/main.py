@@ -27,6 +27,7 @@ from app.linebot_webhook_extension import WebhookHandlerExtended
 
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
+logging.getLogger("oauth2client.crypt").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
 
 user_info = {}
