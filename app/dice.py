@@ -4,9 +4,48 @@ import os
 import random
 
 from app.utils.gspread_util import auth_gss_client
-from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT, GOOGLE_AUTH_JSON_PATH
+from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT, GOOGLE_AUTH_JSON_PATH, \
+    GSPREAD_KEY_SCHUMI
 
 tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
+
+
+def touch_schumi():
+    random.seed(os.urandom(5))
+    gss_scopes = ['https://spreadsheets.google.com/feeds']
+    gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
+    sh = gss_client.open_by_key(GSPREAD_KEY_SCHUMI)
+    worksheet = sh.worksheet("摸朽咪")
+    list_of_lists = worksheet.get_all_values()
+    list_of_lists = list_of_lists[1:]
+
+    population = []
+    weights = []
+    for w, text in list_of_lists:
+        weights.append(float(w))
+        population.append(text)
+    text = random.choices(population=population, weights=weights, k=1)
+    replies = [('text', text)]
+    return replies
+
+
+def find_schumi():
+    random.seed(os.urandom(5))
+    gss_scopes = ['https://spreadsheets.google.com/feeds']
+    gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
+    sh = gss_client.open_by_key(GSPREAD_KEY_SCHUMI)
+    worksheet = sh.worksheet("找朽咪")
+    list_of_lists = worksheet.get_all_values()
+    list_of_lists = list_of_lists[1:]
+
+    population = []
+    weights = []
+    for w, text in list_of_lists:
+        weights.append(float(w))
+        population.append(text)
+    text = random.choices(population=population, weights=weights, k=1)
+    replies = [('text', text)]
+    return replies
 
 
 def draw_cat():

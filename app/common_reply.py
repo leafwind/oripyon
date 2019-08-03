@@ -8,7 +8,7 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
 from app.google_utils.custom_search import google_search_image
-from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat
+from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat, find_schumi, touch_schumi
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
     bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
 from app.finance import exchange_rate
@@ -18,6 +18,8 @@ from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aq
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
 fortune_pattern = re.compile(r'運勢')
 tarot_pattern = re.compile(r'塔羅')
+find_schumi_pattern = re.compile(r'找朽咪')
+touch_schumi_pattern = re.compile(r'摸朽咪')
 draw_cat_pattern = re.compile(r'抽貓')
 coc_7e_basic_pattern = re.compile(
     r"""^cc            # start with cc
@@ -77,6 +79,18 @@ pattern_mapping = [
         'cmd': draw_cat_pattern,
         'type': 'search',
         'function': draw_cat,
+        'multi_type_output': True
+    },
+    {
+        'cmd': find_schumi_pattern,
+        'type': 'equal',
+        'function': find_schumi,
+        'multi_type_output': True
+    },
+    {
+        'cmd': touch_schumi_pattern,
+        'type': 'equal',
+        'function': touch_schumi,
         'multi_type_output': True
     },
     {
