@@ -18,8 +18,6 @@ from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aq
 # fortune_pattern = re.compile(ur'\u904b\u52e2', re.UNICODE)
 fortune_pattern = re.compile(r'運勢')
 tarot_pattern = re.compile(r'塔羅')
-find_schumi_pattern = re.compile(r'找朽咪')
-touch_schumi_pattern = re.compile(r'摸朽咪')
 draw_cat_pattern = re.compile(r'抽貓')
 coc_7e_basic_pattern = re.compile(
     r"""^cc            # start with cc
@@ -82,13 +80,13 @@ pattern_mapping = [
         'multi_type_output': True
     },
     {
-        'cmd': find_schumi_pattern,
+        'cmd': '找朽咪',
         'type': 'equal',
         'function': find_schumi,
         'multi_type_output': True
     },
     {
-        'cmd': touch_schumi_pattern,
+        'cmd': '摸朽咪',
         'type': 'equal',
         'function': touch_schumi,
         'multi_type_output': True
