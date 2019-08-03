@@ -24,7 +24,7 @@ def touch_schumi():
     for w, text in list_of_lists:
         weights.append(float(w))
         population.append(text)
-    text = random.choices(population=population, weights=weights, k=1)
+    text = random.choices(population=population, weights=weights, k=1)[0]
     replies = [('text', text)]
     return replies
 
@@ -43,9 +43,7 @@ def find_schumi():
     for w, text in list_of_lists:
         weights.append(float(w))
         population.append(text)
-    text = random.choices(population=population, weights=weights, k=1)
-    logging.info(text)
-    logging.info(type(text))
+    text = random.choices(population=population, weights=weights, k=1)[0]
     replies = [('text', text)]
     return replies
 
