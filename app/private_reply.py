@@ -7,13 +7,15 @@ pattern_mapping_private = [
         'cmd': '我的兔子',
         'type': 'equal',
         'function': my_rabbit,
-        'multi_type_output': True
+        'multi_type_output': True,
+        'source_as_arg': True
     },
     {
         'cmd': '領養兔子',
         'type': 'equal',
         'function': adopt_rabbit,
-        'multi_type_output': True
+        'multi_type_output': True,
+        'source_as_arg': True
     },
 ]
 
