@@ -33,7 +33,7 @@ def adopt_rabbit(uid):
         with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
             now = int(time.time())
             insert_sql = f'''
-                INSERT INTO {TABLE_RABBIT_FEEDING} VALUES (:uid, :born_ts);
+                INSERT INTO {TABLE_RABBIT_FEEDING} (uid, born_ts) VALUES (:uid, :born_ts);
             '''
             c.execute(insert_sql, {'uid': uid, 'born_ts': now})
             conn.commit()
