@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import sqlite3
 import time
 
@@ -48,11 +48,11 @@ def my_rabbit(uid):
     if not my_rabbit_exists(uid):
         actions = [
             MessageAction(
-                label='Y',
+                label='領養兔子',
                 text='領養兔子'
             ),
             MessageAction(
-                label='N',
+                label='沒事了',
                 text='沒事了'
             )
         ]
