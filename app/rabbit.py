@@ -37,7 +37,7 @@ def adopt_rabbit(uid):
         c.execute(insert_sql, {'uid': uid, 'born_ts': now})
         conn.commit()
         conn.close()
-        time_str = (datetime..datetime.utcfromtimestamp(now) + datetime.timedelta(hours=8)).strftime('%Y-%m-%d %H:%M:%S')
+        time_str = (datetime.datetime.utcfromtimestamp(now) + datetime.timedelta(hours=8)).strftime('%Y-%m-%d %H:%M:%S')
         return [('text', f'已經領養完畢，他的出生時間是 {time_str}')]
 
 
