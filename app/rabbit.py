@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 import sqlite3
 import time
 
@@ -37,7 +37,7 @@ def adopt_rabbit(uid):
         c.execute(insert_sql, {'uid': uid, 'born_ts': now})
         conn.commit()
         conn.close()
-        time_str = (datetime.utcfromtimestamp(now) + datetime.timedelta(hours=8)).strftime('%Y-%m-%d %H:%M:%S')
+        time_str = (datetime..datetime.utcfromtimestamp(now) + datetime.timedelta(hours=8)).strftime('%Y-%m-%d %H:%M:%S')
         return [('text', f'已經領養完畢，他的出生時間是 {time_str}')]
 
 
@@ -57,7 +57,7 @@ def my_rabbit(uid):
             )
         ]
         return [('flex', TemplateSendMessage(
-            alt_text='Confirm template',
+            alt_text='請到手機確認是否領養',
             template=ConfirmTemplate(text='你還沒有兔子', actions=actions))
         )]
     else:
