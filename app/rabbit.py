@@ -17,8 +17,8 @@ def my_rabbit_exists(uid):
     c = conn.cursor()
     query = f"SELECT count(1) FROM {TABLE_RABBIT_FEEDING} WHERE uid=:uid;"
     c.execute(query, {'uid': uid})
-    result = c.fetchall()
-    if result:
+    count = c.fetchone()
+    if count > 0:
         return True
     else:
         return False
