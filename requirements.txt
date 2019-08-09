@@ -12,3 +12,4 @@ jieba
 python-Levenshtein
 gspread
 oauth2client
+cachetools

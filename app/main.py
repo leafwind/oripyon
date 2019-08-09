@@ -24,6 +24,7 @@ from app.linebot_api_extension import (
 )
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
 from app.linebot_webhook_extension import WebhookHandlerExtended
+from app.private_reply import private_reply
 
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
@@ -289,7 +290,7 @@ def handle_text_message(event):
             logging.error('LineBotApiError: %s, source_id: %s, uid: %s', e, source_id, uid)
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
-    make_reply(source_id, uid, event.message.text, reply_token=event.reply_token)
+    make_reply(event.source.type, source_id, uid, event.message.text, reply_token=event.reply_token)
 
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
         log_filename = GROUP_MAPPING[source_id]['log_filename'] + '.txt'
@@ -338,8 +339,15 @@ def get_announcement(source_id):
             return None
 
 
-def make_reply(source_id, uid, msg, reply_token=None):
-    # private reply
+def make_reply(source_type, source_id, uid, msg, reply_token=None):
+    # private reply, only
+    if source_type == 'user':
+        reply = private_reply(uid, msg)
+        if reply:
+            line_bot_api.reply_message(reply_token, reply)
+            return
+
+    # common reply
     reply = common_reply(line_bot_api, source_id, uid, msg)
     announcement_text_list = get_announcement(source_id)
     if announcement_text_list:
@@ -349,7 +357,7 @@ def make_reply(source_id, uid, msg, reply_token=None):
         line_bot_api.reply_message(reply_token, reply)
         return
 
-    # group reply
+    # group specific reply
     if source_id not in GROUP_MAPPING:
         return
 

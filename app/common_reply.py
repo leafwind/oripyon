@@ -7,11 +7,12 @@ from linebot.exceptions import (
 from linebot.models import (
     TextSendMessage, ImageSendMessage
 )
-from app.google_utils.custom_search import google_search_image
+
 from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat, find_schumi, touch_schumi
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
     bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
 from app.finance import exchange_rate
+from app.google_utils.custom_search import google_search_image
 from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status, reservoir_now
 
 # equivalent to:
@@ -48,7 +49,9 @@ choice_pattern = re.compile(
     (,[^,\[\]]+)+  # plus dot (at least once)
     ]              # ]
     """, re.VERBOSE | re.IGNORECASE)
-pattern_mapping = [
+
+
+pattern_mapping_common = [
     {
         'cmd': fortune_pattern,
         'type': 'search',
@@ -220,12 +223,14 @@ def build_complex_msg(result):
                 original_content_url=msg,
                 preview_image_url=msg,
             ))
+        elif msg_type == 'flex':
+            complex_msg.append(msg)
         else:
             raise ValueError(f" unknown msg_type: {msg_type}")
     return complex_msg
 
 
-def common_reply(line_bot_api, source_id, uid, msg):
+def get_reply_from_mapping_function(msg, source_id, pattern_mapping):
     for p in pattern_mapping:
         if p['type'] == 'equal':
             if msg == p['cmd']:
@@ -250,6 +255,13 @@ def common_reply(line_bot_api, source_id, uid, msg):
                     return [TextSendMessage(text=result)]
         else:
             raise ValueError(f" unknown pattern type: {p['type']}")
+    return None
+
+
+def common_reply(line_bot_api, source_id, uid, msg):
+    reply = get_reply_from_mapping_function(msg, source_id, pattern_mapping_common)
+    if reply:
+        return reply
 
     if msg.startswith('何老師抽卡'):
         reply = draw_card()
