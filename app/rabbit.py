@@ -2,7 +2,7 @@ import datetime
 import sqlite3
 import time
 
-import cachetools
+import cachetools.func
 from linebot.models import (
     ConfirmTemplate, MessageAction
 )

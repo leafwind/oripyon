@@ -1,6 +1,6 @@
 import sqlite3
 
-import cachetools
+import cachetools.func
 
 from constants import LINE_DB_PATH
 
