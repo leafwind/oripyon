@@ -15,7 +15,7 @@ from constants import LINE_DB_PATH, TABLE_RABBIT_FEEDING
 @cachetools.func.ttl_cache(ttl=86400)
 def my_rabbit_exists(uid):
     with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
-        query = f"SELECT count(1) FROM {TABLE_RABBIT_FEEDING} WHERE uid=:uid;"
+        query = f"SELECT count(1) FROM {TABLE_RABBIT_FEEDING} WHERE uid=':uid';"
         c.execute(query, {'uid': uid})
         (count,) = c.fetchone()
     if count > 0:
