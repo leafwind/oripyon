@@ -4,7 +4,7 @@ import time
 
 import cachetools.func
 from linebot.models import (
-    ConfirmTemplate, MessageAction
+    ConfirmTemplate, MessageAction, TemplateSendMessage
 )
 
 from app.utils.sqlite_util import table_exists
@@ -56,7 +56,10 @@ def my_rabbit(uid):
                 text='沒事了'
             )
         ]
-        return [('flex', ConfirmTemplate(text='你還沒有兔子', actions=actions))]
+        return [('flex', TemplateSendMessage(
+            alt_text='Confirm template',
+            template=ConfirmTemplate(text='你還沒有兔子', actions=actions))
+        )]
     else:
         return [('text', f'你的兔子資訊：')]
 
