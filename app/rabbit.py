@@ -47,20 +47,8 @@ def my_rabbit(uid):
         check_or_create_table_rabbit_feeding()
 
     if not my_rabbit_exists(uid):
-        actions = [
-            MessageAction(
-                label='領養兔子',
-                text='領養兔子'
-            ),
-            MessageAction(
-                label='沒事了',
-                text='沒事了'
-            )
-        ]
-        return [('flex', TemplateSendMessage(
-            alt_text='請到手機確認是否領養',
-            template=ConfirmTemplate(text='你還沒有兔子', actions=actions))
-        )]
+        container = build_rabbit_adopt_content
+        return [('flex', FlexSendMessage(alt_text='請到手機確認是否領養', contents=container))]
     else:
         with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
             query = f'''
@@ -105,6 +93,38 @@ def insert_rabbit_feeding(uid):
         '''
         c.execute(insert_sql, {'uid': uid, 'born_ts': int(time.time())})
         conn.commit()
+
+
+def build_rabbit_adopt_content():
+    container = BubbleContainer(
+        direction='ltr',
+        body=BoxComponent(
+            layout='vertical',
+            contents=[
+                TextComponent(text='你還沒有兔子', weight='bold', size='xl'),
+                SeparatorComponent(),
+                BoxComponent(
+                    layout='horizontal',
+                    spacing='sm',
+                    contents=[
+                        ButtonComponent(
+                            style='primary',
+                            height='sm',
+                            color='#95B9B4',
+                            action=MessageAction(label='領養兔子', text='領養兔子'),
+                        ),
+                        ButtonComponent(
+                            style='primary',
+                            height='sm',
+                            color='#95B9B4',
+                            action=MessageAction(label='沒事了', text='沒事了')
+                        )
+                    ]
+                )
+            ],
+        ),
+    )
+    return container
 
 
 def build_rabbit_card_content(born_ts, strength, agility, intelligence, affection, satiation):
