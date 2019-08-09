@@ -56,7 +56,9 @@ def my_rabbit(uid):
                 text='沒事了'
             )
         ]
-        return [('flex', ConfirmTemplate(text='', actions=actions))]
+        return [('flex', ConfirmTemplate(text='你還沒有兔子', actions=actions))]
+    else:
+        return [('text', f'你的兔子資訊：')]
 
 
 def check_or_create_table_rabbit_feeding():
