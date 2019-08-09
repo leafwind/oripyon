@@ -34,7 +34,7 @@ def adopt_rabbit(uid):
                 INSERT INTO {TABLE_RABBIT_FEEDING} VALUES (:uid, :born_ts);
             '''
             c.execute(insert_sql, {'uid': uid, 'born_ts': now})
-            c.commit()
+            conn.commit()
         time_str = (datetime.datetime.utcfromtimestamp(now) + datetime.timedelta(hours=8))\
             .strftime('%Y-%m-%d %H:%M:%S')
         return [('text', f'已經領養完畢，他的出生時間是 {time_str}')]
@@ -74,7 +74,7 @@ def check_or_create_table_rabbit_feeding():
             )
         '''
         c.execute(create_sql)
-        c.commit()
+        conn.commit()
 
 
 def insert_rabbit_feeding(uid):
@@ -83,4 +83,4 @@ def insert_rabbit_feeding(uid):
             INSERT OR REPLACE INTO {TABLE_RABBIT_FEEDING} VALUES (:uid, :born_ts);
         '''
         c.execute(insert_sql, {'uid': uid, 'born_ts': int(time.time())})
-        c.commit()
+        conn.commit()
