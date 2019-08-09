@@ -1,6 +1,7 @@
 import datetime
 import sqlite3
 import time
+from contextlib import closing
 
 import cachetools.func
 from linebot.models import (
@@ -13,11 +14,10 @@ from constants import LINE_DB_PATH, TABLE_RABBIT_FEEDING
 
 @cachetools.func.ttl_cache(ttl=86400)
 def my_rabbit_exists(uid):
-    conn = sqlite3.connect(LINE_DB_PATH)
-    c = conn.cursor()
-    query = f"SELECT count(1) FROM {TABLE_RABBIT_FEEDING} WHERE uid=:uid;"
-    c.execute(query, {'uid': uid})
-    (count,) = c.fetchone()
+    with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
+        query = f"SELECT count(1) FROM {TABLE_RABBIT_FEEDING} WHERE uid=:uid;"
+        c.execute(query, {'uid': uid})
+        (count,) = c.fetchone()
     if count > 0:
         return True
     else:
@@ -28,16 +28,14 @@ def adopt_rabbit(uid):
     if my_rabbit_exists(uid):
         return [('text', '你已經有一隻兔子啦')]
     else:
-        now = int(time.time())
-        conn = sqlite3.connect(LINE_DB_PATH)
-        c = conn.cursor()
-        insert_sql = f'''
-            INSERT INTO {TABLE_RABBIT_FEEDING} VALUES (:uid, :born_ts);
-        '''
-        c.execute(insert_sql, {'uid': uid, 'born_ts': now})
-        conn.commit()
-        conn.close()
-        time_str = (datetime.datetime.utcfromtimestamp(now) + datetime.timedelta(hours=8)).strftime('%Y-%m-%d %H:%M:%S')
+        with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
+            now = int(time.time())
+            insert_sql = f'''
+                INSERT INTO {TABLE_RABBIT_FEEDING} VALUES (:uid, :born_ts);
+            '''
+            c.execute(insert_sql, {'uid': uid, 'born_ts': now})
+        time_str = (datetime.datetime.utcfromtimestamp(now) + datetime.timedelta(hours=8))\
+            .strftime('%Y-%m-%d %H:%M:%S')
         return [('text', f'已經領養完畢，他的出生時間是 {time_str}')]
 
 
@@ -65,32 +63,21 @@ def my_rabbit(uid):
 
 
 def check_or_create_table_rabbit_feeding():
-    conn = sqlite3.connect(LINE_DB_PATH)
-    c = conn.cursor()
-
-    create_sql = f'''
-        CREATE TABLE IF NOT EXISTS {TABLE_RABBIT_FEEDING}
-        (
-            uid text,
-            born_ts int,
-            PRIMARY KEY (uid)
-        )
-    '''
-    c.execute(create_sql)
-    conn.commit()
-    conn.close()
+    with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
+        create_sql = f'''
+            CREATE TABLE IF NOT EXISTS {TABLE_RABBIT_FEEDING}
+            (
+                uid text,
+                born_ts int,
+                PRIMARY KEY (uid)
+            )
+        '''
+        c.execute(create_sql)
 
 
 def insert_rabbit_feeding(uid):
-    conn = sqlite3.connect(LINE_DB_PATH)
-    c = conn.cursor()
-    insert_sql = f'''
-        INSERT OR REPLACE INTO {TABLE_RABBIT_FEEDING} VALUES (:uid, :born_ts);
-    '''
-    c.execute(insert_sql, {'uid': uid, 'born_ts': int(time.time())})
-    conn.commit()
-    conn.close()
-
-
-
-
+    with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
+        insert_sql = f'''
+            INSERT OR REPLACE INTO {TABLE_RABBIT_FEEDING} VALUES (:uid, :born_ts);
+        '''
+        c.execute(insert_sql, {'uid': uid, 'born_ts': int(time.time())})
