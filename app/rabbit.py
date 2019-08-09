@@ -47,7 +47,7 @@ def my_rabbit(uid):
         check_or_create_table_rabbit_feeding()
 
     if not my_rabbit_exists(uid):
-        container = build_rabbit_adopt_content
+        container = build_rabbit_adopt_content()
         return [('flex', FlexSendMessage(alt_text='請到手機確認是否領養', contents=container))]
     else:
         with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
