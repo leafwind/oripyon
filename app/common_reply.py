@@ -234,7 +234,10 @@ def get_reply_from_mapping_function(msg, source_id, pattern_mapping):
     for p in pattern_mapping:
         if p['type'] == 'equal':
             if msg == p['cmd']:
-                result = p['function']()
+                if p.get('source_as_arg', False):
+                    result = p['function'](source_id)
+                else:
+                    result = p['function']()
                 if p.get('multi_type_output', False):
                     return build_complex_msg(result)
                 else:
