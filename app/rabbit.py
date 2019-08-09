@@ -15,7 +15,7 @@ from constants import LINE_DB_PATH, TABLE_RABBIT_FEEDING
 def my_rabbit_exists(uid):
     conn = sqlite3.connect(LINE_DB_PATH)
     c = conn.cursor()
-    query = f"SELECT count(1) FROM TABLE_RABBIT_FEEDING WHERE uid=:uid;"
+    query = f"SELECT count(1) FROM {TABLE_RABBIT_FEEDING} WHERE uid=:uid;"
     c.execute(query, {'uid': uid})
     result = c.fetchall()
     if result:
