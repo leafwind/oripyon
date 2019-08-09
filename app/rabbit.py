@@ -159,7 +159,7 @@ def build_rabbit_card_content(born_ts, strength, agility, intelligence, affectio
                     margin='md',
                     contents=[
                         TextComponent(text=f'好感：{affection}', size='md', color='#000000'),
-                        TextComponent(text='很會栽贓', size='sm', color='#999999', align='end')
+                        TextComponent(text='跟你多熟', size='sm', color='#999999', align='end')
                     ]
                 ),
                 BoxComponent(
@@ -167,7 +167,7 @@ def build_rabbit_card_content(born_ts, strength, agility, intelligence, affectio
                     margin='md',
                     contents=[
                         TextComponent(text=f'飽食：{satiation}', size='md', color='#000000'),
-                        TextComponent(text='很會栽贓', size='sm', color='#999999', align='end')
+                        TextComponent(text='肚子多重', size='sm', color='#999999', align='end')
                     ]
                 ),
             ],
