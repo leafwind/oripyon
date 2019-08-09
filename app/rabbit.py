@@ -107,7 +107,9 @@ def insert_rabbit_feeding(uid):
         conn.commit()
 
 
-def build_rabbit_card_content(strength, agility, intelligence, affection, satiation):
+def build_rabbit_card_content(born_ts, strength, agility, intelligence, affection, satiation):
+    birthday_str = (datetime.datetime.utcfromtimestamp(born_ts) + datetime.timedelta(hours=8)) \
+        .strftime('%Y-%m-%d %H:%M:%S')
     container = BubbleContainer(
         direction='ltr',
         hero=ImageComponent(
@@ -121,6 +123,13 @@ def build_rabbit_card_content(strength, agility, intelligence, affection, satiat
             contents=[
                 TextComponent(text='你的兔子（尚未取名）', weight='bold', size='xl'),
                 SeparatorComponent(),
+                BoxComponent(
+                    layout='baseline',
+                    margin='md',
+                    contents=[
+                        TextComponent(text=f'生日：{birthday_str}', size='sm', color='#999999', align='end')
+                    ]
+                ),
                 BoxComponent(
                     layout='baseline',
                     margin='md',
