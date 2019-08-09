@@ -5,7 +5,9 @@ from contextlib import closing
 
 import cachetools.func
 from linebot.models import (
-    ConfirmTemplate, MessageAction, TemplateSendMessage
+    ConfirmTemplate, MessageAction, TemplateSendMessage, FlexSendMessage,
+    BubbleContainer, ImageComponent, BoxComponent, ButtonComponent, TextComponent,
+    SeparatorComponent
 )
 
 from app.utils.sqlite_util import table_exists
@@ -60,7 +62,21 @@ def my_rabbit(uid):
             template=ConfirmTemplate(text='你還沒有兔子', actions=actions))
         )]
     else:
-        return [('text', f'你的兔子資訊：')]
+        with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
+            query = f'''
+                SELECT
+                born_ts,
+                strength,
+                agility,
+                intelligence,
+                affection,
+                satiation
+                FROM {TABLE_RABBIT_FEEDING} WHERE uid=:uid
+            '''
+            c.execute(query, {'uid': uid})
+            (born_ts, strength, agility, intelligence, affection, satiation) = c.fetchone()
+            container = build_rabbit_card_content(born_ts, strength, agility, intelligence, affection, satiation)
+            return [('flex', FlexSendMessage(alt_text="請到手機查看兔子資訊", contents=container))]
 
 
 def check_or_create_table_rabbit_feeding():
@@ -70,6 +86,11 @@ def check_or_create_table_rabbit_feeding():
             (
                 uid text,
                 born_ts int,
+                strength int DEFAULT 0,
+                agility int DEFAULT 0,
+                intelligence int DEFAULT 0,
+                affection int DEFAULT 0,
+                satiation int DEFAULT 0,
                 PRIMARY KEY (uid)
             )
         '''
@@ -84,3 +105,87 @@ def insert_rabbit_feeding(uid):
         '''
         c.execute(insert_sql, {'uid': uid, 'born_ts': int(time.time())})
         conn.commit()
+
+
+def build_rabbit_card_content(strength, agility, intelligence, affection, satiation):
+    container = BubbleContainer(
+        direction='ltr',
+        hero=ImageComponent(
+            url='https://obs.line-scdn.net/0h70H0wyxgaB91SUIJHCUXSEkMZnICZ25XDXh0KQIeMioMeXscGi8gfFceNi1eKXhMGSklfFBJNS9c',
+            size='full',
+            aspect_ratio='20:15',
+            aspect_mode='cover'
+        ),
+        body=BoxComponent(
+            layout='vertical',
+            contents=[
+                TextComponent(text='你的兔子（尚未取名）', weight='bold', size='xl'),
+                SeparatorComponent(),
+                BoxComponent(
+                    layout='baseline',
+                    margin='md',
+                    contents=[
+                        TextComponent(text=f'力量：{strength}', size='md', color='#000000'),
+                        TextComponent(text='肌肉多多', size='sm', color='#999999', align='end')
+                    ]
+                ),
+                BoxComponent(
+                    layout='baseline',
+                    margin='md',
+                    contents=[
+                        TextComponent(text=f'敏捷：{agility}', size='md', color='#000000'),
+                        TextComponent(text='跳得很快', size='sm', color='#999999', align='end')
+                    ]
+                ),
+                BoxComponent(
+                    layout='baseline',
+                    margin='md',
+                    contents=[
+                        TextComponent(text=f'智慧：{intelligence}', size='md', color='#000000'),
+                        TextComponent(text='很會栽贓', size='sm', color='#999999', align='end')
+                    ]
+                ),
+                BoxComponent(
+                    layout='baseline',
+                    margin='md',
+                    contents=[
+                        TextComponent(text=f'好感：{affection}', size='md', color='#000000'),
+                        TextComponent(text='很會栽贓', size='sm', color='#999999', align='end')
+                    ]
+                ),
+                BoxComponent(
+                    layout='baseline',
+                    margin='md',
+                    contents=[
+                        TextComponent(text=f'飽食：{satiation}', size='md', color='#000000'),
+                        TextComponent(text='很會栽贓', size='sm', color='#999999', align='end')
+                    ]
+                ),
+            ],
+        ),
+        footer=BoxComponent(
+            layout='horizontal',
+            spacing='sm',
+            contents=[
+                ButtonComponent(
+                    style='primary',
+                    height='sm',
+                    color='#95B9B4',
+                    action=MessageAction(label='每日', text='每日'),
+                ),
+                ButtonComponent(
+                    style='primary',
+                    height='sm',
+                    color='#95B9B4',
+                    action=MessageAction(label='餵食', text='餵食')
+                ),
+                ButtonComponent(
+                    style='primary',
+                    height='sm',
+                    color='#95B9B4',
+                    action=MessageAction(label='摸他', text='摸他')
+                )
+            ]
+        ),
+    )
+    return container
