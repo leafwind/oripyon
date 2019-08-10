@@ -239,6 +239,7 @@ def build_complex_msg(result):
             complex_msg.append(msg)
         else:
             raise ValueError(f" unknown msg_type: {msg_type}")
+        logging.warning(complex_msg)
     return complex_msg
 
 
