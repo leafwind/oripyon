@@ -1,4 +1,3 @@
-import logging
 import sqlite3
 
 from constants import LINE_DB_PATH, TABLE_LINE_ANNOUNCEMENT_LOG

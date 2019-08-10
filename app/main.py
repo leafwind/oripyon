@@ -193,20 +193,6 @@ def handle_sticker_message(event):
         raise ValueError
     pid = event.message.package_id
     sid = event.message.sticker_id
-    if source_id == 'C1e38a92f8c7b4ad377df882b9f3bf336' and event.source.user_id == 'U2b7c3a71683ab247b08b1f7845e20df7':
-        sticker_mapping = {
-            ('3219988', '35156126'): '躲',
-            ('1353138', '14028005'): '躲',
-            ('1300920', '12169612'): '躲',
-            ('1394695', '15335159'): '躲',
-            ('1394695', '15335150'): '看',
-            ('1394695', '15335129'): '笑',
-            ('1394695', '15335126'): '氣',
-            ('1394695', '15335128'): '哭',
-        }
-        if (pid, sid) in sticker_mapping:
-            reply = [TextSendMessage(text=f"EBB 不要{sticker_mapping['(pid, sid)']}出來嗨ヽ(∀ﾟ )人( ﾟ∀)ﾉ")]
-            line_bot_api.reply_message(event.reply_token, reply)
     uid = event.source.user_id
     user_name = user_info.get(uid, None)
     if not user_name:

@@ -1,13 +1,13 @@
 import datetime
+import logging
 import sqlite3
 import time
 from contextlib import closing
 
 import cachetools.func
 from linebot.models import (
-    ConfirmTemplate, MessageAction, TemplateSendMessage, FlexSendMessage,
-    BubbleContainer, ImageComponent, BoxComponent, ButtonComponent, TextComponent,
-    SeparatorComponent
+    MessageAction, FlexSendMessage, BubbleContainer, ImageComponent, BoxComponent,
+    ButtonComponent, TextComponent, SeparatorComponent
 )
 
 from app.utils.sqlite_util import table_exists
@@ -20,6 +20,7 @@ def my_rabbit_exists(uid):
         query = f"SELECT count(1) FROM {TABLE_RABBIT_FEEDING} WHERE uid=:uid;"
         c.execute(query, {'uid': uid})
         (count,) = c.fetchone()
+        logging.warning(f'{uid} has {count} rabbit')
         if count > 0:
             return True
         else:
