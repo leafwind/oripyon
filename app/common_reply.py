@@ -8,7 +8,8 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage, AudioSendMessage
 )
 
-from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat, find_schumi, touch_schumi
+from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat, find_schumi, \
+    touch_schumi, draw_sinoalice
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
     bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
 from app.finance import exchange_rate
@@ -154,6 +155,11 @@ pattern_mapping_common = [
         'cmd': '匯率',
         'type': 'equal',
         'function': exchange_rate
+    },
+    {
+        'cmd': '抽死愛',
+        'type': 'equal',
+        'function': draw_sinoalice
     },
     {
         'cmd': poor_chinese_pattern,
