@@ -65,6 +65,7 @@ def draw_sinoalice():
         ('image', f'{char[3]}'),
         ('text', f'{char[1]}/{char[2]}')
     ]
+    return replies
     if char[1] in char_voice_map:
         audio_url = random.choice(char_voice_map[char[1]])
         replies.append(
