@@ -70,7 +70,6 @@ def draw_sinoalice():
         replies.append(
             ('audio', f'{audio_url}')
         )
-    logging.warning(replies)
     return replies
 
 

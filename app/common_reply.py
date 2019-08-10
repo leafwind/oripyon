@@ -233,7 +233,7 @@ def build_complex_msg(result):
         elif msg_type == 'audio':
             complex_msg.append(AudioSendMessage(
                 original_content_url=msg,
-                duration=(len(msg)//3+1) * 1000  # chinese character has 3 bytes
+                duration=10 * 1000
             ))
         elif msg_type == 'flex':
             complex_msg.append(msg)
