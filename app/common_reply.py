@@ -231,7 +231,6 @@ def build_complex_msg(result):
                 preview_image_url=msg,
             ))
         elif msg_type == 'audio':
-            continue
             complex_msg.append(AudioSendMessage(
                 original_content_url=msg,
                 duration=(len(msg)//3+1) * 1000  # chinese character has 3 bytes
@@ -240,7 +239,6 @@ def build_complex_msg(result):
             complex_msg.append(msg)
         else:
             raise ValueError(f" unknown msg_type: {msg_type}")
-    logging.warning(complex_msg)
     return complex_msg
 
 
