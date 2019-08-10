@@ -159,7 +159,8 @@ pattern_mapping_common = [
     {
         'cmd': '抽死愛',
         'type': 'equal',
-        'function': draw_sinoalice
+        'function': draw_sinoalice,
+        'multi_type_output': True
     },
     {
         'cmd': poor_chinese_pattern,
