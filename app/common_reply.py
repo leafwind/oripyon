@@ -5,7 +5,7 @@ from linebot.exceptions import (
     LineBotApiError
 )
 from linebot.models import (
-    TextSendMessage, ImageSendMessage
+    TextSendMessage, ImageSendMessage, AudioSendMessage
 )
 
 from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat, find_schumi, touch_schumi
@@ -222,6 +222,11 @@ def build_complex_msg(result):
             complex_msg.append(ImageSendMessage(
                 original_content_url=msg,
                 preview_image_url=msg,
+            ))
+        elif msg_type == 'audio':
+            complex_msg.append(AudioSendMessage(
+                original_content_url=msg,
+                duration=len(msg) * 1000 // 3  # chinese character has 3 bytes
             ))
         elif msg_type == 'flex':
             complex_msg.append(msg)

@@ -3,9 +3,10 @@ import logging
 import os
 import random
 
+import cachetools.func
 from app.utils.gspread_util import auth_gss_client
 from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT, GOOGLE_AUTH_JSON_PATH, \
-    GSPREAD_KEY_SCHUMI
+    GSPREAD_KEY_SCHUMI, GSPREAD_KEY_SINOALICE
 
 tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
 
@@ -26,6 +27,48 @@ def touch_schumi():
         population.append(text)
     text = random.choices(population=population, weights=weights, k=1)[0]
     replies = [('text', text)]
+    return replies
+
+
+@cachetools.func.ttl_cache(ttl=86400)
+def get_sinoalice_char_list():
+    gss_scopes = ['https://spreadsheets.google.com/feeds']
+    gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
+    sh = gss_client.open_by_key(GSPREAD_KEY_SINOALICE)
+    worksheet = sh.worksheet("character")
+    return worksheet.get_all_values()
+
+
+@cachetools.func.ttl_cache(ttl=86400)
+def get_sinoalice_char_voice_map():
+    gss_scopes = ['https://spreadsheets.google.com/feeds']
+    gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
+    sh = gss_client.open_by_key(GSPREAD_KEY_SINOALICE)
+    worksheet = sh.worksheet("audio mapping")
+    char_voice_2d_list = worksheet.get_all_values()
+    char_voice_map = {}
+    for char in char_voice_2d_list:
+        name = char[0]
+        audio_list = char[1:]
+        char_voice_map[name] = audio_list
+    return char_voice_map
+
+
+def draw_sinoalice():
+    random.seed(os.urandom(5))
+    char_list = get_sinoalice_char_list()
+    char = random.choice(char_list)
+    char_voice_map = get_sinoalice_char_voice_map()
+
+    replies = [
+        ('image', f'{char[3]}'),
+        ('text', f'{char[1]}/{char[2]}')
+    ]
+    if char[1] in char_voice_map:
+        audio_url = random.choice(char_voice_map[char[1]])
+        replies.append(
+            ('audio', f'{audio_url}')
+        )
     return replies
 
 
