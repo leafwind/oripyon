@@ -233,13 +233,13 @@ def build_complex_msg(result):
         elif msg_type == 'audio':
             complex_msg.append(AudioSendMessage(
                 original_content_url=msg,
-                duration=len(msg) * 1000 // 3  # chinese character has 3 bytes
+                duration=(len(msg)//3+1) * 1000  # chinese character has 3 bytes
             ))
         elif msg_type == 'flex':
             complex_msg.append(msg)
         else:
             raise ValueError(f" unknown msg_type: {msg_type}")
-        logging.warning(complex_msg)
+    logging.warning(complex_msg)
     return complex_msg
 
 
