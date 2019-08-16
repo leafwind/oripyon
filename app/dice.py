@@ -67,7 +67,9 @@ def build_sinoalice_char_content(image_url, title):
         ),
         body=BoxComponent(
             layout='vertical',
-            contents=[],
+            contents=[
+                TextComponent(text=title, weight='bold', size='xl'),
+            ],
         ),
     )
     return container
