@@ -36,40 +36,34 @@ def get_sinoalice_char_list():
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
     sh = gss_client.open_by_key(GSPREAD_KEY_SINOALICE)
-    worksheet = sh.worksheet("character")
+    worksheet = sh.worksheet("name")
     return worksheet.get_all_values()
 
 
 @cachetools.func.ttl_cache(ttl=86400)
-def get_sinoalice_char_voice_map():
+def get_sinoalice_char_voice_list(name):
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
     sh = gss_client.open_by_key(GSPREAD_KEY_SINOALICE)
-    worksheet = sh.worksheet("audio mapping")
-    char_voice_2d_list = worksheet.get_all_values()
-    char_voice_map = {}
-    for char in char_voice_2d_list:
-        name = char[0]
-        audio_list = char[1:]
-        char_voice_map[name] = audio_list
-    return char_voice_map
+    worksheet = sh.worksheet(name)
+    char_voice_list = worksheet.get_all_values()
+    return char_voice_list
 
 
 def draw_sinoalice():
     random.seed(os.urandom(5))
     char_list = get_sinoalice_char_list()
     char = random.choice(char_list)
-    char_voice_map = get_sinoalice_char_voice_map()
+    char_voice_list = get_sinoalice_char_voice_list(char[1])
 
     replies = [
-        ('image', f'{char[3]}'),
+        ('image', f'https://leafwind.github.io/images/sinoalice/{char[0]:0>3d}.png'),
         ('text', f'{char[1]}/{char[2]}')
     ]
-    if char[1] in char_voice_map:
-        audio_url = random.choice(char_voice_map[char[1]])
-        replies.append(
-            ('audio', f'{audio_url}')
-        )
+    audio_url = random.choice(char_voice_list)
+    replies.append(
+        ('audio', f'{audio_url}')
+    )
     return replies
 
 
