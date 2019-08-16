@@ -61,7 +61,7 @@ def draw_sinoalice():
     char_voice_list = get_sinoalice_char_voice_list(char[1])
 
     replies = [
-        ('image', f'https://leafwind.github.io/images/sinoalice/{char[0]:0>3d}.png'),
+        ('image', f'https://leafwind.github.io/images/sinoalice/{int(char[0]):0>3d}.png'),
         ('text', f'{char[1]}/{char[2]}')
     ]
     if char_voice_list:
