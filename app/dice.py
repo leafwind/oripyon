@@ -4,6 +4,7 @@ import os
 import random
 
 import cachetools.func
+import gspread
 
 from app.utils.gspread_util import auth_gss_client
 from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT, GOOGLE_AUTH_JSON_PATH, \
@@ -45,9 +46,12 @@ def get_sinoalice_char_voice_list(name):
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
     sh = gss_client.open_by_key(GSPREAD_KEY_SINOALICE)
-    worksheet = sh.worksheet(name)
-    char_voice_list = worksheet.get_all_values()
-    return char_voice_list
+    try:
+        worksheet = sh.worksheet(name)
+        char_voice_list = worksheet.get_all_values()
+        return char_voice_list
+    except gspread.exceptions.WorksheetNotFound:
+        return None
 
 
 def draw_sinoalice():
@@ -60,10 +64,11 @@ def draw_sinoalice():
         ('image', f'https://leafwind.github.io/images/sinoalice/{char[0]:0>3d}.png'),
         ('text', f'{char[1]}/{char[2]}')
     ]
-    audio_url = random.choice(char_voice_list)
-    replies.append(
-        ('audio', f'{audio_url}')
-    )
+    if char_voice_list:
+        audio_url = random.choice(char_voice_list)
+        replies.append(
+            ('audio', f'{audio_url}')
+        )
     return replies
 
 
