@@ -88,7 +88,7 @@ def draw_sinoalice():
         ('flex', FlexSendMessage(alt_text='請到手機確認', contents=container))
     ]
     if char_voice_list:
-        audio_url = random.choice(char_voice_list)
+        audio_url = random.choice(char_voice_list)[0]
         replies.append(
             ('audio', f'{audio_url}')
         )
