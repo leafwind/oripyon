@@ -5,6 +5,8 @@ import random
 
 import cachetools.func
 import gspread
+from linebot.models import FlexSendMessage, BubbleContainer, BoxComponent, \
+    ImageComponent, TextComponent, SeparatorComponent
 
 from app.utils.gspread_util import auth_gss_client
 from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT, GOOGLE_AUTH_JSON_PATH, \
@@ -54,15 +56,34 @@ def get_sinoalice_char_voice_list(name):
         return None
 
 
+def build_sinoalice_char_content(image_url, title):
+    container = BubbleContainer(
+        direction='ltr',
+        hero=ImageComponent(
+            url=image_url,
+            size='full',
+            aspect_ratio='16:19',
+            aspect_mode='cover'
+        ),
+        body=BoxComponent(
+            layout='vertical',
+            contents=[],
+        ),
+    )
+    return container
+
+
 def draw_sinoalice():
     random.seed(os.urandom(5))
     char_list = get_sinoalice_char_list()
     char = random.choice(char_list)
     char_voice_list = get_sinoalice_char_voice_list(char[1])
 
+    image_url = f'https://leafwind.github.io/images/sinoalice/{int(char[0]):0>3d}.png'
+    title = f'{char[1]}/{char[2]}'
+    container = build_sinoalice_char_content(image_url, title)
     replies = [
-        ('image', f'https://leafwind.github.io/images/sinoalice/{int(char[0]):0>3d}.png'),
-        ('text', f'{char[1]}/{char[2]}')
+        ('flex', FlexSendMessage(alt_text='請到手機確認', contents=container))
     ]
     if char_voice_list:
         audio_url = random.choice(char_voice_list)
