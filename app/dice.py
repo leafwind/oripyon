@@ -78,7 +78,7 @@ def build_sinoalice_char_content(image_url, title):
 def draw_sinoalice(msg_info, robot_settings):
     if msg_info.source_id not in robot_settings.vip_groups:
         return [
-            ('text', f'群組 {msg_info.source_id} 尚未開通功能')
+            ('text', f'群組 {msg_info.source_id} 尚未開通功能，請填寫申請表 https://www.surveycake.com/s/aYRbY')
         ]
     random.seed(os.urandom(5))
     char_list = get_sinoalice_char_list()
