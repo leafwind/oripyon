@@ -1,9 +1,5 @@
-import logging
 import re
 
-from linebot.exceptions import (
-    LineBotApiError
-)
 from linebot.models import (
     TextSendMessage, ImageSendMessage, AudioSendMessage
 )
@@ -67,8 +63,7 @@ pattern_mapping_common = [
         'cmd': tarot_pattern,
         'type': 'search',
         'function': tarot,
-        'multi_type_output': True,
-        'source_as_arg': True
+        'multi_type_output': True
     },
     {
         'cmd': google_custom_search_pattern,
@@ -163,6 +158,11 @@ pattern_mapping_common = [
         'multi_type_output': True
     },
     {
+        'cmd': '何老師抽卡',
+        'type': 'equal',
+        'function': draw_card
+    },
+    {
         'cmd': poor_chinese_pattern,
         'type': 'search',
         'function': poor_chinese
@@ -242,28 +242,23 @@ def build_complex_msg(result):
     return complex_msg
 
 
-def get_reply_from_mapping_function(msg, source_id, pattern_mapping):
+def get_reply_from_mapping_function(msg_info, pattern_mapping):
     for p in pattern_mapping:
         if p['type'] == 'equal':
-            if msg == p['cmd']:
-                if p.get('source_as_arg', False):
-                    result = p['function'](source_id)
-                else:
-                    result = p['function']()
+            if msg_info.msg == p['cmd']:
+                result = p['function'](msg_info)
                 if p.get('multi_type_output', False):
                     return build_complex_msg(result)
                 else:
                     return [TextSendMessage(text=result)]
 
         elif p['type'] == 'search':
-            match = p['cmd'].search(msg)
+            match = p['cmd'].search(msg_info.msg)
             if match:
                 if p.get('matched_as_arg', False):
                     result = p['function'](match.group(0))
-                elif p.get('source_as_arg', False):
-                    result = p['function'](source_id)
                 else:
-                    result = p['function']()
+                    result = p['function'](msg_info)
                 if p.get('multi_type_output', False):
                     return build_complex_msg(result)
                 else:
@@ -273,27 +268,10 @@ def get_reply_from_mapping_function(msg, source_id, pattern_mapping):
     return None
 
 
-def common_reply(line_bot_api, source_id, uid, msg):
-    reply = get_reply_from_mapping_function(msg, source_id, pattern_mapping_common)
+def common_reply(msg_info):
+    reply = get_reply_from_mapping_function(msg_info, pattern_mapping_common)
     if reply:
         return reply
-
-    if msg.startswith('何老師抽卡'):
-        reply = draw_card()
-        try:
-            user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-        except LineBotApiError as e:
-            logging.error('LineBotApiError: %s', e)
-            user_name = ''
-        return [TextSendMessage(text=reply.format(name=user_name))]
-
-    if msg == '暗鬼任務':
-        reply = '素材兌換建議: https://forum.gamer.com.tw/C.php?bsn=31743&snA=3472&tnum=2 \n 詳細攻略（殘體）: http://sinoalice.weebly.com/30097245152626339740middot2021921153.html'
-        return [TextSendMessage(text=reply)]
-    elif msg == '收集任務':
-        reply = '4/18 開始 http://sinoalice.weebly.com/30097245152626339740middot2591034255.html'
-        return [TextSendMessage(text=reply)]
-
     # if msg == last_msg.get(source_id, None):
     #     now = int(time.time())
     #     logging.info('偵測到重複，準備推齊')
@@ -304,5 +282,5 @@ def common_reply(line_bot_api, source_id, uid, msg):
     #         return [TextSendMessage(text=msg)]
     #     else:
     #         logging.info(f'{msg} 上次重複在 {repeated_diff_ts} 秒內，不推齊')
-    last_msg[source_id] = msg
+    last_msg[msg_info.source_id] = msg_info.msg
     return []

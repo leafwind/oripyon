@@ -85,7 +85,7 @@ def draw_sinoalice():
     title = f'{char[1]}/{char[2]}'
     container = build_sinoalice_char_content(image_url, title)
     replies = [
-        ('flex', FlexSendMessage(alt_text='請到手機確認', contents=container))
+        ('flex', FlexSendMessage(alt_text='請到手機確認你的老婆', contents=container))
     ]
     if char_voice_list:
         audio_url = random.choice(char_voice_list)[0]
@@ -130,10 +130,10 @@ def draw_cat():
     return replies
 
 
-def draw_card():
+def draw_card(msg_info):
     random.seed(os.urandom(5))
     msg = random.choice(TEACHER_HO)
-    return msg
+    return msg.format(name=msg_info.user_name)
 
 
 def pan_pan():
@@ -142,12 +142,12 @@ def pan_pan():
     return msg
 
 
-def tarot(source_id):
+def tarot(msg_info):
     random.seed(os.urandom(5))
     card = random.choice(tarot_cards)
     logging.info('%s: %s', card['nameCN'], card['url'])
     replies = []
-    if source_id not in HUGE_GROUP_IDS:
+    if msg_info.source_id not in HUGE_GROUP_IDS:
         # skip card picture for large groups
         replies.append(('image', card['url']))
     replies.append(('text', f'{card["nameCN"]}: {card["conclusion"]}'))

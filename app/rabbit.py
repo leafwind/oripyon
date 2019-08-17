@@ -27,8 +27,8 @@ def my_rabbit_exists(uid):
             return False
 
 
-def adopt_rabbit(uid):
-    if my_rabbit_exists(uid):
+def adopt_rabbit(msg_info):
+    if my_rabbit_exists(msg_info.uid):
         return [('text', '你已經有一隻兔子啦')]
     else:
         with closing(sqlite3.connect(LINE_DB_PATH)) as conn, closing(conn.cursor()) as c:
@@ -36,18 +36,18 @@ def adopt_rabbit(uid):
             insert_sql = f'''
                 INSERT INTO {TABLE_RABBIT_FEEDING} (uid, born_ts) VALUES (:uid, :born_ts);
             '''
-            c.execute(insert_sql, {'uid': uid, 'born_ts': now})
+            c.execute(insert_sql, {'uid': msg_info.uid, 'born_ts': now})
             conn.commit()
         time_str = (datetime.datetime.utcfromtimestamp(now) + datetime.timedelta(hours=8))\
             .strftime('%Y-%m-%d %H:%M:%S')
         return [('text', f'已經領養完畢，他的出生時間是 {time_str}')]
 
 
-def my_rabbit(uid):
+def my_rabbit(msg_info):
     if not table_exists(TABLE_RABBIT_FEEDING):
         check_or_create_table_rabbit_feeding()
 
-    if not my_rabbit_exists(uid):
+    if not my_rabbit_exists(msg_info.uid):
         container = build_rabbit_adopt_content()
         return [('flex', FlexSendMessage(alt_text='請到手機確認是否領養', contents=container))]
     else:

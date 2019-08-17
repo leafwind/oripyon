@@ -248,6 +248,15 @@ def handle_image_message(event):
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (image) saved: {file_path}")
 
 
+class MessageInfo:
+    def __init__(self, source_type, source_id, uid, user_name, msg):
+        self.source_type = source_type
+        self.source_id = source_id
+        self.user_name = user_name
+        self.uid = uid
+        self.msg = msg
+
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     # logging.info('%s', event.__dict__)
@@ -276,7 +285,9 @@ def handle_text_message(event):
             logging.error('LineBotApiError: %s, source_id: %s, uid: %s', e, source_id, uid)
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
-    make_reply(event.source.type, source_id, uid, event.message.text, reply_token=event.reply_token)
+
+    msg_info = MessageInfo(event.source.type, source_id, uid, user_name, event.message.text)
+    make_reply(msg_info, reply_token=event.reply_token)
 
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
         log_filename = GROUP_MAPPING[source_id]['log_filename'] + '.txt'
@@ -325,17 +336,17 @@ def get_announcement(source_id):
             return None
 
 
-def make_reply(source_type, source_id, uid, msg, reply_token=None):
+def make_reply(msg_info, reply_token=None):
     # private reply, only
-    if source_type == 'user':
-        reply = private_reply(uid, msg)
+    if msg_info.source_type == 'user':
+        reply = private_reply(msg_info)
         if reply:
             line_bot_api.reply_message(reply_token, reply)
             return
 
     # common reply
-    reply = common_reply(line_bot_api, source_id, uid, msg)
-    announcement_text_list = get_announcement(source_id)
+    reply = common_reply(msg_info)
+    announcement_text_list = get_announcement(msg_info.source_id)
     if announcement_text_list:
         for text in announcement_text_list:
             reply.append(TextSendMessage(text=text))
@@ -344,10 +355,10 @@ def make_reply(source_type, source_id, uid, msg, reply_token=None):
         return
 
     # group specific reply
-    if source_id not in GROUP_MAPPING:
+    if msg_info.source_id not in GROUP_MAPPING:
         return
 
-    reply = GROUP_MAPPING[source_id]['function'](line_bot_api, source_id, uid, msg)
+    reply = GROUP_MAPPING[msg_info.source_id]['function'](line_bot_api, msg_info.source_id, msg_info.uid, msg_info.msg)
     if reply:
         line_bot_api.reply_message(reply_token, reply)
         return
