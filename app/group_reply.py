@@ -80,10 +80,6 @@ def group_reply_test(_line_bot_api, _source_id, _uid, msg):
     return []
 
 
-def group_reply_lineage_m(_line_bot_api, _source_id, _uid, _msg):
-    return []
-
-
 def group_reply_maplestory(_line_bot_api, _source_id, _uid, msg):
     if '小路占卜' in msg:
         global maple_phrase
@@ -153,32 +149,11 @@ def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
     return replies
 
 
-def group_reply_4_and_pan(line_bot_api, source_id, uid, msg):
-    replies = group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg)
-    return replies
-
-
-def group_reply_luna(_line_bot_api, _source_id, _uid, _msg):
-    return
-
-
 def group_reply_mao(_line_bot_api, _source_id, _uid, _msg):
     return
 
 
-def group_reply_working(_line_bot_api, _source_id, _uid, _msg):
-    return
-
-    
-def group_reply_mao_test(_line_bot_api, _source_id, _uid, _msg):
-    return
-
-
-def group_reply_momo_loft(_line_bot_api, _source_id, _uid, _msg):
-    return
-
-
-def group_reply_schumi_user(_line_bot_api, _source_id, _uid, _msg):
+def group_reply_default(_line_bot_api, _source_id, _uid, _msg):
     return
 
 
@@ -211,7 +186,7 @@ GROUP_MAPPING = {
     },
     'C690e08d2fb900d5bbd873e103d500b92': {
         'name': '皇家御貓園',
-        'function': group_reply_luna,
+        'function': group_reply_default,
     },
     'C25add4301bc790a641e07b02b868a9b7': {
         'name': '葉白',
@@ -225,7 +200,7 @@ GROUP_MAPPING = {
     },
     'C966396824051cbb00e35af7b4123a0a5': {
         'name': '天堂老司機',
-        'function': group_reply_lineage_m,
+        'function': group_reply_default,
     },
     'Cfb6a76351d112834244144a1cd4f0f57': {
         'name': '死愛魔王城',
@@ -239,11 +214,11 @@ GROUP_MAPPING = {
     },
     'Ce1ab51b1e9be1f69edf765e77ef43a49': {
         'name': '四姊與盼盼',
-        'function': group_reply_4_and_pan,
+        'function': group_reply_default,
     },
     'Cbc420349e56f3bae5d5f46fafb0ac5cb': {
         'name': '社畜人生的煩惱',
-        'function': group_reply_working,
+        'function': group_reply_default,
         'log_filename': 'worker_life',
     },
     'Cfbbdac072c508472fd3acc9ac8fa7adc': {
@@ -253,17 +228,17 @@ GROUP_MAPPING = {
     },
     'Cf794cf7dc1970c3fba9122673cf3dcde': {
         'name': '魔王城測試',
-        'function': group_reply_mao_test,
+        'function': group_reply_default,
         'log_filename': 'mao_test',
     },
     'Cead15d583326d8cfc28d06d98308b009': {
         'name': '陌陌小閣',
-        'function': group_reply_momo_loft,
+        'function': group_reply_default,
         'log_filename': 'momo_loft',
     },
-    'C043a2d61209065726c7aae4ef4c748a0': {
-        'name': '朽瞇使用者',
-        'function': group_reply_schumi_user,
+    'C01f5f627f97916d0a6b2f40228656bc0': {
+        'name': '死愛甜甜圈',
+        'function': group_reply_default,
         'log_filename': 'schumi_user',
     }
 }
