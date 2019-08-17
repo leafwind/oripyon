@@ -6,7 +6,7 @@ import random
 import cachetools.func
 import gspread
 from linebot.models import FlexSendMessage, BubbleContainer, BoxComponent, \
-    ImageComponent, TextComponent, SeparatorComponent
+    ImageComponent, TextComponent
 
 from app.utils.gspread_util import auth_gss_client
 from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT, GOOGLE_AUTH_JSON_PATH, \
@@ -15,7 +15,7 @@ from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT
 tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
 
 
-def touch_schumi():
+def touch_schumi(msg_info, robot_settings):
     random.seed(os.urandom(5))
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
@@ -75,7 +75,11 @@ def build_sinoalice_char_content(image_url, title):
     return container
 
 
-def draw_sinoalice():
+def draw_sinoalice(msg_info, robot_settings):
+    if msg_info.source_id not in robot_settings.vip_groups:
+        return [
+            ('text', f'群組 {msg_info.source_id} 尚未開通功能')
+        ]
     random.seed(os.urandom(5))
     char_list = get_sinoalice_char_list()
     char = random.choice(char_list)
@@ -95,7 +99,7 @@ def draw_sinoalice():
     return replies
 
 
-def find_schumi():
+def find_schumi(msg_info, robot_settings):
     random.seed(os.urandom(5))
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
@@ -114,7 +118,7 @@ def find_schumi():
     return replies
 
 
-def draw_cat():
+def draw_cat(msg_info, robot_settings):
     random.seed(os.urandom(5))
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
@@ -130,19 +134,19 @@ def draw_cat():
     return replies
 
 
-def draw_card(msg_info):
+def draw_card(msg_info, robot_settings):
     random.seed(os.urandom(5))
     msg = random.choice(TEACHER_HO)
     return msg.format(name=msg_info.user_name)
 
 
-def pan_pan():
+def pan_pan(msg_info, robot_settings):
     random.seed(os.urandom(5))
     msg = random.choice(PAN_SENTENCES)
     return msg
 
 
-def tarot(msg_info):
+def tarot(msg_info, robot_settings):
     random.seed(os.urandom(5))
     card = random.choice(tarot_cards)
     logging.info('%s: %s', card['nameCN'], card['url'])
@@ -154,15 +158,15 @@ def tarot(msg_info):
     return replies
 
 
-def coc_7e_basic(msg):
+def coc_7e_basic(matched_msg):
     random.seed(os.urandom(5))
     d100 = random.randint(1, 100)  # 1 <= N <= 100
-    condition = int(msg.split('<=')[1])
+    condition = int(matched_msg.split('<=')[1])
     result = f'克蘇魯的呼喚七版：(1D100<={condition}) 初始結果 → {d100}\n'
 
     final_dice = d100
-    if '(' in msg:
-        extra = int(msg.split(')')[0].split('(')[1])
+    if '(' in matched_msg:
+        extra = int(matched_msg.split(')')[0].split('(')[1])
         if -2 <= extra <= 2 and extra != 0:
             tens_digit = d100 // 10
             abs_extra = abs(extra)
@@ -194,7 +198,7 @@ def coc_7e_basic(msg):
     return result
 
 
-def nca():
+def nca(msg_info, robot_settings):
     random.seed(os.urandom(5))
     d10 = random.randint(1, 10)  # 1 <= N <= 10
     desc_str_map = {
@@ -220,7 +224,7 @@ def choice(matched_msg):
     return result
 
 
-def fortune():
+def fortune(msg_info, robot_settings):
     random.seed(os.urandom(5))
     dice = random.randint(1, 1000)  # 1 <= N <= 1000
     ans = [

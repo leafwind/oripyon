@@ -242,11 +242,11 @@ def build_complex_msg(result):
     return complex_msg
 
 
-def get_reply_from_mapping_function(msg_info, pattern_mapping):
+def get_reply_from_mapping_function(msg_info, robot_settings, pattern_mapping):
     for p in pattern_mapping:
         if p['type'] == 'equal':
             if msg_info.msg == p['cmd']:
-                result = p['function'](msg_info)
+                result = p['function'](msg_info, robot_settings)
                 if p.get('multi_type_output', False):
                     return build_complex_msg(result)
                 else:
@@ -258,7 +258,7 @@ def get_reply_from_mapping_function(msg_info, pattern_mapping):
                 if p.get('matched_as_arg', False):
                     result = p['function'](match.group(0))
                 else:
-                    result = p['function'](msg_info)
+                    result = p['function'](msg_info, robot_settings)
                 if p.get('multi_type_output', False):
                     return build_complex_msg(result)
                 else:
@@ -268,8 +268,8 @@ def get_reply_from_mapping_function(msg_info, pattern_mapping):
     return None
 
 
-def common_reply(msg_info):
-    reply = get_reply_from_mapping_function(msg_info, pattern_mapping_common)
+def common_reply(msg_info, robot_settings):
+    reply = get_reply_from_mapping_function(msg_info, robot_settings, pattern_mapping_common)
     if reply:
         return reply
     # if msg == last_msg.get(source_id, None):

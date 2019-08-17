@@ -4,7 +4,7 @@ from datetime import datetime
 from app.util import get_exchange_rate
 
 
-def exchange_rate():
+def exchange_rate(msg_info, robot_settings):
     mapping = get_exchange_rate()
     # {
     #     "USDTWD": {

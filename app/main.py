@@ -5,6 +5,8 @@ import os
 import time
 import uuid
 
+import cachetools.func
+import gspread
 import yaml
 from flask import Flask, request, abort, render_template
 from linebot.exceptions import (
@@ -25,6 +27,8 @@ from app.linebot_api_extension import (
 from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
 from app.linebot_webhook_extension import WebhookHandlerExtended
 from app.private_reply import private_reply
+from app.utils.gspread_util import auth_gss_client
+from constants import GOOGLE_AUTH_JSON_PATH, GSPREAD_KEY_VIP
 
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
@@ -49,6 +53,27 @@ def write_temp_user_mapping(uid, user_name):
     temp_map_file = os.path.join('line-user-info', 'users_temp.txt')
     with open(temp_map_file, 'a') as f:
         f.write(f'\"{uid}\": \"{user_name}\",\n')
+
+
+@cachetools.func.ttl_cache(ttl=86400)
+def get_vip_groups_users():
+    gss_scopes = ['https://spreadsheets.google.com/feeds']
+    gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
+    sh = gss_client.open_by_key(GSPREAD_KEY_VIP)
+    vip_groups = vip_users = None
+    try:
+        worksheet = sh.worksheet('vip group')
+        vip_groups = worksheet.get_all_values()
+        vip_groups = [g[0] for g in vip_groups]
+    except gspread.exceptions.WorksheetNotFound as e:
+        logging.exception(e)
+    try:
+        worksheet = sh.worksheet('vip user')
+        vip_users = worksheet.get_all_values()
+        vip_users = [u[0] for u in vip_users]
+    except gspread.exceptions.WorksheetNotFound as e:
+        logging.exception(e)
+    return vip_groups, vip_users
 
 
 @application.route('/', methods=['GET', 'POST'])
@@ -257,6 +282,12 @@ class MessageInfo:
         self.msg = msg
 
 
+class RobotSettings:
+    def __init__(self, vip_groups, vip_users):
+        self.vip_groups = vip_groups
+        self.vip_users = vip_users
+
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     # logging.info('%s', event.__dict__)
@@ -286,8 +317,10 @@ def handle_text_message(event):
     logging.info(
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
 
+    vip_groups, vip_users = get_vip_groups_users()
     msg_info = MessageInfo(event.source.type, source_id, uid, user_name, event.message.text)
-    make_reply(msg_info, reply_token=event.reply_token)
+    robot_settings = RobotSettings(vip_groups, vip_users)
+    make_reply(msg_info, robot_settings, reply_token=event.reply_token)
 
     if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
         log_filename = GROUP_MAPPING[source_id]['log_filename'] + '.txt'
@@ -336,16 +369,16 @@ def get_announcement(source_id):
             return None
 
 
-def make_reply(msg_info, reply_token=None):
+def make_reply(msg_info, robot_settings, reply_token=None):
     # private reply, only
     if msg_info.source_type == 'user':
-        reply = private_reply(msg_info)
+        reply = private_reply(msg_info, robot_settings)
         if reply:
             line_bot_api.reply_message(reply_token, reply)
             return
 
     # common reply
-    reply = common_reply(msg_info)
+    reply = common_reply(msg_info, robot_settings)
     announcement_text_list = get_announcement(msg_info.source_id)
     if announcement_text_list:
         for text in announcement_text_list:

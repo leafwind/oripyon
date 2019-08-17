@@ -18,7 +18,7 @@ pattern_mapping_private = [
 ]
 
 
-def private_reply(msg_info):
-    reply = get_reply_from_mapping_function(msg_info, pattern_mapping_private)
+def private_reply(msg_info, robot_settings):
+    reply = get_reply_from_mapping_function(msg_info, robot_settings, pattern_mapping_private)
     if reply:
         return reply

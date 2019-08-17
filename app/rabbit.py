@@ -27,7 +27,7 @@ def my_rabbit_exists(uid):
             return False
 
 
-def adopt_rabbit(msg_info):
+def adopt_rabbit(msg_info, robot_settings):
     if my_rabbit_exists(msg_info.uid):
         return [('text', '你已經有一隻兔子啦')]
     else:
@@ -43,7 +43,7 @@ def adopt_rabbit(msg_info):
         return [('text', f'已經領養完畢，他的出生時間是 {time_str}')]
 
 
-def my_rabbit(msg_info):
+def my_rabbit(msg_info, robot_settings):
     if not table_exists(TABLE_RABBIT_FEEDING):
         check_or_create_table_rabbit_feeding()
 
@@ -62,7 +62,7 @@ def my_rabbit(msg_info):
                 satiation
                 FROM {TABLE_RABBIT_FEEDING} WHERE uid=:uid
             '''
-            c.execute(query, {'uid': uid})
+            c.execute(query, {'uid': msg_info.uid})
             (born_ts, strength, agility, intelligence, affection, satiation) = c.fetchone()
             container = build_rabbit_card_content(born_ts, strength, agility, intelligence, affection, satiation)
             return [('flex', FlexSendMessage(alt_text="請到手機查看兔子資訊", contents=container))]
