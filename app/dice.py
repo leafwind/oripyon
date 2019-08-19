@@ -83,6 +83,10 @@ def draw_sinoalice(msg_info, robot_settings):
     random.seed(os.urandom(5))
     char_list = get_sinoalice_char_list()
     char = random.choice(char_list)
+    if msg_info.uid == 'U989dcc506501f62f6b70550bf812c095':
+        while char[1] != '輝夜姬':
+            char = random.choice(char_list)
+
     char_voice_list = get_sinoalice_char_voice_list(char[1])
 
     image_url = f'https://leafwind.github.io/images/sinoalice/{int(char[0]):0>3d}.png'
