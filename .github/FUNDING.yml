@@ -9,4 +9,4 @@ community_bridge: # Replace with a single Community Bridge project-name e.g., cl
 liberapay: # Replace with a single Liberapay username
 issuehunt: # Replace with a single IssueHunt username
 otechie: # Replace with a single Otechie username
-custom: ['https://payment.ecpay.com.tw/QuickPay/AddShippingAddress?QuickPayID=790027&AllPayTradeID=64017482&AllPayTradeNo=1908201013393851&IsGuarantee=0&MID=3137761&v=F139AEAF94EEBE91D998197FF5E3F122']
+custom: 'https://payment.ecpay.com.tw/QuickPay/AddShippingAddress?QuickPayID=790027&AllPayTradeID=64017482&AllPayTradeNo=1908201013393851&IsGuarantee=0&MID=3137761&v=F139AEAF94EEBE91D998197FF5E3F122'
