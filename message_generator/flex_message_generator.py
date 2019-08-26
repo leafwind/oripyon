@@ -1,6 +1,6 @@
 from linebot.models import (
     MessageAction, BubbleContainer, BoxComponent,
-    ButtonComponent, TextComponent, SeparatorComponent
+    ButtonComponent, TextComponent, SpacerComponent
 )
 
 
@@ -20,7 +20,7 @@ def build_top_menu_function_card_content(title, text_contents):
             layout='vertical',
             contents=[
                 TextComponent(text=title, weight='bold', size='xl'),
-                SeparatorComponent(margin='5'),
+                SpacerComponent(size='lg'),
                 BoxComponent(
                     layout='vertical',
                     spacing='sm',
