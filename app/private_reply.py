@@ -7,7 +7,7 @@ from linebot.models import (
 )
 
 
-def build_top_menu_function_card_message_tool():
+def build_top_menu_function_card_message_tool(_msg_info, _robot_settings):
     title = '工具類別指令範例'
     text_content = [
         ('水庫(beta)', '水庫'),
@@ -21,7 +21,7 @@ def build_top_menu_function_card_message_tool():
     return [('flex', FlexSendMessage(alt_text='', contents=container))]
 
 
-def build_top_menu_function_card_message_dice():
+def build_top_menu_function_card_message_dice(_msg_info, _robot_settings):
     title = '運勢類別指令範例'
     text_content = [
         ('運勢 想測的東西', '運勢 考試'),
@@ -38,8 +38,8 @@ def build_top_menu_function_card_message_dice():
     return [('flex', FlexSendMessage(alt_text='', contents=container))]
 
 
-def build_top_menu_function_card_message_others():
-    title = '運勢類別指令範例'
+def build_top_menu_function_card_message_others(_msg_info, _robot_settings):
+    title = '彩蛋類別指令範例'
     text_content = [
         ('幫QQ', '幫QQ'),
         ('咕嚕靈波', '咕嚕靈波'),
