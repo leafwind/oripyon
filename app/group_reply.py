@@ -184,10 +184,6 @@ GROUP_MAPPING = {
         'function': group_reply_test,
         'log_filename': 'powpow_test',
     },
-    'C690e08d2fb900d5bbd873e103d500b92': {
-        'name': '皇家御貓園',
-        'function': group_reply_default,
-    },
     'C25add4301bc790a641e07b02b868a9b7': {
         'name': '葉白',
         'function': group_reply_yebai,
@@ -198,10 +194,6 @@ GROUP_MAPPING = {
         'function': group_reply_maplestory,
         'log_filename': 'maplestory',
     },
-    'C966396824051cbb00e35af7b4123a0a5': {
-        'name': '天堂老司機',
-        'function': group_reply_default,
-    },
     'Cfb6a76351d112834244144a1cd4f0f57': {
         'name': '死愛魔王城',
         'function': group_reply_mao_sino_alice,
@@ -211,10 +203,6 @@ GROUP_MAPPING = {
         'name': '尼爾主題餐廳',
         'function': group_reply_nier_sino_alice,
         'log_filename': 'nier_sino_alice',
-    },
-    'Ce1ab51b1e9be1f69edf765e77ef43a49': {
-        'name': '四姊與盼盼',
-        'function': group_reply_default,
     },
     'Cbc420349e56f3bae5d5f46fafb0ac5cb': {
         'name': '社畜人生的煩惱',
@@ -230,11 +218,6 @@ GROUP_MAPPING = {
         'name': '魔王城測試',
         'function': group_reply_default,
         'log_filename': 'mao_test',
-    },
-    'Cead15d583326d8cfc28d06d98308b009': {
-        'name': '陌陌小閣',
-        'function': group_reply_default,
-        'log_filename': 'momo_loft',
     },
     'C01f5f627f97916d0a6b2f40228656bc0': {
         'name': '死愛甜甜圈',
