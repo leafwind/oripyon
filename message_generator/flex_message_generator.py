@@ -22,7 +22,7 @@ def build_top_menu_function_card_content(title, text_contents):
                 TextComponent(text=title, weight='bold', size='xl'),
                 SeparatorComponent(),
                 BoxComponent(
-                    layout='horizontal',
+                    layout='vertical',
                     spacing='sm',
                     contents=contents
                 )
