@@ -20,13 +20,18 @@ def build_top_menu_function_card_content(title, text_contents):
             layout='vertical',
             contents=[
                 TextComponent(text=title, weight='bold', size='xl'),
-                SpacerComponent(size='lg'),
+            ],
+        ),
+        footer=BoxComponent(
+            layout='vertical',
+            spacing='lg',
+            contents=[
                 BoxComponent(
                     layout='vertical',
                     spacing='sm',
                     contents=contents
                 )
-            ],
+            ]
         ),
     )
     return container
