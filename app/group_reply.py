@@ -161,7 +161,7 @@ def get_user_name(line_bot_api, source_id, uid):
     try:
         user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
     except LineBotApiError as e:
-        logging.error('LineBotApiError: %s', e)
+        logging.debug('LineBotApiError: %s', e)
         user_name = ''
     return user_name
 
