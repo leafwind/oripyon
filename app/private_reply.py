@@ -18,7 +18,7 @@ def build_top_menu_function_card_message_tool(_msg_info, _robot_settings):
         ('空品(中央氣象局圖檔)', '空品'),
     ]
     container = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
-    return [('flex', FlexSendMessage(alt_text='', contents=container))]
+    return [('flex', FlexSendMessage(alt_text='工具類別指令範例', contents=container))]
 
 
 def build_top_menu_function_card_message_dice(_msg_info, _robot_settings):
@@ -35,7 +35,7 @@ def build_top_menu_function_card_message_dice(_msg_info, _robot_settings):
         ('cc(z)<=x (COC 7e)', 'cc<=50'),
     ]
     container = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
-    return [('flex', FlexSendMessage(alt_text='', contents=container))]
+    return [('flex', FlexSendMessage(alt_text='運勢類別指令範例', contents=container))]
 
 
 def build_top_menu_function_card_message_others(_msg_info, _robot_settings):
@@ -49,7 +49,7 @@ def build_top_menu_function_card_message_others(_msg_info, _robot_settings):
         ('女兒紅', '女兒紅'),
     ]
     container = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
-    return [('flex', FlexSendMessage(alt_text='', contents=container))]
+    return [('flex', FlexSendMessage(alt_text='彩蛋類別指令範例', contents=container))]
 
 
 pattern_mapping_private = [
