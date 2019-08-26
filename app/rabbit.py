@@ -27,7 +27,7 @@ def my_rabbit_exists(uid):
             return False
 
 
-def adopt_rabbit(msg_info, robot_settings):
+def adopt_rabbit(msg_info, _robot_settings):
     if my_rabbit_exists(msg_info.uid):
         return [('text', '你已經有一隻兔子啦')]
     else:
@@ -43,7 +43,7 @@ def adopt_rabbit(msg_info, robot_settings):
         return [('text', f'已經領養完畢，他的出生時間是 {time_str}')]
 
 
-def my_rabbit(msg_info, robot_settings):
+def my_rabbit(msg_info, _robot_settings):
     if not table_exists(TABLE_RABBIT_FEEDING):
         check_or_create_table_rabbit_feeding()
 

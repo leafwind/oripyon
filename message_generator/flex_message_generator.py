@@ -7,7 +7,7 @@ from linebot.models import (
 def build_top_menu_function_card_content(title, text_contents):
     contents = [
         ButtonComponent(
-            style='primary',
+            style='secondary',
             height='sm',
             color='#95B9B4',
             action=MessageAction(label=label, text=text),
@@ -20,7 +20,7 @@ def build_top_menu_function_card_content(title, text_contents):
             layout='vertical',
             contents=[
                 TextComponent(text=title, weight='bold', size='xl'),
-                SeparatorComponent(),
+                SeparatorComponent(margin=5),
                 BoxComponent(
                     layout='vertical',
                     spacing='sm',
