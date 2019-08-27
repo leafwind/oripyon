@@ -14,13 +14,22 @@ def build_top_menu_function_card_message_tool(_msg_info, _robot_settings):
             ('水庫(beta)', '水庫'),
             ('匯率(beta)', '匯率'),
         ],
-        [('天氣(中央氣象局圖檔)', '天氣')],
-        [('即時雨量(中央氣象局圖檔)', '即時雨量')],
-        [('雷達(中央氣象局圖檔)', '雷達')],
-        [('空品(中央氣象局圖檔)', '空品')],
     ]
-    container = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
-    return [('flex', FlexSendMessage(alt_text='工具類別指令範例', contents=container))]
+    bubble1 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
+    title = '氣象指令(中央氣象局圖檔)'
+    text_content = [
+        [
+            ('天氣', '天氣'),
+            ('即時雨量', '即時雨量'),
+        ],
+        [
+            ('雷達', '雷達'),
+            ('空品', '空品'),
+        ],
+    ]
+    bubble2 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
+    carousel_container = CarouselContainer([bubble1, bubble2])
+    return [('flex', FlexSendMessage(alt_text='工具類別指令範例', contents=carousel_container))]
 
 
 def build_top_menu_function_card_message_dice(_msg_info, _robot_settings):
