@@ -26,8 +26,10 @@ def build_top_menu_function_card_message_tool(_msg_info, _robot_settings):
 def build_top_menu_function_card_message_dice(_msg_info, _robot_settings):
     title = '運勢類別指令範例'
     text_content = [
-        [('運勢 想測的東西', '運勢 考試')],
-        [('塔羅 想測的東西', '塔羅 上班')],
+        [
+            ('運勢', '運勢 考試'),
+            ('塔羅', '塔羅 上班'),
+        ],
         [
             ('請問為什麼', '請問為什麼會下雨'),
             ('何老師抽卡', '何老師抽卡'),
