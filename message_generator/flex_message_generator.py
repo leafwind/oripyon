@@ -1,6 +1,6 @@
 from linebot.models import (
     MessageAction, BubbleContainer, BoxComponent,
-    ButtonComponent, TextComponent, SpacerComponent
+    ButtonComponent, TextComponent
 )
 
 

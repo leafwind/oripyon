@@ -3,7 +3,7 @@ from app.rabbit import my_rabbit, adopt_rabbit
 from message_generator import flex_message_generator
 
 from linebot.models import (
-    FlexSendMessage
+    FlexSendMessage, CarouselContainer
 )
 
 
@@ -36,12 +36,18 @@ def build_top_menu_function_card_message_dice(_msg_info, _robot_settings):
             ('摸朽咪', '摸朽咪'),
             ('找朽咪', '找朽咪'),
         ],
+    ]
+    bubble1 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
+
+    title = '骰子類別指令範例'
+    text_content = [
         [('choice[x,y,z]', 'choice[排骨飯,豬腳飯,焢肉飯]')],
         [('NCA [隨意] (攻擊檢定)', 'NCA 攻擊小明')],
         [('cc(z)<=x (COC 7e)', 'cc<=50')],
     ]
-    container = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
-    return [('flex', FlexSendMessage(alt_text='運勢類別指令範例', contents=container))]
+    bubble2 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
+    carousel_container = CarouselContainer([bubble1, bubble2])
+    return [('flex', FlexSendMessage(alt_text='運勢類別指令範例', contents=carousel_container))]
 
 
 def build_top_menu_function_card_message_others(_msg_info, _robot_settings):
