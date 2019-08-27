@@ -16,7 +16,7 @@ def build_top_menu_function_card_message_tool(_msg_info, _robot_settings):
         ],
     ]
     bubble1 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
-    title = '氣象指令(中央氣象局圖檔)'
+    title = '氣象指令(氣象局圖檔)'
     text_content = [
         [
             ('天氣', '天氣'),
@@ -42,10 +42,6 @@ def build_top_menu_function_card_message_dice(_msg_info, _robot_settings):
         [
             ('請問為什麼', '請問為什麼會下雨'),
             ('何老師抽卡', '何老師抽卡'),
-        ],
-        [
-            ('摸朽咪', '摸朽咪'),
-            ('找朽咪', '找朽咪'),
         ],
     ]
     bubble1 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)

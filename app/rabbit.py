@@ -207,13 +207,13 @@ def build_rabbit_card_content(born_ts, strength, agility, intelligence, affectio
                     style='primary',
                     height='sm',
                     color='#95B9B4',
-                    action=MessageAction(label='餵食', text='餵食')
+                    action=MessageAction(label='找朽咪', text='找朽咪')
                 ),
                 ButtonComponent(
                     style='primary',
                     height='sm',
                     color='#95B9B4',
-                    action=MessageAction(label='摸他', text='摸他')
+                    action=MessageAction(label='摸朽咪', text='摸朽咪')
                 )
             ]
         ),
