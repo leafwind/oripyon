@@ -5,14 +5,19 @@ from linebot.models import (
 
 
 def build_top_menu_function_card_content(title, text_contents):
-    contents = [
-        ButtonComponent(
-            style='secondary',
-            height='sm',
-            color='#95B9B4',
-            action=MessageAction(label=label, text=text),
-        )
-        for (label, text) in text_contents
+    rows = [
+        BoxComponent(
+            layout='horizontal',
+            spacing='sm',
+            contents=[
+                ButtonComponent(
+                    style='secondary',
+                    height='sm',
+                    color='#95B9B4',
+                    action=MessageAction(label=label, text=text),
+                )for (label, text) in buttons
+            ]
+        )for buttons in text_contents
     ]
     container = BubbleContainer(
         direction='ltr',
@@ -29,7 +34,7 @@ def build_top_menu_function_card_content(title, text_contents):
                 BoxComponent(
                     layout='vertical',
                     spacing='sm',
-                    contents=contents
+                    contents=rows
                 )
             ]
         ),
