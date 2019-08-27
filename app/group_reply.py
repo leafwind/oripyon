@@ -157,15 +157,6 @@ def group_reply_default(_line_bot_api, _source_id, _uid, _msg):
     return
 
 
-def get_user_name(line_bot_api, source_id, uid):
-    try:
-        user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-    except LineBotApiError as e:
-        logging.debug('LineBotApiError: %s', e)
-        user_name = ''
-    return user_name
-
-
 def random_choice_except_key(from_dict, except_key):
     # drop the user itself
     random.seed(os.urandom(5))
