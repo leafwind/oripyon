@@ -201,7 +201,7 @@ def build_rabbit_card_content(born_ts, strength, agility, intelligence, affectio
                     style='primary',
                     height='sm',
                     color='#95B9B4',
-                    action=MessageAction(label='每日', text='每日'),
+                    action=MessageAction(label='狀態', text='狀態（暫無功能）'),
                 ),
                 ButtonComponent(
                     style='primary',
