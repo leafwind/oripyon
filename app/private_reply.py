@@ -75,7 +75,8 @@ def build_top_menu_function_card_message_others(_msg_info, _robot_settings):
             ('女兒紅', '女兒紅'),
         ],
     ]
-    container = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
+    container = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content,
+                                                                            bubble_size='nano')
     return [('flex', FlexSendMessage(alt_text='彩蛋類別指令範例', contents=container))]
 
 
