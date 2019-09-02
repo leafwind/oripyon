@@ -4,7 +4,7 @@ from linebot.models import (
 )
 
 
-def build_top_menu_function_card_content(title, text_contents):
+def build_top_menu_function_card_content(title, text_contents, bubble_size='mega'):
     rows = [
         BoxComponent(
             layout='horizontal',
@@ -20,6 +20,7 @@ def build_top_menu_function_card_content(title, text_contents):
         )for buttons in text_contents
     ]
     container = BubbleContainer(
+        size=bubble_size,
         direction='ltr',
         body=BoxComponent(
             layout='vertical',

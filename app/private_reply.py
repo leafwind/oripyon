@@ -15,7 +15,8 @@ def build_top_menu_function_card_message_tool(_msg_info, _robot_settings):
             ('匯率(beta)', '匯率'),
         ],
     ]
-    bubble1 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content)
+    bubble1 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content,
+                                                                          bubble_size='nano')
     title = '氣象指令(氣象局圖檔)'
     text_content = [
         [
