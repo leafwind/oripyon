@@ -45,8 +45,10 @@ def build_top_menu_function_card_message_dice(_msg_info, _robot_settings):
     text_content = [
         [
             ('運勢', '運勢 考試'),
-            ('塔羅', '塔羅 上班'),
         ],
+        [
+            ('塔羅', '塔羅 上班'),
+        ]
     ]
     bubble1 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content,
                                                                           bubble_size='nano')
@@ -54,8 +56,10 @@ def build_top_menu_function_card_message_dice(_msg_info, _robot_settings):
     text_content = [
         [
             ('為什麼', '請問為什麼會下雨'),
-            ('何老師', '何老師抽卡'),
         ],
+        [
+            ('何老師', '何老師抽卡'),
+        ]
     ]
     bubble2 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content,
                                                                           bubble_size='nano')
