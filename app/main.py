@@ -9,11 +9,12 @@ import cachetools.func
 import gspread
 import yaml
 from flask import Flask, request, abort, render_template
+from linebot import WebhookHandler
 from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError
 )
 from linebot.models import (
-    MessageEvent, JoinEvent, LeaveEvent, FollowEvent,
+    MessageEvent, JoinEvent, LeaveEvent, FollowEvent, MemberJoinedEvent, MemberLeftEvent,
     TextMessage, ImageMessage, AudioMessage, TextSendMessage, ImageSendMessage, StickerMessage
 )
 
@@ -24,8 +25,6 @@ from app.group_reply import GROUP_MAPPING
 from app.linebot_api_extension import (
     LineBotApiExtension
 )
-from app.linebot_model_event_extension import MemberJoinEvent, MemberLeaveEvent
-from app.linebot_webhook_extension import WebhookHandlerExtended
 from app.private_reply import private_reply
 from app.utils.gspread_util import auth_gss_client
 from constants import GOOGLE_AUTH_JSON_PATH, GSPREAD_KEY_VIP
@@ -46,7 +45,7 @@ with open("line_auth_key.yml", 'r') as stream:
     CHANNEL_ACCESS_TOKEN = data['CHANNEL_ACCESS_TOKEN']
     CHANNEL_SECRET = data['CHANNEL_SECRET']
 line_bot_api = LineBotApiExtension(CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandlerExtended(CHANNEL_SECRET)
+handler = WebhookHandler(CHANNEL_SECRET)
 
 
 def write_temp_user_mapping(uid, user_name):
@@ -167,7 +166,7 @@ def handle_leave_event(event):
         f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} LeaveEvent")
 
 
-@handler.add(MemberJoinEvent)
+@handler.add(MemberJoinedEvent)
 def handle_member_join_event(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
@@ -194,7 +193,7 @@ def handle_member_join_event(event):
     line_bot_api.reply_message(event.reply_token, replies)
 
 
-@handler.add(MemberLeaveEvent)
+@handler.add(MemberLeftEvent)
 def handle_member_leave_event(event):
     if event.source.type == 'room':
         source_id = event.source.room_id
