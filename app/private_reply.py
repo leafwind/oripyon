@@ -64,16 +64,22 @@ def build_top_menu_function_card_message_others(_msg_info, _robot_settings):
     text_content = [
         [
             ('幫QQ', '幫QQ'),
+        ],
+        [
             ('爛中文', '爛中文'),
         ],
         [
             ('咕嚕靈波', '咕嚕靈波'),
+        ],
+        [
             ('魔法少女', '魔法少女'),
         ],
         [
             ('慈孤觀音', '慈孤觀音'),
-            ('女兒紅', '女兒紅'),
         ],
+        [
+            ('女兒紅', '女兒紅'),
+        ]
     ]
     container = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content,
                                                                             bubble_size='nano')
