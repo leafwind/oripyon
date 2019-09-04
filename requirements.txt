@@ -1,5 +1,5 @@
 -e git+https://github.com/leafwind/line-bot-sdk-python.git#egg=line-bot-sdk
-Flask==0.12.3
+Flask
 uWSGI==2.0.14
 request
 pytest
