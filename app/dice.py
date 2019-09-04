@@ -15,7 +15,7 @@ from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT
 tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
 
 
-def touch_schumi(msg_info, robot_settings):
+def touch_schumi(_msg_info, _robot_settings):
     random.seed(os.urandom(5))
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
@@ -103,7 +103,7 @@ def draw_sinoalice(msg_info, robot_settings):
     return replies
 
 
-def find_schumi(msg_info, robot_settings):
+def find_schumi(_msg_info, _robot_settings):
     random.seed(os.urandom(5))
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
@@ -122,7 +122,7 @@ def find_schumi(msg_info, robot_settings):
     return replies
 
 
-def draw_cat(msg_info, robot_settings):
+def draw_cat(_msg_info, _robot_settings):
     random.seed(os.urandom(5))
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
@@ -138,19 +138,19 @@ def draw_cat(msg_info, robot_settings):
     return replies
 
 
-def draw_card(msg_info, robot_settings):
+def draw_card(msg_info, _robot_settings):
     random.seed(os.urandom(5))
     msg = random.choice(TEACHER_HO)
     return msg.format(name=msg_info.user_name)
 
 
-def pan_pan(msg_info, robot_settings):
+def pan_pan(_msg_info, _robot_settings):
     random.seed(os.urandom(5))
     msg = random.choice(PAN_SENTENCES)
     return msg
 
 
-def tarot(msg_info, robot_settings):
+def tarot(msg_info, _robot_settings):
     random.seed(os.urandom(5))
     card = random.choice(tarot_cards)
     logging.info('%s: %s', card['nameCN'], card['url'])
@@ -202,7 +202,7 @@ def coc_7e_basic(matched_msg):
     return result
 
 
-def nca(msg_info, robot_settings):
+def nca(_msg_info, _robot_settings):
     random.seed(os.urandom(5))
     d10 = random.randint(1, 10)  # 1 <= N <= 10
     desc_str_map = {
@@ -228,7 +228,7 @@ def choice(matched_msg):
     return result
 
 
-def fortune(msg_info, robot_settings):
+def fortune(_msg_info, _robot_settings):
     random.seed(os.urandom(5))
     dice = random.randint(1, 1000)  # 1 <= N <= 1000
     ans = [

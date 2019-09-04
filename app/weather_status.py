@@ -7,7 +7,7 @@ from app.util import get_short_url, get_reservoir_stat
 from taiwan_area_map.query_area import query_area
 
 
-def reservoir_now(msg_info, robot_settings):
+def reservoir_now(_msg_info, _robot_settings):
     reservoir_stat = get_reservoir_stat()
     replies = []
     for reservoir_name in ['翡翠水庫', '石門水庫']:
@@ -35,13 +35,13 @@ def reservoir_now(msg_info, robot_settings):
     return replies
 
 
-def weather_now(msg_info, robot_settings):
+def weather_now(_msg_info, _robot_settings):
     image_url = f'https://www.cwb.gov.tw/V7/observe/real/Data/Real_Image.png?dumm={int(time.time())}'
     short_url = get_short_url(image_url)
     return short_url
 
 
-def rainfall_now(msg_info, robot_settings):
+def rainfall_now(_msg_info, _robot_settings):
     now = int(time.time())
     target_ts = now - 600  # CWB may delay few minutes, set 10 minutes
     target_ts = target_ts // 1800 * 1800  # truncate to 30 minutes
@@ -53,7 +53,7 @@ def rainfall_now(msg_info, robot_settings):
     return short_url
 
 
-def radar_now(msg_info, robot_settings):
+def radar_now(_msg_info, _robot_settings):
     now = int(time.time())
     target_ts = now - 600  # CWB may delay few minutes, set 10 minutes
     target_ts = target_ts // 600 * 600  # truncate to 10 minutes
@@ -65,7 +65,7 @@ def radar_now(msg_info, robot_settings):
     return short_url
 
 
-def aqi_now(msg_info, robot_settings):
+def aqi_now(_msg_info, _robot_settings):
     image_url = f'https://taqm.epa.gov.tw/taqm/Chart/AqiMap/map2.aspx?lang=tw&ts={int(time.time() * 1000)}'
     short_url = get_short_url(image_url)
     return short_url

@@ -213,8 +213,8 @@ def handle_sticker_message(event):
         source_id = event.source.user_id
     else:
         raise ValueError
-    pid = event.message.package_id
-    sid = event.message.sticker_id
+    # pid = event.message.package_id
+    # sid = event.message.sticker_id
     uid = event.source.user_id
     user_name = user_info.get(uid, None)
     if not user_name:

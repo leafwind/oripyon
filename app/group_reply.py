@@ -4,9 +4,6 @@ import os
 import random
 import re
 
-from linebot.exceptions import (
-    LineBotApiError
-)
 from linebot.models import (
     TextSendMessage, ImageSendMessage, TemplateSendMessage
 )
@@ -141,7 +138,7 @@ def group_reply_mao_sino_alice(_line_bot_api, _source_id, _uid, msg):
     return replies
 
 
-def group_reply_nier_sino_alice(line_bot_api, source_id, uid, msg):
+def group_reply_nier_sino_alice(_line_bot_api, _source_id, _uid, msg):
     if msg.lower().startswith('id對照表'):
         replies = [TextSendMessage(text='\n'.join(SINOALICE_NIER_ID_LIST))]
     else:
