@@ -10,6 +10,7 @@ import gspread
 import yaml
 from flask import Flask, request, abort, render_template
 from linebot import WebhookHandler
+from linebot.api import LineBotApi
 from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError
 )
@@ -22,9 +23,6 @@ from announcement_log import check_or_create_table_line_announcement_log, \
     insert_line_announcement_log, query_line_announcement_log
 from app.common_reply import common_reply
 from app.group_reply import GROUP_MAPPING
-from app.linebot_api_extension import (
-    LineBotApiExtension
-)
 from app.private_reply import private_reply
 from app.utils.gspread_util import auth_gss_client
 from constants import GOOGLE_AUTH_JSON_PATH, GSPREAD_KEY_VIP
@@ -44,7 +42,7 @@ with open("line_auth_key.yml", 'r') as stream:
     data = yaml.load(stream)
     CHANNEL_ACCESS_TOKEN = data['CHANNEL_ACCESS_TOKEN']
     CHANNEL_SECRET = data['CHANNEL_SECRET']
-line_bot_api = LineBotApiExtension(CHANNEL_ACCESS_TOKEN)
+line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 
 
