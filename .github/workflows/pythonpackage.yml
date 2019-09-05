@@ -23,7 +23,7 @@ jobs:
         pip install virtualenv
         ./scripts/build_venv.sh
         . venv/bin/activate
-        sudo CFLAGS="-I/usr/local/opt/openssl/include" LDFLAGS="-L/usr/local/opt/openssl/lib" UWSGI_PROFILE_OVERRIDE=ssl=true pip install uwsgi -I --no-cache-dir
+        CFLAGS="-I/usr/local/opt/openssl/include" LDFLAGS="-L/usr/local/opt/openssl/lib" UWSGI_PROFILE_OVERRIDE=ssl=true
     - name: Install requirements
       run: |
         pip install -r requirements.txt
