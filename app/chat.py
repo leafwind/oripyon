@@ -11,6 +11,7 @@ from constants import TEST_GROUP_IDS
 
 markov_chat_instance_map = {}
 
+
 def chat(line_bot_api, reply_token, source_id, msg, log_filename):
     global markov_chat_instance_map
     if source_id not in markov_chat_instance_map:

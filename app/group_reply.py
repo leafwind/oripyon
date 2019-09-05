@@ -11,10 +11,10 @@ from linebot.models import (
 from app.line_templates import make_carousel_template, make_confirm_template, make_buttons_template
 from app.line_templates import make_template_action, make_carousel_column
 from app.phrase import horse_phrase, lion_phrase, dunkey_phrase
+from constants import SINOALICE_NIER_ID_LIST
 
 maple_phrase = horse_phrase + lion_phrase + dunkey_phrase
 help_find_pattern = re.compile('協尋')
-from constants import SINOALICE_NIER_ID_LIST
 
 RANDOM_GF = {}
 random_gf_file = os.path.join('line-user-info', 'random_gf.json')

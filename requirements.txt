@@ -7,9 +7,9 @@ pytest-cov
 coverage
 pylint
 pyflakes
+flake8
 pyyaml
 jieba
-python-Levenshtein
 gspread
 oauth2client
 cachetools

@@ -15,6 +15,7 @@ with open("./secret.yml", 'r') as stream:
     TWITCH_TOKEN = _data['TWITCH_TOKEN']
     LINE_NOTIFY_SECRET = _data['LINE_NOTIFY_SECRET']
 
+
 def notify(data):
     """
     :param data:
@@ -31,7 +32,10 @@ def notify(data):
     payload = json.loads(r.text)
     logging.info('%s', payload)
 
+
 stream_set = set()
+
+
 def twitch_stream_notify():
     """
     :return:
@@ -99,12 +103,11 @@ class StreamLister:
         """
         while self._running:
             try:
-                twitch_stream_notify()      
+                twitch_stream_notify()
             except Exception as e:
                 logging.exception("type(e): %s, str(e): %s", type(e), str(e))
             finally:
                 time.sleep(15)
-            
 
 
 if __name__ == "__main__":

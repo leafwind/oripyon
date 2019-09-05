@@ -131,10 +131,11 @@ def build_rabbit_adopt_content():
 def build_rabbit_card_content(born_ts, strength, agility, intelligence, affection, satiation):
     birthday_str = (datetime.datetime.utcfromtimestamp(born_ts) + datetime.timedelta(hours=8)) \
         .strftime('%Y-%m-%d %H:%M:%S')
+    img_url = 'https://obs.line-scdn.net/0h70H0wyxgaB91SUIJHCUXSEkMZnICZ25XDXh0KQIeMioMeXscGi8gfFceNi1eKXhMGSklfFBJNS9c'
     container = BubbleContainer(
         direction='ltr',
         hero=ImageComponent(
-            url='https://obs.line-scdn.net/0h70H0wyxgaB91SUIJHCUXSEkMZnICZ25XDXh0KQIeMioMeXscGi8gfFceNi1eKXhMGSklfFBJNS9c',
+            url=img_url,
             size='full',
             aspect_ratio='20:15',
             aspect_mode='cover'

@@ -230,7 +230,7 @@ def handle_sticker_message(event):
     # )
 
 
-@handler.add(MessageEvent, message=[ImageMessage,AudioMessage])
+@handler.add(MessageEvent, message=[ImageMessage, AudioMessage])
 def handle_image_message(event):
     if event.source.type == 'room':
         source_id = event.source.room_id

@@ -10,6 +10,7 @@ echo "# -------------------"
 echo "# pyflakes"
 echo "# -------------------"
 pyflakes app/ tests/ twitch_notify/
+flake8 . --count --exit-zero --max-complexity=15 --max-line-length=120 --statistics --exclude=venv,taiwan_area_map,line-user-info
 
 echo "# -------------------"
 echo "# pylint"

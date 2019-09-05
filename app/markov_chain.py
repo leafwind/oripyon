@@ -18,14 +18,14 @@ def _load_stop_word_list(file_path):
 
 class MarkovChat(object):
     chain_length = 2
-    #chattiness = 0
+    # chattiness = 0
     max_words = 25
     MESSAGES_TO_GENERATE = 2
     separator = '\x01'
     stop_word = '\x02'
     ltable = defaultdict(list)
     rtable = defaultdict(list)
-    #train_data = 'logs/markov_train.txt'
+    # train_data = 'logs/markov_train.txt'
 
     def __init__(self, train_data, additional_train_data=None, chattiness=0):
         self.train_data = train_data
@@ -39,12 +39,10 @@ class MarkovChat(object):
                 self._load_model(model)
                 logging.info("MarkovChat: load %s", model)
 
-
     def _simple_split_message_chinese(self, message):
         words_generator = jieba.cut(message, cut_all=False)
         words = [w for w in words_generator if w not in self.stop_word_list]
         return words
-
 
     def _split_message_chinese(self, message):
         words_generator = jieba.cut(message, cut_all=False)
@@ -105,11 +103,11 @@ class MarkovChat(object):
         last_ascii = True
         output = ""
         for word in gen_words:
-            if ord(word[0]) < 128 and last_ascii == False:
+            if ord(word[0]) < 128 and last_ascii is False:
                 output += " "
                 output += word
                 last_ascii = True
-            elif ord(word[0]) >= 128 and last_ascii == True:
+            elif ord(word[0]) >= 128 and last_ascii is True:
                 output += " "
                 output += word
                 last_ascii = False
@@ -119,13 +117,13 @@ class MarkovChat(object):
             elif ord(word[0]) >= 128:
                 output += word
                 last_ascii = False
-        output = " ".join(output.split()).strip(self.stop_word + " ") # remove trailing space
-        #return ' '.join(gen_words).strip('\x02 ')
+        output = " ".join(output.split()).strip(self.stop_word + " ")  # remove trailing space
+        # return ' '.join(gen_words).strip('\x02 ')
         return output
 
     def log(self, msg, _chattiness=None):
         # speak only when spoken to, or when the spirit moves me
-        #if msg.startswith('!') or 'http://' in msg or not msg.count(' '):
+        # if msg.startswith('!') or 'http://' in msg or not msg.count(' '):
         if msg.startswith('!') or 'http://' in msg or 'https://' in msg:
             return
         if len(msg) < 4:
