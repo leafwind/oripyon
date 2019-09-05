@@ -27,7 +27,7 @@ from app.private_reply import private_reply
 from app.utils.gspread_util import auth_gss_client
 from constants import GOOGLE_AUTH_JSON_PATH, GSPREAD_KEY_VIP
 
-logging.basicConfig(level=logging.INFO)
+logging.getLogger().setLevel(logging.INFO)
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("oauth2client.crypt").setLevel(logging.WARNING)
