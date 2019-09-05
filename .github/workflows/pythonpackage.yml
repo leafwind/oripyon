@@ -27,6 +27,9 @@ jobs:
     - name: Install requirements
       run: |
         ./scripts/build_venv.sh
+    - name: start venv
+      run: |
+        . venv/bin/activate
     - name: repo built-in check
       run: |
         ./scripts/pre_commit_check.sh
