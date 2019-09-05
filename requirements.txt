@@ -1,4 +1,4 @@
--e git+https://github.com/leafwind/line-bot-sdk-python.git#egg=line-bot-sdk
+line-bot-sdk
 Flask
 uWSGI==2.0.14
 request
