@@ -30,6 +30,7 @@ from constants import GOOGLE_AUTH_JSON_PATH, GSPREAD_KEY_VIP
 logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(logging.WARNING)
 logging.getLogger("oauth2client.crypt").setLevel(logging.WARNING)
+logging.getLogger("root").setLevel(logging.INFO)
 application = Flask(__name__, template_folder='templates')
 
 user_info = {}
