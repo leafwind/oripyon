@@ -85,7 +85,6 @@ def callback():
 
     # get request body as text
     body = request.get_data(as_text=True)
-    application.logger.debug("Request body: " + body)
 
     # handle Web hook body
     try:
