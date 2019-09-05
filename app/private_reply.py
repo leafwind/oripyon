@@ -18,7 +18,7 @@ def build_top_menu_function_card_message_tool(_msg_info, _robot_settings):
         ]
     ]
     bubble1 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content,
-                                                                          bubble_size='micro')
+                                                                          bubble_size='nano')
     title = '氣象圖'
     text_content = [
         [
@@ -35,7 +35,7 @@ def build_top_menu_function_card_message_tool(_msg_info, _robot_settings):
         ]
     ]
     bubble2 = flex_message_generator.build_top_menu_function_card_content(title=title, text_contents=text_content,
-                                                                          bubble_size='micro')
+                                                                          bubble_size='nano')
     carousel_container = CarouselContainer([bubble1, bubble2])
     return [('flex', FlexSendMessage(alt_text='工具類別指令範例', contents=carousel_container))]
 
