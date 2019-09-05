@@ -27,6 +27,9 @@ jobs:
     - name: Install requirements
       run: |
         ./scripts/build_venv.sh
+    - name: repo built-in check
+      run: |
+        ./scripts/pre_commit_check.sh
     - name: Lint with flake8
       run: |
         pip install flake8
