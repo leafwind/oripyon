@@ -44,7 +44,16 @@ def get_google_custom_search_result(query_string, num=10, safe='active', search_
     return images
 
 
-def google_search_image(msg):
+def google_search_image(msg, msg_info, _robot_settings):
+    allow_google_search_group_ids = [
+        'C1bebaeaf89242089f0d755d492df6cb6',  # 測試群組
+        'Cfb6a76351d112834244144a1cd4f0f57',  # 死愛魔王城
+        'C1e38a92f8c7b4ad377df882b9f3bf336',  # 尼爾主題餐廳
+        'Cbc420349e56f3bae5d5f46fafb0ac5cb',  # 社畜人生的煩惱
+        'Cf794cf7dc1970c3fba9122673cf3dcde',  # 魔王城測試
+    ]
+    if msg_info.source_id not in allow_google_search_group_ids:
+        return []
     msg = " ".join(msg.split())
     query = msg.split(' ')[1]
     random.seed(os.urandom(5))

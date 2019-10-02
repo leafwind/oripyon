@@ -73,7 +73,7 @@ def aqi_now(_msg_info, _robot_settings):
     return short_url
 
 
-def aqi_predict(msg):
+def aqi_predict(msg, _msg_info, _robot_settings):
     msg_list = msg.split(' ')
     location = msg_list[1].replace('台', '臺')
     aqi_info = predict_AQI.predict_aqi(location)

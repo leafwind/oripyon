@@ -162,7 +162,7 @@ def tarot(msg_info, _robot_settings):
     return replies
 
 
-def coc_7e_basic(matched_msg):
+def coc_7e_basic(matched_msg, _msg_info, _robot_settings):
     random.seed(os.urandom(5))
     d100 = random.randint(1, 100)  # 1 <= N <= 100
     condition = int(matched_msg.split('<=')[1])
@@ -220,7 +220,7 @@ def nca(_msg_info, _robot_settings):
     return f'死靈年代記之永遠的後日談：[{d10}]  → {desc_str_map[d10]}'
 
 
-def choice(matched_msg):
+def choice(matched_msg, _msg_info, _robot_settings):
     random.seed(os.urandom(5))
     options_str = matched_msg.split('[')[1][:-1]
     options = options_str.split(',')

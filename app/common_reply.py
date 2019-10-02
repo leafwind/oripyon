@@ -256,7 +256,7 @@ def get_reply_from_mapping_function(msg_info, robot_settings, pattern_mapping):
             match = p['cmd'].search(msg_info.msg)
             if match:
                 if p.get('matched_as_arg', False):
-                    result = p['function'](match.group(0))
+                    result = p['function'](match.group(0), msg_info, robot_settings)
                 else:
                     result = p['function'](msg_info, robot_settings)
                 if p.get('multi_type_output', False):
