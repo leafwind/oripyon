@@ -11,7 +11,10 @@ with open(GOOGLE_API_KEY_PATH, 'r') as _f:
     data = json.load(_f)
     API_KEY = data['API_KEY']
 
-
+# CSE setting
+# https://cse.google.com/cse/setup/basic?cx=010322789978293582519:tmzyqrdufxq
+# google api key
+# https://console.developers.google.com/apis/credentials?project=phrasal-ability-235508
 # https://developers.google.com/custom-search/v1/using_rest
 # https://developers.google.com/custom-search/v1/cse/list
 def get_google_custom_search_result(query_string, num=10, safe='active', search_type='image'):
@@ -22,7 +25,7 @@ def get_google_custom_search_result(query_string, num=10, safe='active', search_
     api_url += f'&safe={safe}'
     api_url += f'&searchType={search_type}'
     api_url += f'&q={query_string}'
-    api_url += f'&cx=013563099022526892869:vdjdigrv2sm'
+    api_url += f'&cx=010322789978293582519:tmzyqrdufxq'
     logging.info(api_url)
     r = requests.get(api_url)
     result = r.json()
