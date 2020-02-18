@@ -364,6 +364,7 @@ def get_announcement(source_id):
     end_ts = time.mktime(date_end.timetuple())
     if begin_ts < now_ts < end_ts:
         announcement_text_list = announcement[0]['content']
+        logging.info(f'sending announcement: {announcement_text_list}')
         insert_line_announcement_log(source_id, now_ts)
         return announcement_text_list
     else:
