@@ -368,7 +368,7 @@ def get_announcement(source_id):
         insert_line_announcement_log(source_id, now_ts)
         return announcement_text_list
     else:
-        logging.info(f'not in the desired date {date_begin} - {date_end}, skip')
+        logging.debug(f'not in the desired date {date_begin} - {date_end}, skip')
         return None
 
 
