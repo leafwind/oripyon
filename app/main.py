@@ -346,12 +346,13 @@ def get_announcement(source_id):
     now_ts = int(time.time())
     announcement_file = os.path.join('./announcement.json')
     if now_ts//86400 == max_ts//86400:
-        # same day, skip
+        logging.info(f'same day, skip')
         return None
     elif now_ts - max_ts <= 12*3600:
-        # not over 12 hrs
+        logging.info(f'not over 12 hrs, skip')
         return None
     elif not os.path.exists(announcement_file):
+        logging.info(f'announcement_file not exist, skip')
         return None
     else:
         pass
@@ -366,6 +367,7 @@ def get_announcement(source_id):
         insert_line_announcement_log(source_id, now_ts)
         return announcement_text_list
     else:
+        logging.info(f'not in the desired date {date_begin} - {date_end}, skip')
         return None
 
 
