@@ -24,9 +24,6 @@ jobs:
     - name: set environment variables for building uWSGI
       run: |
         CFLAGS="-I/usr/local/opt/openssl/include" LDFLAGS="-L/usr/local/opt/openssl/lib" UWSGI_PROFILE_OVERRIDE=ssl=true
-    - name: Install requirements
-      run: |
-        ./scripts/build_venv.sh
     - name: repo built-in check
       run: |
         pip install pytest flake8 pyflakes pylint
