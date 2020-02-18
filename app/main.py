@@ -354,18 +354,19 @@ def get_announcement(source_id):
     elif not os.path.exists(announcement_file):
         return None
     else:
-        with open(announcement_file, 'r') as f:
-            announcement = json.load(f)
-        date_begin = datetime.datetime.strptime(announcement[0]['date_begin'], '%Y-%m-%d')
-        date_end = datetime.datetime.strptime(announcement[0]['date_end'], '%Y-%m-%d')
-        begin_ts = time.mktime(date_begin.timetuple())
-        end_ts = time.mktime(date_end.timetuple())
-        if begin_ts < now_ts < end_ts:
-            announcement_text_list = announcement[0]['content']
-            insert_line_announcement_log(source_id, now_ts)
-            return announcement_text_list
-        else:
-            return None
+        pass
+    with open(announcement_file, 'r') as f:
+        announcement = json.load(f)
+    date_begin = datetime.datetime.strptime(announcement[0]['date_begin'], '%Y-%m-%d')
+    date_end = datetime.datetime.strptime(announcement[0]['date_end'], '%Y-%m-%d')
+    begin_ts = time.mktime(date_begin.timetuple())
+    end_ts = time.mktime(date_end.timetuple())
+    if begin_ts < now_ts < end_ts:
+        announcement_text_list = announcement[0]['content']
+        insert_line_announcement_log(source_id, now_ts)
+        return announcement_text_list
+    else:
+        return None
 
 
 def make_reply(msg_info, robot_settings, reply_token=None):
