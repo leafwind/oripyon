@@ -339,10 +339,10 @@ def handle_text_message(event):
     # chat(line_bot_api, event.reply_token, source_id, event.msg.text, log_filename)
 
 
-def get_announcement(source_id):
+def get_announcement(msg_info):
     # common reply 塞公告
     check_or_create_table_line_announcement_log()
-    max_ts = query_line_announcement_log(source_id)
+    max_ts = query_line_announcement_log(msg_info.source_id)
     now_ts = int(time.time())
     announcement_file = os.path.join('./announcement.json')
     if now_ts//86400 == max_ts//86400:
@@ -364,8 +364,9 @@ def get_announcement(source_id):
     end_ts = time.mktime(date_end.timetuple())
     if begin_ts < now_ts < end_ts:
         announcement_text_list = announcement[0]['content']
+        announcement_text_list = [t.format(msg_info.user_name) for t in announcement_text_list]
         logging.info(f'sending announcement: {announcement_text_list}')
-        insert_line_announcement_log(source_id, now_ts)
+        insert_line_announcement_log(msg_info.source_id, now_ts)
         return announcement_text_list
     else:
         logging.debug(f'not in the desired date {date_begin} - {date_end}, skip')
@@ -382,7 +383,7 @@ def make_reply(msg_info, robot_settings, reply_token=None):
 
     # common reply
     reply = common_reply(msg_info, robot_settings)
-    announcement_text_list = get_announcement(msg_info.source_id)
+    announcement_text_list = get_announcement(msg_info)
     if announcement_text_list:
         for text in announcement_text_list:
             reply.append(TextSendMessage(text=text))
