@@ -128,7 +128,7 @@ def echo(message):
     else:
         logging.info(f'message.chat.id: {message.chat.id}, text: {text}')
         chat_id = message.chat.id
-        telegram_bot.sendMessage(chat_id=chat_id, text=text)
+        telegram_bot.sendMessage(chat_id=chat_id, text=json.dumps(text.decode("utf-8")))
 
 
 @application.route("/telegram_callback", methods=['POST'])
