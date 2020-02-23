@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import os
+import ssl
 import time
 import uuid
 
@@ -399,3 +400,12 @@ def make_reply(msg_info, robot_settings, reply_token=None):
     if reply:
         line_bot_api.reply_message(reply_token, reply)
         return
+
+
+if __name__ == '__main__':
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    ssl_context.load_cert_chain(
+        '/etc/ssl/private/letsencrypt-domain.pem',
+        '/etc/ssl/private/letsencrypt-domain.key'
+    )
+    application.run(ssl_context=ssl_context, port=5000)

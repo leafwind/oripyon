@@ -13,3 +13,4 @@ jieba
 gspread
 oauth2client
 cachetools
+gunicorn
