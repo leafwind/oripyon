@@ -29,15 +29,18 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 - `CHANNEL_SECRET = ''`
 - `CHANNEL_ACCESS_TOKEN = ''`
 
-# Development
+# setup env
 
 - build environment
   - python 3.7 and requirements: `./scripts/build_venv.sh`
 - init and update submodule: `git submodule update --init --recursive`
+- setup supervisord
+  - `sudo cp supervisord.conf.template /etc/supervisor/conf.d/line_bot.conf`
+  - `sudo supervisorctl update`
 
-## Restart uwsgi to apply code change
+## Restart supervisord to apply code change
 
-`sudo systemctl restart line_bot_uwsgi`
+`sudo supervisorctl restart line_bot`
 
 ## Debug
 
