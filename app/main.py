@@ -110,7 +110,7 @@ def parse_cmd_text(text):
     cmd = None
     if b'/' in text:
         try:
-            i = text.index(' ')
+            i = text.index(b' ')
         except ValueError as e:
             return text, None
         cmd = text[:i]
