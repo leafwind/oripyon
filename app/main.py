@@ -40,7 +40,7 @@ if os.path.exists(USER_INFO_MAP_FILE):
         user_info = json.load(_f)
 
 with open("line_auth_key.yml", 'r') as stream:
-    data = yaml.load(stream)
+    data = yaml.safe_load(stream)
     CHANNEL_ACCESS_TOKEN = data['CHANNEL_ACCESS_TOKEN']
     CHANNEL_SECRET = data['CHANNEL_SECRET']
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
