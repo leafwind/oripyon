@@ -13,3 +13,4 @@ oauth2client
 cachetools
 gunicorn
 gevent
+python-telegram-bot

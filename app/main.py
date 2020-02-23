@@ -8,6 +8,7 @@ import uuid
 
 import cachetools.func
 import gspread
+import telegram
 import yaml
 from flask import Flask, request, abort, render_template
 from linebot import WebhookHandler
@@ -46,6 +47,11 @@ with open("line_auth_key.yml", 'r') as stream:
     CHANNEL_SECRET = data['CHANNEL_SECRET']
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
+
+with open("telegram_token.yml", 'r') as stream:
+    data = yaml.safe_load(stream)
+    TELEGRAM_TOKEN = data['TELEGRAM_TOKEN']
+telegram_bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
 
 def write_temp_user_mapping(uid, user_name):
@@ -96,6 +102,46 @@ def callback():
         abort(400)
 
     return 'OK'
+
+
+def parse_cmd_text(text):
+    # Telegram understands UTF-8, so encode text for unicode compatibility
+    text = text.encode('utf-8')
+    cmd = None
+    if '/' in text:
+        try:
+            i = text.index(' ')
+        except ValueError as e:
+            return text, None
+        cmd = text[:i]
+        text = text[i + 1:]
+    return cmd, text
+
+
+def echo(message):
+    """
+    repeat the same message back (echo)
+    """
+    cmd, text = parse_cmd_text(message.text)
+    if text is None or len(text) == 0:
+        pass
+    else:
+        chat_id = message.chat.id
+        telegram_bot.sendMessage(chat_id=chat_id, text=text)
+
+
+@application.route("/telegram_callback", methods=['POST'])
+def callback():
+    if request.method == "POST":
+        update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
+        handle_message(update.message)
+    return 'OK'
+
+
+def handle_message(message):
+    text = message.text
+    if '/echo' in text:
+        echo(message)
 
 
 @handler.default()
