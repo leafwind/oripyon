@@ -108,7 +108,7 @@ def parse_cmd_text(text):
     # Telegram understands UTF-8, so encode text for unicode compatibility
     text = text.encode('utf-8')
     cmd = None
-    if '/' in text:
+    if b'/' in text:
         try:
             i = text.index(' ')
         except ValueError as e:
