@@ -17,6 +17,8 @@ with open(GOOGLE_API_KEY_PATH, 'r') as _f:
 # https://console.developers.google.com/apis/credentials?project=phrasal-ability-235508
 # https://developers.google.com/custom-search/v1/using_rest
 # https://developers.google.com/custom-search/v1/cse/list
+
+
 def get_google_custom_search_result(query_string, num=10, safe='active', search_type='image'):
     global API_KEY
     api_url = 'https://www.googleapis.com/customsearch/v1'
