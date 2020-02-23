@@ -1,2 +1,2 @@
 CHANNEL_SECRET: your_secret
-                        CHANNEL_ACCESS_TOKEN: your_access_token
+CHANNEL_ACCESS_TOKEN: your_access_token
