@@ -131,7 +131,7 @@ def echo(message):
 
 
 @application.route("/telegram_callback", methods=['POST'])
-def callback():
+def telegram_callback():
     if request.method == "POST":
         update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
         handle_message(update.message)
