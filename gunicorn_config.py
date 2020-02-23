@@ -1,7 +1,7 @@
 import multiprocessing
 debug = True
 loglevel = 'info'
-bind = '0.0.0.0:8787'
+bind = '0.0.0.0:8443'
 pidfile = 'gunicorn.pid'
 workers = multiprocessing.cpu_count() * 2 + 1
 worker_class = 'gevent'

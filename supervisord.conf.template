@@ -5,11 +5,3 @@ stdout_logfile=/var/log/line_bot.out
 stderr_logfile=/var/log/line_bot.err
 autostart=true
 autorestart=true
-
-[program:telegram_bot]
-directory=/home/leafbot/git/line_bot
-command=/home/leafbot/git/line_bot/venv/bin/gunicorn -c gunicorn_config.py app.main:application
-stdout_logfile=/var/log/telegram_bot.out
-stderr_logfile=/var/log/telegram_bot.err
-autostart=true
-autorestart=true
