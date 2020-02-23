@@ -85,3 +85,13 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 - [Emoji supported by Line bot](https://developers.line.biz/media/messaging-api/emoji-list.pdf)
 - [Sticker supported by Line bot](https://developers.line.biz/media/messaging-api/messages/sticker_list.pdf)
 - 匯率查詢來自[全球即時匯率API](https://tw.rter.info/howto_currencyapi.php)
+
+## load test with siege
+
+```
+brew install openssl
+brew link --force openssl
+brew install siege
+ln -s /usr/local/Cellar/siege/4.0.5/bin/siege /usr/local/bin/siege
+siege https://ori.leafwind.tw:8787 -t1m
+```
