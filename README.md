@@ -44,7 +44,7 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 
 ## Debug
 
-`tail -f /var/log/uwsgi/uwsgi.log -n 100`
+`tail -f /var/log/line_bot.err -n 100`
 
 ## 機器人指令表
 
