@@ -27,11 +27,11 @@ if os.path.exists(USER_INFO_MAP_FILE):
     with open(USER_INFO_MAP_FILE, 'r') as _f:
         cache_user_info = json.load(_f)
 
-with open("line_auth_key.yml", 'r') as stream:
+with open("bot_token.yml", 'r') as stream:
     data = yaml.safe_load(stream)
-    CHANNEL_ACCESS_TOKEN = data['CHANNEL_ACCESS_TOKEN']
+    LINE_CHANNEL_ACCESS_TOKEN = data['LINE_CHANNEL_ACCESS_TOKEN']
 
-line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
+line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 
 
 @cachetools.func.ttl_cache(ttl=86400)

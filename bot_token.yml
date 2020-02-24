@@ -1,0 +1,7 @@
+LINE_CHANNEL_SECRET: your_secret
+LINE_CHANNEL_ACCESS_TOKEN: your_access_token
+TELEGRAM_TOKEN: your_token
+DISCORD_TOKEN: your_token
+GOOGLE_API_KEY: your_api_key
+TWITCH_TOKEN: your_token
+LINE_NOTIFY_SECRET: your_secret

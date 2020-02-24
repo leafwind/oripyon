@@ -19,14 +19,11 @@ logging.getLogger("oauth2client").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
 
 
-with open("line_auth_key.yml", 'r') as stream:
+with open("bot_token.yml", 'r') as stream:
     data = yaml.safe_load(stream)
-    CHANNEL_SECRET = data['CHANNEL_SECRET']
-line_web_hook_handler = WebhookHandler(CHANNEL_SECRET)
-
-with open("telegram_token.yml", 'r') as stream:
-    data = yaml.safe_load(stream)
+    LINE_CHANNEL_SECRET = data['LINE_CHANNEL_SECRET']
     TELEGRAM_TOKEN = data['TELEGRAM_TOKEN']
+line_web_hook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
 telegram_bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
 

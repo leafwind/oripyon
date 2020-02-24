@@ -28,8 +28,8 @@ Go to [Business Center](https://business.line.me/zh-hant/)
 
 - Account List -> Your Accounts -> Messaging API -> LINE Developers
 - Fill `line_auth_key.yml` with secret and access token
-- `CHANNEL_SECRET = ''`
-- `CHANNEL_ACCESS_TOKEN = ''`
+- `LINE_CHANNEL_SECRET = ''`
+- `LINE_CHANNEL_ACCESS_TOKEN = ''`
 
 # setup env
 

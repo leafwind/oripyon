@@ -10,7 +10,7 @@ import requests
 
 logging.getLogger().setLevel(logging.INFO)
 
-with open("./secret.yml", 'r') as stream:
+with open("bot_token.yml", 'r') as stream:
     _data = yaml.safe_load(stream)
     TWITCH_TOKEN = _data['TWITCH_TOKEN']
     LINE_NOTIFY_SECRET = _data['LINE_NOTIFY_SECRET']

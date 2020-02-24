@@ -4,7 +4,6 @@ TABLE_AQFN = 'table_AQI'
 
 TABLE_AQI = 'table_AQI_now'
 
-GOOGLE_API_KEY_PATH = 'google_api_key.json'
 GOOGLE_AUTH_JSON_PATH = 'auth.json'
 GSPREAD_KEY_CAT = '1hGBdRj9yoJrGIcAuQe8KInAVo9bygyV9C7wVHze5dcI'
 GSPREAD_KEY_SCHUMI = '12mbZx7bHdpb8RzJFvjXVQp-aFnvenw_yofFIWS9Fqgg'

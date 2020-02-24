@@ -1,15 +1,13 @@
-import json
 import logging
-import random
 import os
+import random
 
 import requests
+import yaml
 
-from constants import GOOGLE_API_KEY_PATH
-
-with open(GOOGLE_API_KEY_PATH, 'r') as _f:
-    data = json.load(_f)
-    API_KEY = data['API_KEY']
+with open("bot_token.yml", 'r') as stream:
+    data = yaml.GOOGLE_API_KEY(stream)
+    GOOGLE_API_KEY = data['GOOGLE_API_KEY']
 
 # CSE setting
 # https://cse.google.com/cse/setup/basic?cx=010322789978293582519:tmzyqrdufxq
@@ -20,9 +18,9 @@ with open(GOOGLE_API_KEY_PATH, 'r') as _f:
 
 
 def get_google_custom_search_result(query_string, num=10, safe='active', search_type='image'):
-    global API_KEY
+    global GOOGLE_API_KEY
     api_url = 'https://www.googleapis.com/customsearch/v1'
-    api_url += f'?key={API_KEY}'
+    api_url += f'?key={GOOGLE_API_KEY}'
     api_url += f'&num={num}'
     api_url += f'&safe={safe}'
     api_url += f'&searchType={search_type}'
