@@ -55,6 +55,20 @@ def get_vip_groups_users():
     return vip_groups, vip_users
 
 
+@cachetools.func.ttl_cache(ttl=86400)
+def get_cached_user_name(source_id, uid):
+    user_name = None
+    try:
+        user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
+    except LineBotApiError:
+        pass  # try room member profile
+    try:
+        user_name = line_bot_api.get_room_member_profile(source_id, uid).display_name
+    except LineBotApiError as e:
+        logging.debug('LineBotApiError: %s, source_id: %s, uid: %s', e, source_id, uid)
+    return user_name
+
+
 class MessageInfo:
     def __init__(self, source_type, source_id, uid, user_name, msg):
         self.source_type = source_type
@@ -161,14 +175,7 @@ def add_handlers(line_web_hook_handler):
         uid = event.source.user_id
         user_name = cache_user_info.get(uid, None)
         if not user_name:
-            try:
-                user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            except LineBotApiError:
-                pass  # try room member profile
-            try:
-                user_name = line_bot_api.get_room_member_profile(source_id, uid).display_name
-            except LineBotApiError as e:
-                logging.debug('LineBotApiError: %s, source_id: %s, uid: %s', e, source_id, uid)
+            user_name = get_cached_user_name(source_id, uid)
         logging.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name}：{event.message.text}")
 
@@ -227,10 +234,7 @@ def add_handlers(line_web_hook_handler):
         uid = event.source.user_id
         user_name = cache_user_info.get(uid, None)
         if not user_name:
-            try:
-                user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            except LineBotApiError as e:
-                logging.debug('LineBotApiError: %s', e)
+            user_name = get_cached_user_name(source_id, uid)
         logging.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (image) saved: {file_path}")
 
@@ -244,20 +248,17 @@ def add_handlers(line_web_hook_handler):
             source_id = event.source.user_id
         else:
             raise ValueError
-        # pid = event.message.package_id
-        # sid = event.message.sticker_id
+        pid = event.message.package_id
+        sid = event.message.sticker_id
         uid = event.source.user_id
         user_name = cache_user_info.get(uid, None)
         if not user_name:
-            try:
-                user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            except LineBotApiError as e:
-                logging.debug('LineBotApiError: %s', e)
-        # sticker_url = f'https://stickershop.line-scdn.net/stickershop/v1/sticker/{sid}/android/sticker.png'
-        # logging.info(
-        #     f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}"
-        #     f"{user_name}({uid}) (sticker) ({pid}, {sid}), url: {sticker_url}"
-        # )
+            user_name = get_cached_user_name(source_id, uid)
+        sticker_url = f'https://stickershop.line-scdn.net/stickershop/v1/sticker/{sid}/android/sticker.png'
+        logging.info(
+            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}"
+            f"{user_name}({uid}) (sticker) ({pid}, {sid}), url: {sticker_url}"
+        )
 
     @line_web_hook_handler.add(MemberLeftEvent)
     def handle_member_leave_event(event):
@@ -340,10 +341,7 @@ def add_handlers(line_web_hook_handler):
         uid = event.source.user_id
         user_name = cache_user_info.get(uid, None)
         if not user_name:
-            try:
-                user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-            except LineBotApiError as e:
-                logging.debug('LineBotApiError: %s', e)
+            user_name = get_cached_user_name(source_id, uid)
         logging.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} "
             f"{user_name}：(default handler){event.message}")
