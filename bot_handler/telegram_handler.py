@@ -1,28 +1,39 @@
 import logging
 
-from telegram.ext import MessageHandler, Filters, CommandHandler
+from telegram import Update
+from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
 
 from app import dice
 
 
-def bot_help(update):
+def bot_help(update: Update, context: CallbackContext):
+    _args = context.args
+    _jobqueue = context.jobqueue
     update.message.reply_text('Help!')
 
 
-def weather(update):
+def weather(update: Update, context: CallbackContext):
+    _args = context.args
+    _jobqueue = context.jobqueue
     update.message.reply_text('weather!')
 
 
-def tarot(update):
+def tarot(update: Update, context: CallbackContext):
+    _args = context.args
+    _jobqueue = context.jobqueue
     update.message.reply_text('tarot!')
 
 
-def fortune(update):
+def fortune(update: Update, context: CallbackContext):
+    _args = context.args
+    _jobqueue = context.jobqueue
     reply = dice.fortune(None, None)
     update.message.reply_text(reply)
 
 
-def make_reply(update):
+def make_reply(update: Update, context: CallbackContext):
+    _args = context.args
+    _jobqueue = context.jobqueue
     text = update.message.text
     if 'ㄆㄆ' in text:
         reply = '我知道！戳！'
