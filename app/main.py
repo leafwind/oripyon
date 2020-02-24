@@ -60,6 +60,7 @@ def line_callback():
 def telegram_callback():
     if request.method == "POST":
         update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
+        logging(update.__dict__)
         handle_message(telegram_bot, update.message)
     return 'OK'
 
