@@ -18,7 +18,13 @@ def weather(update: Update, context: CallbackContext):
 
 def tarot(update: Update, context: CallbackContext):
     _args = context.args
-    update.message.reply_text('tarot!')
+    card = dice.draw_tarot()
+    update.message.reply_photo(
+        photo=card['url'],
+        caption=card['nameCN'],
+        disable_notification=True,
+        reply_to_message_id=update.message.message_id,
+    )
 
 
 def fortune(update: Update, context: CallbackContext):
@@ -37,8 +43,8 @@ def make_reply(update: Update, context: CallbackContext):
     elif '我看了' in text:
         update.message.reply_sticker(
             sticker='CAACAgUAAxkBAAMrXlNbUucnbiBebclIoM_qSMb52-sAAjoBAALvY54jySoLvI3DgmEYBA',
-            reply_to_message_id=update.message.message_id,
             disable_notification=True,
+            reply_to_message_id=update.message.message_id,
         )
 
 

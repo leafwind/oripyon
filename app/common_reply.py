@@ -4,7 +4,7 @@ from linebot.models import (
     TextSendMessage, ImageSendMessage, AudioSendMessage
 )
 
-from app.dice import fortune, tarot, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat, find_schumi, \
+from app.dice import fortune, tarot_line_reply, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat, find_schumi, \
     touch_schumi, draw_sinoalice
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
     bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
@@ -62,7 +62,7 @@ pattern_mapping_common = [
     {
         'cmd': tarot_pattern,
         'type': 'search',
-        'function': tarot,
+        'function': tarot_line_reply,
         'multi_type_output': True
     },
     {
