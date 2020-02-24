@@ -20,13 +20,17 @@ def echo(telegram_bot, message):
     """
     repeat the same message back (echo)
     """
+    chat_id = message.chat.id
     _cmd, text = parse_cmd_text(message.text)
     if text is None or len(text) == 0:
         pass
+    elif 'ㄆㄆ' in text:
+        reply = '我知道！戳！'
+        logging.info(f'reply: {reply}')
+        telegram_bot.sendMessage(chat_id=chat_id, text=reply)
     else:
         # logging.info(f'message.chat.id: {message.chat.id}, text: {text.decode("utf-8")}')
         logging.info(f'message.chat.id: {message.chat.id}, text: {text}')
-        chat_id = message.chat.id
         # reply = json.dumps(text.decode('utf-8'), ensure_ascii=False)
         reply = json.dumps(text, ensure_ascii=False)
         reply = reply.strip('\"')
