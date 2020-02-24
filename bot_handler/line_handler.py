@@ -138,6 +138,7 @@ def get_announcement(msg_info):
         return None
 
 
+# put all types of handlers into line web hook handler
 def add_handlers(line_web_hook_handler):
     @line_web_hook_handler.add(LeaveEvent)
     def handle_leave_event(event):
