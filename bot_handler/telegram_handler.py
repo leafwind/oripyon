@@ -33,7 +33,7 @@ def echo(telegram_bot, message):
 
 def handle_message(telegram_bot, message):
     chat_id = message.chat.id
-    logging.info(f'chat.id: {chat_id}, text: {message.text}')
+    logging.info(f'chat_id: {chat_id}, text: {message.text}')
     if message.text is None:
         return
     text = message.text
@@ -52,4 +52,3 @@ def handle_message(telegram_bot, message):
         )
     else:
         pass
-
