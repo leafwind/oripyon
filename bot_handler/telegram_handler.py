@@ -26,7 +26,7 @@ def echo(telegram_bot, message):
     else:
         logging.info(f'message.chat.id: {message.chat.id}, text: {text.decode("utf-8")}')
         chat_id = message.chat.id
-        reply = json.dumps(text.decode('utf-8'), ensure_ascii=False).encode('utf-8')
+        reply = json.dumps(text.decode('utf-8'), ensure_ascii=False)
         logging.info(f'reply: {reply}')
         telegram_bot.sendMessage(chat_id=chat_id, text=reply)
 
