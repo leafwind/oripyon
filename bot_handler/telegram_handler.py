@@ -8,32 +8,27 @@ from app import dice
 
 def bot_help(update: Update, context: CallbackContext):
     _args = context.args
-    _jobqueue = context.jobqueue
     update.message.reply_text('Help!')
 
 
 def weather(update: Update, context: CallbackContext):
     _args = context.args
-    _jobqueue = context.jobqueue
     update.message.reply_text('weather!')
 
 
 def tarot(update: Update, context: CallbackContext):
     _args = context.args
-    _jobqueue = context.jobqueue
     update.message.reply_text('tarot!')
 
 
 def fortune(update: Update, context: CallbackContext):
     _args = context.args
-    _jobqueue = context.jobqueue
     reply = dice.fortune(None, None)
     update.message.reply_text(reply)
 
 
 def make_reply(update: Update, context: CallbackContext):
     _args = context.args
-    _jobqueue = context.jobqueue
     text = update.message.text
     if 'ㄆㄆ' in text:
         reply = '我知道！戳！'
@@ -48,8 +43,8 @@ def make_reply(update: Update, context: CallbackContext):
 
 
 def add_handlers(dispatcher):
-    dispatcher.add_handler(MessageHandler(Filters.text, make_reply))
-    dispatcher.add_handler(CommandHandler("help", bot_help))
-    dispatcher.add_handler(CommandHandler("weather", weather))
-    dispatcher.add_handler(CommandHandler("tarot", tarot))
-    dispatcher.add_handler(CommandHandler("fortune", fortune))
+    dispatcher.add_handler(CommandHandler("help", bot_help, pass_args=True))
+    dispatcher.add_handler(CommandHandler("weather", weather, pass_args=True))
+    dispatcher.add_handler(CommandHandler("tarot", tarot, pass_args=True))
+    dispatcher.add_handler(CommandHandler("fortune", fortune, pass_args=True))
+    dispatcher.add_handler(MessageHandler(Filters.text, make_reply, pass_args=True))
