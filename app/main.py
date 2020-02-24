@@ -58,6 +58,7 @@ def line_callback():
 # telegram callback endpoint
 @application.route("/telegram_callback", methods=['POST'])
 def telegram_callback():
+    logging.info('telegram_callback')
     if request.method == "POST":
         update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
         logging.info(f'chat_id: {update.message.chat.id}, text: {update.message.text}')
