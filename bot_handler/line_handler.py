@@ -211,32 +211,32 @@ def add_handlers(line_web_hook_handler):
             source_id = event.source.user_id
         else:
             raise ValueError
-        uid = event.source.user_id
-        message_content = line_bot_api.get_message_content(event.message.id)
-        now = int(time.time())
-        date = datetime.datetime.utcfromtimestamp(now)
-        date_str = date.strftime('%Y%m%d')
-        time_str = date.strftime('%H%M%S')
-        filename = uuid.uuid4().hex[:3]
-        dir_path = os.path.join('/var', 'line_image', date_str, source_id, uid)
-        if not os.path.isdir(dir_path):
-            os.makedirs(dir_path)
-        if event.message.type == 'image':
-            extension = 'jpg'
-        elif event.message.type == 'audio':
-            extension = 'aac'
-        else:
-            raise TypeError
-        file_path = os.path.join(dir_path, date_str + time_str + '_' + filename + '.' + extension)
-        with open(file_path, 'wb') as fd:
-            for chunk in message_content.iter_content():
-                fd.write(chunk)
-        uid = event.source.user_id
-        user_name = cache_user_info.get(uid, None)
-        if not user_name:
-            user_name = get_cached_user_name(source_id, uid)
-        logging.info(
-            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (image) saved: {file_path}")
+        # uid = event.source.user_id
+        # message_content = line_bot_api.get_message_content(event.message.id)
+        # now = int(time.time())
+        # date = datetime.datetime.utcfromtimestamp(now)
+        # date_str = date.strftime('%Y%m%d')
+        # time_str = date.strftime('%H%M%S')
+        # filename = uuid.uuid4().hex[:3]
+        # dir_path = os.path.join('/var', 'line_image', date_str, source_id, uid)
+        # if not os.path.isdir(dir_path):
+        #     os.makedirs(dir_path)
+        # if event.message.type == 'image':
+        #     extension = 'jpg'
+        # elif event.message.type == 'audio':
+        #     extension = 'aac'
+        # else:
+        #     raise TypeError
+        # file_path = os.path.join(dir_path, date_str + time_str + '_' + filename + '.' + extension)
+        # with open(file_path, 'wb') as fd:
+        #     for chunk in message_content.iter_content():
+        #         fd.write(chunk)
+        # uid = event.source.user_id
+        # user_name = cache_user_info.get(uid, None)
+        # if not user_name:
+        #     user_name = get_cached_user_name(source_id, uid)
+        # logging.info(
+        #     f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (image) saved: {file_path}")
 
     @line_web_hook_handler.add(MessageEvent, message=StickerMessage)
     def handle_sticker_message(event):
