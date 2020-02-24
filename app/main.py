@@ -25,7 +25,7 @@ with open("bot_token.yml", 'r') as stream:
 line_web_hook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
 telegram_bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
-dispatcher = Dispatcher(telegram_bot, None)
+dispatcher = Dispatcher(telegram_bot, None, use_context=True)
 
 # index endpoint
 @application.route('/', methods=['GET', 'POST'])
