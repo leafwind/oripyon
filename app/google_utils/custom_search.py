@@ -6,7 +6,7 @@ import requests
 import yaml
 
 with open("bot_token.yml", 'r') as stream:
-    data = yaml.GOOGLE_API_KEY(stream)
+    data = yaml.safe_load(stream)
     GOOGLE_API_KEY = data['GOOGLE_API_KEY']
 
 # CSE setting
