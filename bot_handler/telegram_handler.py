@@ -24,6 +24,21 @@ def echo(telegram_bot, message):
     _cmd, text = parse_cmd_text(message.text)
     if text is None or len(text) == 0:
         pass
+    else:
+        reply = json.dumps(text, ensure_ascii=False)
+        reply = reply.strip('\"')
+        logging.info(f'reply: {reply}')
+        telegram_bot.sendMessage(chat_id=chat_id, text=reply)
+
+
+def handle_message(telegram_bot, message):
+    chat_id = message.chat.id
+    logging.info(f'chat.id: {chat_id}, text: {message.text}')
+    if message.text is None:
+        return
+    text = message.text
+    if '/echo' in text:
+        echo(telegram_bot, message)
     elif 'ㄆㄆ' in text:
         reply = '我知道！戳！'
         logging.info(f'reply: {reply}')
@@ -36,18 +51,5 @@ def echo(telegram_bot, message):
             disable_notification=True,
         )
     else:
-        # logging.info(f'message.chat.id: {message.chat.id}, text: {text.decode("utf-8")}')
-        logging.info(f'message.chat.id: {message.chat.id}, text: {text}')
-        # reply = json.dumps(text.decode('utf-8'), ensure_ascii=False)
-        reply = json.dumps(text, ensure_ascii=False)
-        reply = reply.strip('\"')
-        logging.info(f'reply: {reply}')
-        telegram_bot.sendMessage(chat_id=chat_id, text=reply)
+        pass
 
-
-def handle_message(telegram_bot, message):
-    if message.text is None:
-        return
-    text = message.text
-    if '/echo' in text:
-        echo(telegram_bot, message)
