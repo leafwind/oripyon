@@ -61,7 +61,7 @@ def telegram_callback():
         update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
         # Update dispatcher process that handler to process this message
         dispatcher.process_update(update)
-        logging.info(f'chat_id: {update.message.chat.id}, text: {update.message.text}')
+        logging.info(f'chat_id: {update.message.chat.id}, message: {update.message.__dict__}')
         if update.message.sticker is not None:
             logging.info(f'sticker file_id: {update.message.sticker.file_id}')
     return 'OK'
