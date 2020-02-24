@@ -70,12 +70,6 @@ class RobotSettings:
         self.vip_users = vip_users
 
 
-def write_temp_user_mapping(uid, user_name):
-    temp_map_file = os.path.join('line-user-info', 'users_temp.txt')
-    with open(temp_map_file, 'a') as f:
-        f.write(f'\"{uid}\": \"{user_name}\",\n')
-
-
 def make_reply(msg_info, robot_settings, reply_token=None):
     # private reply, only
     if msg_info.source_type == 'user':
@@ -169,12 +163,10 @@ def add_handlers(line_web_hook_handler):
         if not user_name:
             try:
                 user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-                write_temp_user_mapping(uid, user_name)
             except LineBotApiError:
                 pass  # try room member profile
             try:
                 user_name = line_bot_api.get_room_member_profile(source_id, uid).display_name
-                write_temp_user_mapping(uid, user_name)
             except LineBotApiError as e:
                 logging.debug('LineBotApiError: %s, source_id: %s, uid: %s', e, source_id, uid)
         logging.info(
@@ -237,7 +229,6 @@ def add_handlers(line_web_hook_handler):
         if not user_name:
             try:
                 user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-                write_temp_user_mapping(uid, user_name)
             except LineBotApiError as e:
                 logging.debug('LineBotApiError: %s', e)
         logging.info(
@@ -260,7 +251,6 @@ def add_handlers(line_web_hook_handler):
         if not user_name:
             try:
                 user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-                write_temp_user_mapping(uid, user_name)
             except LineBotApiError as e:
                 logging.debug('LineBotApiError: %s', e)
         # sticker_url = f'https://stickershop.line-scdn.net/stickershop/v1/sticker/{sid}/android/sticker.png'
@@ -352,7 +342,6 @@ def add_handlers(line_web_hook_handler):
         if not user_name:
             try:
                 user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
-                write_temp_user_mapping(uid, user_name)
             except LineBotApiError as e:
                 logging.debug('LineBotApiError: %s', e)
         logging.info(
