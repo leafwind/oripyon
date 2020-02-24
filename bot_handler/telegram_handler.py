@@ -28,8 +28,13 @@ def echo(telegram_bot, message):
         reply = '我知道！戳！'
         logging.info(f'reply: {reply}')
         telegram_bot.sendMessage(chat_id=chat_id, text=reply)
-    # elif '我看了' in text:
-    #     telegram_bot.send_sticker(chat_id=chat_id, sticker=, reply_to_message_id=message.message_id)
+    elif '我看了' in text:
+        telegram_bot.send_sticker(
+            chat_id=chat_id,
+            sticker='CAACAgUAAxkBAAMrXlNbUucnbiBebclIoM_qSMb52-sAAjoBAALvY54jySoLvI3DgmEYBA',
+            reply_to_message_id=message.message_id,
+            disable_notification=True,
+        )
     else:
         # logging.info(f'message.chat.id: {message.chat.id}, text: {text.decode("utf-8")}')
         logging.info(f'message.chat.id: {message.chat.id}, text: {text}')
