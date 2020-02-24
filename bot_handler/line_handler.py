@@ -240,25 +240,26 @@ def add_handlers(line_web_hook_handler):
 
     @line_web_hook_handler.add(MessageEvent, message=StickerMessage)
     def handle_sticker_message(event):
-        if event.source.type == 'room':
-            source_id = event.source.room_id
-        elif event.source.type == 'group':
-            source_id = event.source.group_id
-        elif event.source.type == 'user':
-            source_id = event.source.user_id
-        else:
-            raise ValueError
-        pid = event.message.package_id
-        sid = event.message.sticker_id
-        uid = event.source.user_id
-        user_name = cache_user_info.get(uid, None)
-        if not user_name:
-            user_name = get_cached_user_name(source_id, uid)
-        sticker_url = f'https://stickershop.line-scdn.net/stickershop/v1/sticker/{sid}/android/sticker.png'
-        logging.info(
-            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}"
-            f"{user_name}({uid}) (sticker) ({pid}, {sid}), url: {sticker_url}"
-        )
+        # if event.source.type == 'room':
+        #     source_id = event.source.room_id
+        # elif event.source.type == 'group':
+        #     source_id = event.source.group_id
+        # elif event.source.type == 'user':
+        #     source_id = event.source.user_id
+        # else:
+        #     raise ValueError
+        # pid = event.message.package_id
+        # sid = event.message.sticker_id
+        # uid = event.source.user_id
+        # user_name = cache_user_info.get(uid, None)
+        # if not user_name:
+        #     user_name = get_cached_user_name(source_id, uid)
+        # sticker_url = f'https://stickershop.line-scdn.net/stickershop/v1/sticker/{sid}/android/sticker.png'
+        # logging.info(
+        #     f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} "
+        #     f"{user_name}({uid}) (sticker) ({pid}, {sid}), url: {sticker_url}"
+        # )
+        pass
 
     @line_web_hook_handler.add(MemberLeftEvent)
     def handle_member_leave_event(event):

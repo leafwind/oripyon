@@ -8,8 +8,9 @@ from linebot import WebhookHandler
 from linebot.exceptions import (
     InvalidSignatureError
 )
+from telegram.ext import Dispatcher
 
-from bot_handler.line_handler import add_handlers
+from bot_handler import line_handler, telegram_handler
 from bot_handler.telegram_handler import handle_message
 
 logging.getLogger().setLevel(logging.INFO)
@@ -18,7 +19,6 @@ logging.getLogger("requests.packages.urllib3").setLevel(logging.WARNING)
 logging.getLogger("oauth2client").setLevel(logging.WARNING)
 application = Flask(__name__, template_folder='templates')
 
-
 with open("bot_token.yml", 'r') as stream:
     data = yaml.safe_load(stream)
     LINE_CHANNEL_SECRET = data['LINE_CHANNEL_SECRET']
@@ -26,6 +26,7 @@ with open("bot_token.yml", 'r') as stream:
 line_web_hook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
 telegram_bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
+dispatcher = Dispatcher(telegram_bot, None)
 
 # index endpoint
 @application.route('/', methods=['GET', 'POST'])
@@ -45,7 +46,7 @@ def line_callback():
     # handle Web hook body
     try:
         # logging.info('body: %s', body)
-        add_handlers(line_web_hook_handler)
+        line_handler.add_handlers(line_web_hook_handler)
         line_web_hook_handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
@@ -56,8 +57,11 @@ def line_callback():
 @application.route("/telegram_callback", methods=['POST'])
 def telegram_callback():
     logging.info('telegram_callback')
+    telegram_handler.add_handlers(dispatcher)
     if request.method == "POST":
         update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
+        # Update dispatcher process that handler to process this message
+        dispatcher.process_update(update)
         logging.info(f'chat_id: {update.message.chat.id}, text: {update.message.text}')
         if update.message.sticker is not None:
             logging.info(f'sticker file_id: {update.message.sticker.file_id}')

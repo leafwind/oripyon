@@ -1,53 +1,44 @@
-import json
 import logging
 
+from telegram.ext import MessageHandler, Filters, CommandHandler
 
-def parse_cmd_text(text):
-    # Telegram understands UTF-8, so encode text for unicode compatibility
-    # text = text.encode('utf-8')
-    cmd = None
-    if '/' in text:
-        try:
-            i = text.index(' ')
-        except ValueError:
-            return text, None
-        cmd = text[:i]
-        text = text[i + 1:]
-    return cmd, text
+from app import dice
 
 
-def echo(telegram_bot, message):
-    """
-    repeat the same message back (echo)
-    """
-    chat_id = message.chat.id
-    _cmd, text = parse_cmd_text(message.text)
-    if text is None or len(text) == 0:
-        pass
-    else:
-        reply = json.dumps(text, ensure_ascii=False)
-        reply = reply.strip('\"')
-        logging.info(f'reply: {reply}')
-        telegram_bot.sendMessage(chat_id=chat_id, text=reply)
+def bot_help(update):
+    update.message.reply_text('Help!')
 
 
-def handle_message(telegram_bot, message):
-    chat_id = message.chat.id
-    if message.text is None:
-        return
-    text = message.text
-    if '/echo' in text:
-        echo(telegram_bot, message)
-    elif 'ㄆㄆ' in text:
+def weather(update):
+    update.message.reply_text('weather!')
+
+
+def tarot(update):
+    update.message.reply_text('tarot!')
+
+
+def fortune(update):
+    reply = dice.fortune(None, None)
+    update.message.reply_text(reply)
+
+
+def make_reply(update):
+    text = update.message.text
+    if 'ㄆㄆ' in text:
         reply = '我知道！戳！'
         logging.info(f'reply: {reply}')
-        telegram_bot.sendMessage(chat_id=chat_id, text=reply)
+        update.message.reply_text(reply)
     elif '我看了' in text:
-        telegram_bot.send_sticker(
-            chat_id=chat_id,
+        update.message.reply_sticker(
             sticker='CAACAgUAAxkBAAMrXlNbUucnbiBebclIoM_qSMb52-sAAjoBAALvY54jySoLvI3DgmEYBA',
-            reply_to_message_id=message.message_id,
+            reply_to_message_id=update.message.message_id,
             disable_notification=True,
         )
-    else:
-        pass
+
+
+def add_handlers(dispatcher):
+    dispatcher.add_handler(MessageHandler(Filters.text, make_reply))
+    dispatcher.add_handler(CommandHandler("help", bot_help))
+    dispatcher.add_handler(CommandHandler("weather", weather))
+    dispatcher.add_handler(CommandHandler("tarot", tarot))
+    dispatcher.add_handler(CommandHandler("fortune", fortune))
