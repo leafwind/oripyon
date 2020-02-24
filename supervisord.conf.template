@@ -1,6 +1,6 @@
 [program:oripyon]
-directory=/home/leafbot/git/line_bot
-command=/home/leafbot/git/line_bot/venv/bin/gunicorn -c gunicorn_config.py app.main:application
+directory=/home/leafbot/git/oripyon
+command=/home/leafbot/git/oripyon/venv/bin/gunicorn -c gunicorn_config.py app.main:application
 stdout_logfile=/var/log/oripyon.out
 stderr_logfile=/var/log/oripyon.err
 autostart=true
