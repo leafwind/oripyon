@@ -22,14 +22,9 @@ Bot Setting:
 - Auto response Y/N
 - Greetings Y/N
 
-## Get Channel Secret and Channel Access Token
+# setup tokens
 
-Go to [Business Center](https://business.line.me/zh-hant/)
-
-- Account List -> Your Accounts -> Messaging API -> LINE Developers
-- Fill `line_auth_key.yml` with secret and access token
-- `LINE_CHANNEL_SECRET = ''`
-- `LINE_CHANNEL_ACCESS_TOKEN = ''`
+- Fill `bot_token.yml` with secret and access token
 
 # setup env
 
