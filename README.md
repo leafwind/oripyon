@@ -1,8 +1,10 @@
-# Line Bot [![Build Status](https://travis-ci.org/leafwind/line_bot.svg?branch=master)](https://travis-ci.org/leafwind/line_bot) [![Coverage Status](https://coveralls.io/repos/github/leafwind/line_bot/badge.svg?branch=master)](https://coveralls.io/github/leafwind/line_bot?branch=master)
+# Oripyon Bot [![Build Status](https://travis-ci.org/leafwind/line_bot.svg?branch=master)](https://travis-ci.org/leafwind/line_bot) [![Coverage Status](https://coveralls.io/repos/github/leafwind/line_bot/badge.svg?branch=master)](https://coveralls.io/github/leafwind/line_bot?branch=master)
 
-Simple bot build by [line-bot-sdk-python](https://github.com/line/line-bot-sdk-python)
+Oripyon 使用 Gunicorn + Flask 對接各種 bot framework，並持續模組化，試圖達到維護一份程式碼就能同時服務不同平台的目的，目前以 web hook 為主，像是：
+- Line bot [line-bot-sdk-python](https://github.com/line/line-bot-sdk-python)
+- Telegram bot [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
 
-## Bot Administration
+## Line Bot Administration
 
 Go to [LINE@ MANAGER](https://admin-official.line.me/)
 
@@ -35,16 +37,16 @@ Go to [Business Center](https://business.line.me/zh-hant/)
   - python 3.7 and requirements: `./scripts/build_venv.sh`
 - init and update submodule: `git submodule update --init --recursive`
 - setup supervisord
-  - `sudo cp supervisord.conf.template /etc/supervisor/conf.d/line_bot.conf`
+  - `sudo cp supervisord.conf.template /etc/supervisor/conf.d/oripyon.conf`
   - `sudo supervisorctl update`
 
 ## Restart supervisord to apply code change
 
-`sudo supervisorctl restart line_bot`
+`sudo supervisorctl restart oripyon`
 
 ## Debug
 
-`tail -f /var/log/line_bot.err -n 100`
+`tail -f /var/log/oripyon.err -n 100`
 
 ## 機器人指令表
 

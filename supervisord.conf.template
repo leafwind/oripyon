@@ -1,7 +1,7 @@
-[program:line_bot]
+[program:oripyon]
 directory=/home/leafbot/git/line_bot
 command=/home/leafbot/git/line_bot/venv/bin/gunicorn -c gunicorn_config.py app.main:application
-stdout_logfile=/var/log/line_bot.out
-stderr_logfile=/var/log/line_bot.err
+stdout_logfile=/var/log/oripyon.out
+stderr_logfile=/var/log/oripyon.err
 autostart=true
 autorestart=true
