@@ -7,33 +7,33 @@ from app import dice
 
 
 def bot_help(update: Update, context: CallbackContext):
-    _args = context.args
-    _jobqueue = context.jobqueue
+    # _args = context.args
+    # _jobqueue = context.jobqueue
     update.message.reply_text('Help!')
 
 
 def weather(update: Update, context: CallbackContext):
-    _args = context.args
-    _jobqueue = context.jobqueue
+    # _args = context.args
+    # _jobqueue = context.jobqueue
     update.message.reply_text('weather!')
 
 
 def tarot(update: Update, context: CallbackContext):
-    _args = context.args
-    _jobqueue = context.jobqueue
+    # _args = context.args
+    # _jobqueue = context.jobqueue
     update.message.reply_text('tarot!')
 
 
 def fortune(update: Update, context: CallbackContext):
-    _args = context.args
-    _jobqueue = context.jobqueue
+    # _args = context.args
+    # _jobqueue = context.jobqueue
     reply = dice.fortune(None, None)
     update.message.reply_text(reply)
 
 
 def make_reply(update: Update, context: CallbackContext):
-    _args = context.args
-    _jobqueue = context.jobqueue
+    # _args = context.args
+    # _jobqueue = context.jobqueue
     text = update.message.text
     if 'ㄆㄆ' in text:
         reply = '我知道！戳！'
