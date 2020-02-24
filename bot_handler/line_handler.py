@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import time
-import uuid
 
 import cachetools.func
 import gspread
@@ -203,14 +202,14 @@ def add_handlers(line_web_hook_handler):
 
     @line_web_hook_handler.add(MessageEvent, message=[ImageMessage, AudioMessage])
     def handle_image_message(event):
-        if event.source.type == 'room':
-            source_id = event.source.room_id
-        elif event.source.type == 'group':
-            source_id = event.source.group_id
-        elif event.source.type == 'user':
-            source_id = event.source.user_id
-        else:
-            raise ValueError
+        # if event.source.type == 'room':
+        #     source_id = event.source.room_id
+        # elif event.source.type == 'group':
+        #     source_id = event.source.group_id
+        # elif event.source.type == 'user':
+        #     source_id = event.source.user_id
+        # else:
+        #     raise ValueError
         # uid = event.source.user_id
         # message_content = line_bot_api.get_message_content(event.message.id)
         # now = int(time.time())
@@ -237,6 +236,7 @@ def add_handlers(line_web_hook_handler):
         #     user_name = get_cached_user_name(source_id, uid)
         # logging.info(
         #     f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (image) saved: {file_path}")
+        pass
 
     @line_web_hook_handler.add(MessageEvent, message=StickerMessage)
     def handle_sticker_message(event):
