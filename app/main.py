@@ -11,7 +11,6 @@ from linebot.exceptions import (
 from telegram.ext import Dispatcher
 
 from bot_handler import line_handler, telegram_handler
-from bot_handler.telegram_handler import handle_message
 
 logging.getLogger().setLevel(logging.INFO)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -65,7 +64,6 @@ def telegram_callback():
         logging.info(f'chat_id: {update.message.chat.id}, text: {update.message.text}')
         if update.message.sticker is not None:
             logging.info(f'sticker file_id: {update.message.sticker.file_id}')
-        handle_message(telegram_bot, update.message)
     return 'OK'
 
 
