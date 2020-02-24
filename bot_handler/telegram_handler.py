@@ -26,7 +26,7 @@ def echo(telegram_bot, message):
     else:
         logging.info(f'message.chat.id: {message.chat.id}, text: {text}')
         chat_id = message.chat.id
-        telegram_bot.sendMessage(chat_id=chat_id, text=json.dumps(text))
+        telegram_bot.sendMessage(chat_id=chat_id, text=json.dumps(text.decode('utf-8')))
 
 
 def handle_message(telegram_bot, message):
