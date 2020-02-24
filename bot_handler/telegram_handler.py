@@ -47,4 +47,4 @@ def add_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler("weather", weather, pass_args=True))
     dispatcher.add_handler(CommandHandler("tarot", tarot, pass_args=True))
     dispatcher.add_handler(CommandHandler("fortune", fortune, pass_args=True))
-    dispatcher.add_handler(MessageHandler(Filters.text, make_reply, pass_args=True))
+    dispatcher.add_handler(MessageHandler(Filters.text, make_reply))
