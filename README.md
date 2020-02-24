@@ -101,5 +101,5 @@ ln -s /usr/local/Cellar/siege/4.0.5/bin/siege /usr/local/bin/siege
 siege https://ori.leafwind.tw:8787 -t1m
 ```
 
-## set webhook for Telegram
+## set web hook for Telegram
 https://api.telegram.org/bot[token]/setWebhook?url=https://ori.leafwind.tw:8443/telegram_callback

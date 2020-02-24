@@ -21,11 +21,11 @@ from app.private_reply import private_reply
 from app.utils.gspread_util import auth_gss_client
 from constants import GOOGLE_AUTH_JSON_PATH, GSPREAD_KEY_VIP
 
-user_info = {}
+cache_user_info = {}
 USER_INFO_MAP_FILE = os.path.join('line-user-info', 'users.json')
 if os.path.exists(USER_INFO_MAP_FILE):
     with open(USER_INFO_MAP_FILE, 'r') as _f:
-        user_info = json.load(_f)
+        cache_user_info = json.load(_f)
 
 with open("line_auth_key.yml", 'r') as stream:
     data = yaml.safe_load(stream)
@@ -165,7 +165,7 @@ def add_handlers(line_web_hook_handler):
         else:
             raise ValueError(f" unknown event.source.type: {event.source.type}")
         uid = event.source.user_id
-        user_name = user_info.get(uid, None)
+        user_name = cache_user_info.get(uid, None)
         if not user_name:
             try:
                 user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
@@ -233,7 +233,7 @@ def add_handlers(line_web_hook_handler):
             for chunk in message_content.iter_content():
                 fd.write(chunk)
         uid = event.source.user_id
-        user_name = user_info.get(uid, None)
+        user_name = cache_user_info.get(uid, None)
         if not user_name:
             try:
                 user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
@@ -256,7 +256,7 @@ def add_handlers(line_web_hook_handler):
         # pid = event.message.package_id
         # sid = event.message.sticker_id
         uid = event.source.user_id
-        user_name = user_info.get(uid, None)
+        user_name = cache_user_info.get(uid, None)
         if not user_name:
             try:
                 user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
@@ -348,7 +348,7 @@ def add_handlers(line_web_hook_handler):
         else:
             raise ValueError
         uid = event.source.user_id
-        user_name = user_info.get(uid, None)
+        user_name = cache_user_info.get(uid, None)
         if not user_name:
             try:
                 user_name = line_bot_api.get_group_member_profile(source_id, uid).display_name
