@@ -11,6 +11,13 @@ from linebot.exceptions import (
 )
 from telegram.ext import Dispatcher
 
+from bot_handler import line_handler, telegram_handler
+
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger("requests.packages.urllib3").setLevel(logging.WARNING)
+logging.getLogger("oauth2client").setLevel(logging.WARNING)
+logging.getLogger("telegram.ext").setLevel(logging.WARNING)
+
 
 def set_logger():
     log_level = logging.INFO
@@ -28,14 +35,6 @@ def set_logger():
 # logging config should before Flask app init
 # if not, Flask will write to stderr by default
 set_logger()
-
-from bot_handler import line_handler, telegram_handler
-
-logging.getLogger("urllib3").setLevel(logging.WARNING)
-logging.getLogger("requests.packages.urllib3").setLevel(logging.WARNING)
-logging.getLogger("oauth2client").setLevel(logging.WARNING)
-logging.getLogger("telegram.ext").setLevel(logging.WARNING)
-
 
 application = Flask(__name__, template_folder='templates')
 
