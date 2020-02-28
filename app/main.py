@@ -16,6 +16,7 @@ from bot_handler import line_handler, telegram_handler
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3").setLevel(logging.WARNING)
 logging.getLogger("oauth2client").setLevel(logging.WARNING)
+logging.getLogger("telegram.ext").setLevel(logging.WARNING)
 
 
 def set_logger():
