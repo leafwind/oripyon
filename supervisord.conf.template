@@ -5,3 +5,5 @@ stdout_logfile=/var/log/oripyon.out
 stderr_logfile=/var/log/oripyon.err
 autostart=true
 autorestart=true
+logfile_maxbytes=1024576
+logfile_backups=2

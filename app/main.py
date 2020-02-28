@@ -1,5 +1,8 @@
 import logging
+import os
 import ssl
+import sys
+from datetime import datetime
 
 import telegram
 import yaml
@@ -16,6 +19,25 @@ logging.getLogger().setLevel(logging.INFO)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3").setLevel(logging.WARNING)
 logging.getLogger("oauth2client").setLevel(logging.WARNING)
+
+
+def set_logger():
+    log_level = logging.INFO
+    my_format = "[%(levelname).4s] %(asctime)s | %(name)s | " \
+                "%(filename)+20s | %(lineno)3s | %(message)s"
+    date_fmt = '%Y-%m-%d %H:%M:%S'
+    formatter = logging.Formatter(my_format, date_fmt)
+    h = logging.StreamHandler(sys.stdout)
+    h.setFormatter(formatter)
+    h.setLevel(log_level)
+    logging.getLogger().addHandler(h)
+    return
+
+
+# logging config should before Flask app init
+# if not, Flask will write to stderr by default
+set_logger()
+
 application = Flask(__name__, template_folder='templates')
 
 with open("bot_token.yml", 'r') as stream:
