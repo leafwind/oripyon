@@ -176,7 +176,7 @@ def add_handlers(line_web_hook_handler):
         if not user_name:
             user_name = get_cached_user_name(source_id, uid)
         logging.info(
-            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')[:10]} {user_name}：{event.message.text}")
+            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')[:10]} | {user_name} | {event.message.text}")
 
         vip_groups, vip_users = get_vip_groups_users()
         msg_info = MessageInfo(event.source.type, source_id, uid, user_name, event.message.text)
