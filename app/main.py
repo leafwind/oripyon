@@ -1,8 +1,6 @@
 import logging
-import os
 import ssl
 import sys
-from datetime import datetime
 
 import telegram
 import yaml
@@ -24,7 +22,7 @@ logging.getLogger("oauth2client").setLevel(logging.WARNING)
 def set_logger():
     log_level = logging.INFO
     my_format = "[%(levelname).4s] %(asctime)s | %(name)s | " \
-                "%(filename)+20s | %(lineno)3s | %(message)s"
+                "%(module)+12s | %(lineno)3s | %(message)s"
     date_fmt = '%Y-%m-%d %H:%M:%S'
     formatter = logging.Formatter(my_format, date_fmt)
     h = logging.StreamHandler(sys.stdout)
@@ -58,6 +56,7 @@ def index():
 # line callback endpoint
 @application.route("/line_callback", methods=['POST'])
 def line_callback():
+    logging.info(f'line_callback')
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
