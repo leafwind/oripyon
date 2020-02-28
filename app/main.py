@@ -56,7 +56,6 @@ def index():
 # line callback endpoint
 @application.route("/line_callback", methods=['POST'])
 def line_callback():
-    logging.info(f'line_callback')
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
