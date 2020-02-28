@@ -13,7 +13,6 @@ from telegram.ext import Dispatcher
 
 from bot_handler import line_handler, telegram_handler
 
-logging.getLogger().setLevel(logging.INFO)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3").setLevel(logging.WARNING)
 logging.getLogger("oauth2client").setLevel(logging.WARNING)
@@ -66,12 +65,9 @@ def line_callback():
     try:
         # logging.info('body: %s', body)
         line_handler.add_handlers(line_web_hook_handler)
-        logging.info(f'end add_handlers')
         line_web_hook_handler.handle(body, signature)
-        logging.info(f'end handle')
     except InvalidSignatureError:
         abort(400)
-    logging.info(f'end line_callback')
     return 'OK'
 
 
