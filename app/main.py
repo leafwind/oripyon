@@ -66,9 +66,12 @@ def line_callback():
     try:
         # logging.info('body: %s', body)
         line_handler.add_handlers(line_web_hook_handler)
+        logging.info(f'end add_handlers')
         line_web_hook_handler.handle(body, signature)
+        logging.info(f'end handle')
     except InvalidSignatureError:
         abort(400)
+    logging.info(f'end line_callback')
     return 'OK'
 
 

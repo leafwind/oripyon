@@ -182,7 +182,6 @@ def add_handlers(line_web_hook_handler):
         msg_info = MessageInfo(event.source.type, source_id, uid, user_name, event.message.text)
         robot_settings = RobotSettings(vip_groups, vip_users)
         make_reply(msg_info, robot_settings, reply_token=event.reply_token)
-        logging.info(f'end reply')
         if source_id in GROUP_MAPPING and 'log_filename' in GROUP_MAPPING[source_id]:
             log_filename = GROUP_MAPPING[source_id]['log_filename'] + '.txt'
         else:
@@ -199,7 +198,6 @@ def add_handlers(line_web_hook_handler):
             time_str = date.strftime('%Y%m%d:%H%M%S')
             fp.write(f"{time_str} {user_name}：{event.message.text}\n")
         # chat(line_bot_api, event.reply_token, source_id, event.msg.text, log_filename)
-        logging.info(f'end handle_text_message')
 
     @line_web_hook_handler.add(MessageEvent, message=[ImageMessage, AudioMessage])
     def handle_image_message(event):
