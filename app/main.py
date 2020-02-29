@@ -27,7 +27,6 @@ def set_logger():
     formatter = logging.Formatter(my_format, date_fmt)
     h = logging.StreamHandler(sys.stdout)
     h.setFormatter(formatter)
-    h.setLevel(log_level)
     root_logger = logging.getLogger()
     root_logger.addHandler(h)
     root_logger.setLevel(log_level)
