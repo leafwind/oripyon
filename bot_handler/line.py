@@ -153,6 +153,7 @@ def add_message_handlers(line_web_hook_handler):
     @line_web_hook_handler.add(MessageEvent, message=TextMessage)
     def handle_text_message(event):
         logger = logging.getLogger(__name__)
+        logging.info(f'{__name__} parent {logger.parent}')
         # logger.info('%s', event.__dict__)
         if event.source.type == 'room':  # 自訂聊天
             source_id = event.source.room_id
@@ -168,6 +169,8 @@ def add_message_handlers(line_web_hook_handler):
         user_name = cache_user_info.get(uid, None)
         if not user_name:
             user_name = get_cached_user_name(source_id, uid)
+        logging.info(f'{event.message.text}')
+        logger.error(f'test logger')
         logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')[:10]} "
             f"| {user_name} | {event.message.text}")
