@@ -22,7 +22,7 @@ logging.getLogger("telegram.ext").setLevel(logging.WARNING)
 def set_logger():
     log_level = logging.INFO
     my_format = "[%(levelname).4s] %(asctime)s | %(name)s | " \
-                "%(module)+12s | %(lineno)3s | %(message)s"
+                "%(lineno)3s | %(message)s"
     date_fmt = '%Y-%m-%d %H:%M:%S'
     formatter = logging.Formatter(my_format, date_fmt)
     h = logging.StreamHandler(sys.stdout)
