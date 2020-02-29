@@ -28,7 +28,9 @@ def set_logger():
     h = logging.StreamHandler(sys.stdout)
     h.setFormatter(formatter)
     h.setLevel(log_level)
-    logging.getLogger().addHandler(h)
+    root_logger = logging.getLogger()
+    root_logger.addHandler(h)
+    root_logger.setLevel(log_level)
     return
 
 
