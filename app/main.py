@@ -65,7 +65,8 @@ def line_callback():
 
     # handle Web hook body
     try:
-        # logging.info('body: %s', body)
+        logger = logging.getLogger(__name__)
+        logger.info('body: %s', body)
         line.add_event_handlers(line_web_hook_handler)
         line.add_message_handlers(line_web_hook_handler)
         line_web_hook_handler.handle(body, signature)
@@ -77,15 +78,16 @@ def line_callback():
 # telegram callback endpoint
 @application.route("/telegram_callback", methods=['POST'])
 def telegram_callback():
-    logging.info('telegram_callback')
+    logger = logging.getLogger(__name__)
+    logger.info('telegram_callback')
     tg.add_handlers(dispatcher)
     if request.method == "POST":
         update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
         # Update dispatcher process that handler to process this message
         dispatcher.process_update(update)
-        logging.info(f'chat_id: {update.message.chat.id}, message: {update.message.text}')
+        logger.info(f'chat_id: {update.message.chat.id}, message: {update.message.text}')
         if update.message.sticker is not None:
-            logging.info(f'sticker file_id: {update.message.sticker.file_id}')
+            logger.info(f'sticker file_id: {update.message.sticker.file_id}')
     return 'OK'
 
 
