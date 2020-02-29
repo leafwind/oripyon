@@ -35,6 +35,7 @@ line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 
 @cachetools.func.ttl_cache(ttl=86400)
 def get_vip_groups_users():
+    logger = logging.getLogger(__name__)
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
     sh = gss_client.open_by_key(GSPREAD_KEY_VIP)
@@ -44,13 +45,13 @@ def get_vip_groups_users():
         vip_groups = worksheet.get_all_values()
         vip_groups = [g[0] for g in vip_groups]
     except gspread.exceptions.WorksheetNotFound as e:
-        logging.exception(e)
+        logger.exception(e)
     try:
         worksheet = sh.worksheet('vip user')
         vip_users = worksheet.get_all_values()
         vip_users = [u[0] for u in vip_users]
     except gspread.exceptions.WorksheetNotFound as e:
-        logging.exception(e)
+        logger.exception(e)
     return vip_groups, vip_users
 
 
@@ -64,7 +65,8 @@ def get_cached_user_name(source_id, uid):
     try:
         user_name = line_bot_api.get_room_member_profile(source_id, uid).display_name
     except LineBotApiError as e:
-        logging.debug('LineBotApiError: %s, source_id: %s, uid: %s', e, source_id, uid)
+        logger = logging.getLogger(__name__)
+        logger.debug('LineBotApiError: %s, source_id: %s, uid: %s', e, source_id, uid)
     return user_name
 
 
@@ -112,19 +114,20 @@ def make_reply(msg_info, robot_settings, reply_token=None):
 
 
 def get_announcement(msg_info):
+    logger = logging.getLogger(__name__)
     # common reply 塞公告
     check_or_create_table_line_announcement_log()
     max_ts = query_line_announcement_log(msg_info.source_id)
     now_ts = int(time.time())
     announcement_file = os.path.join('./announcement.json')
     if now_ts//86400 == max_ts//86400:
-        logging.info(f'same day, skip')
+        logger.info(f'same day, skip')
         return None
     elif now_ts - max_ts <= 12*3600:
-        logging.info(f'not over 12 hrs, skip')
+        logger.info(f'not over 12 hrs, skip')
         return None
     elif not os.path.exists(announcement_file):
-        logging.info(f'announcement_file not exist, skip')
+        logger.info(f'announcement_file not exist, skip')
         return None
     else:
         pass
@@ -137,11 +140,11 @@ def get_announcement(msg_info):
     if begin_ts < now_ts < end_ts:
         announcement_text_list = announcement[0]['content']
         announcement_text_list = [t.format(msg_info.user_name) for t in announcement_text_list]
-        logging.info(f'sending announcement: {announcement_text_list}')
+        logger.info(f'sending announcement: {announcement_text_list}')
         insert_line_announcement_log(msg_info.source_id, now_ts)
         return announcement_text_list
     else:
-        logging.debug(f'not in the desired date {date_begin} - {date_end}, skip')
+        logger.debug(f'not in the desired date {date_begin} - {date_end}, skip')
         return None
 
 
@@ -149,18 +152,20 @@ def get_announcement(msg_info):
 def add_handlers(line_web_hook_handler):
     @line_web_hook_handler.add(LeaveEvent)
     def handle_leave_event(event):
+        logger = logging.getLogger(__name__)
         if event.source.type == 'room':
             source_id = event.source.room_id
         elif event.source.type == 'group':
             source_id = event.source.group_id
         else:
             raise ValueError
-        logging.info(
+        logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} LeaveEvent")
 
     @line_web_hook_handler.add(MessageEvent, message=TextMessage)
     def handle_text_message(event):
-        # logging.info('%s', event.__dict__)
+        logger = logging.getLogger(__name__)
+        # logger.info('%s', event.__dict__)
         if event.source.type == 'room':  # 自訂聊天
             source_id = event.source.room_id
         elif event.source.type == 'user':
@@ -175,7 +180,7 @@ def add_handlers(line_web_hook_handler):
         user_name = cache_user_info.get(uid, None)
         if not user_name:
             user_name = get_cached_user_name(source_id, uid)
-        logging.info(
+        logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')[:10]} | {user_name} | {event.message.text}")
 
         vip_groups, vip_users = get_vip_groups_users()
@@ -233,7 +238,7 @@ def add_handlers(line_web_hook_handler):
         # user_name = cache_user_info.get(uid, None)
         # if not user_name:
         #     user_name = get_cached_user_name(source_id, uid)
-        # logging.info(
+        # logger.info(
         #     f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} {user_name} (image) saved: {file_path}")
         pass
 
@@ -254,7 +259,7 @@ def add_handlers(line_web_hook_handler):
         # if not user_name:
         #     user_name = get_cached_user_name(source_id, uid)
         # sticker_url = f'https://stickershop.line-scdn.net/stickershop/v1/sticker/{sid}/android/sticker.png'
-        # logging.info(
+        # logger.info(
         #     f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} "
         #     f"{user_name}({uid}) (sticker) ({pid}, {sid}), url: {sticker_url}"
         # )
@@ -262,24 +267,26 @@ def add_handlers(line_web_hook_handler):
 
     @line_web_hook_handler.add(MemberLeftEvent)
     def handle_member_leave_event(event):
+        logger = logging.getLogger(__name__)
         if event.source.type == 'room':
             source_id = event.source.room_id
         elif event.source.type == 'group':
             source_id = event.source.group_id
         else:
             raise ValueError
-        logging.info(
+        logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} 有人退群囉")
 
     @line_web_hook_handler.add(MemberJoinedEvent)
     def handle_member_join_event(event):
+        logger = logging.getLogger(__name__)
         if event.source.type == 'room':
             source_id = event.source.room_id
         elif event.source.type == 'group':
             source_id = event.source.group_id
         else:
             raise ValueError
-        logging.info(
+        logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}")
 
         # 可怕的象奶儀式
@@ -299,13 +306,14 @@ def add_handlers(line_web_hook_handler):
 
     @line_web_hook_handler.add(JoinEvent)
     def handle_join_event(event):
+        logger = logging.getLogger(__name__)
         if event.source.type == 'room':
             source_id = event.source.room_id
         elif event.source.type == 'group':
             source_id = event.source.group_id
         else:
             raise ValueError
-        logging.info(
+        logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} JoinEvent")
         replies = [
             TextSendMessage(text=f'安安/ 感謝邀請我進來～／人◕ ‿‿ ◕人＼'),
@@ -317,19 +325,21 @@ def add_handlers(line_web_hook_handler):
 
     @line_web_hook_handler.add(FollowEvent)
     def handle_follow_event(event):
+        logger = logging.getLogger(__name__)
         if event.source.type == 'room':
             source_id = event.source.room_id
         elif event.source.type == 'group':
             source_id = event.source.group_id
         else:
             raise ValueError
-        logging.info(
+        logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} JoinEvent")
         replies = [TextSendMessage(text=f'安安/ 感謝邀請我進來～')]
         line_bot_api.reply_message(event.reply_token, replies)
 
     @line_web_hook_handler.default()
     def default(event):
+        logger = logging.getLogger(__name__)
         if event.source.type == 'room':
             source_id = event.source.room_id
         elif event.source.type == 'user':
@@ -342,6 +352,6 @@ def add_handlers(line_web_hook_handler):
         user_name = cache_user_info.get(uid, None)
         if not user_name:
             user_name = get_cached_user_name(source_id, uid)
-        logging.info(
+        logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} "
             f"{user_name}：(default handler){event.message}")
