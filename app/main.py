@@ -66,7 +66,7 @@ def line_callback():
     # handle Web hook body
     try:
         logger = logging.getLogger(__name__)
-        logger.info('body: %s', body)
+        logger.debug('body: %s', body)
         line.add_event_handlers(line_web_hook_handler)
         line.add_message_handlers(line_web_hook_handler)
         line_web_hook_handler.handle(body, signature)
@@ -79,7 +79,6 @@ def line_callback():
 @application.route("/telegram_callback", methods=['POST'])
 def telegram_callback():
     logger = logging.getLogger(__name__)
-    logger.info('telegram_callback')
     tg.add_handlers(dispatcher)
     if request.method == "POST":
         update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
