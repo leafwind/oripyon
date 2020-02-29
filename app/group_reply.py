@@ -160,7 +160,7 @@ def random_choice_except_key(from_dict, except_key):
     candidates = from_dict  # copy a new obj
     for i, c in enumerate(candidates):
         if c['uid'] == except_key:
-            logging.info(f'丟掉自己 {c["name"]}')
+            logging.getLogger(__name__).info(f'丟掉自己 {c["name"]}')
             candidates.pop(i)
     target = random.choice(list(candidates))
     return target

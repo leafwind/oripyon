@@ -1,14 +1,14 @@
 import logging
 import sqlite3
-import time
 from datetime import datetime
+
+import time
 
 from constants import CWB_DB_PATH
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 def predict(location):
+    logger = logging.getLogger(__name__)
     conn = sqlite3.connect(CWB_DB_PATH)
     ts_now = int(time.time())
 
@@ -19,9 +19,7 @@ def predict(location):
         ORDER BY end_ts ASC;
     '''
     c.execute(query_str, (location, ts_now))
-    logging.debug(query_str)
-    logging.debug(location)
-    logging.debug(ts_now)
+    logger.debug(f'{query_str}, {location}, {ts_now}')
     result_level_1_2 = c.fetchall()
     if result_level_1_2:
         conn.close()
@@ -48,9 +46,7 @@ def predict(location):
             ORDER BY start_ts ASC;
         '''
         c.execute(query_str, (location, ts_now))
-        logging.debug(query_str)
-        logging.debug(location)
-        logging.debug(ts_now)
+        logger.debug(f'{query_str}, {location}, {ts_now}')
         result_level_3 = c.fetchall()
         # INSERT OR REPLACE INTO level_3 VALUES ('宜蘭縣', '五結鄉', 1489734000, 1489744800, 26, 21, 21, 0, '')
         if not result_level_3:

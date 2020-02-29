@@ -1,12 +1,13 @@
 """
 polling twitch api and notify line if streaming online
 """
-import time
+import datetime
 import json
 import logging
-import datetime
-import yaml
+
 import requests
+import time
+import yaml
 
 logging.getLogger().setLevel(logging.INFO)
 

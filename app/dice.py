@@ -153,7 +153,7 @@ def pan_pan(_msg_info, _robot_settings):
 def draw_tarot():
     random.seed(os.urandom(5))
     card = random.choice(tarot_cards)
-    logging.info('%s: %s', card['nameCN'], card['url'])
+    logging.getLogger(__name__).info('%s: %s', card['nameCN'], card['url'])
     return card
 
 

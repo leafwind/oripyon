@@ -36,9 +36,10 @@ def fortune(update: Update, context: CallbackContext):
 def make_reply(update: Update, context: CallbackContext):
     _args = context.args
     text = update.message.text
+    logger = logging.getLogger(__name__)
     if 'ㄆㄆ' in text:
         reply = '我知道！戳！'
-        logging.info(f'reply: {reply}')
+        logger.info(f'reply: {reply}')
         update.message.reply_text(reply)
     elif '我看了' in text:
         update.message.reply_sticker(

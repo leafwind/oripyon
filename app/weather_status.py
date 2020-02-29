@@ -1,6 +1,7 @@
 import logging
-import time
 from datetime import datetime
+
+import time
 
 from app import predict_AQI
 from app.util import get_short_url, get_reservoir_stat
@@ -51,7 +52,7 @@ def rainfall_now(_msg_info, _robot_settings):
     target_date_str = datetime.strftime(target_date, '%Y-%m-%d_%H%M')
     image_url = f'https://www.cwb.gov.tw/V7/observe/rainfall/Data/{target_date_str}.QZT.jpg'
     short_url = get_short_url(image_url)
-    logging.info(image_url)
+    logging.getLogger(__name__).info(image_url)
     return short_url
 
 
@@ -63,7 +64,7 @@ def radar_now(_msg_info, _robot_settings):
     target_date_str = datetime.strftime(target_date, '%Y%m%d%H%M')
     image_url = f'https://www.cwb.gov.tw/V7/observe/radar/Data/HD_Radar/CV1_TW_3600_{target_date_str}.png'
     short_url = get_short_url(image_url)
-    logging.info(image_url)
+    logging.getLogger(__name__).info(image_url)
     return short_url
 
 

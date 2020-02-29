@@ -10,7 +10,7 @@ def get_short_url(target_url):
     if r.status_code == 200:
         return r.json()['data']['picseeUrl']
     else:
-        logging.error(r.status_code)
+        logging.getLogger(__name__).error(r.status_code)
 
 
 def get_exchange_rate():

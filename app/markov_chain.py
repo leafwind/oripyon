@@ -33,11 +33,12 @@ class MarkovChat(object):
         # stop words will be used in load model, so this line should before _load_model
         self.stop_word_list = _load_stop_word_list('app/data/stopwords.txt')
         self._load_model(self.train_data)
-        logging.info("MarkovChat: load %s", self.train_data)
+        self.logger = logging.getLogger(__name__)
+        self.logger.info("MarkovChat: load %s", self.train_data)
         if additional_train_data:
             for model in additional_train_data:
                 self._load_model(model)
-                logging.info("MarkovChat: load %s", model)
+                self.logger.info("MarkovChat: load %s", model)
 
     def _simple_split_message_chinese(self, message):
         words_generator = jieba.cut(message, cut_all=False)
@@ -127,7 +128,7 @@ class MarkovChat(object):
         if msg.startswith('!') or 'http://' in msg or 'https://' in msg:
             return
         if len(msg) < 4:
-            logging.warning("input msg too short(len=%s)", len(msg))
+            self.logger.warning("input msg too short(len=%s)", len(msg))
             return
 
         with open(self.train_data, 'a+') as fp:
@@ -143,9 +144,9 @@ class MarkovChat(object):
             best_similarity = 1.0
             for _ in range(self.MESSAGES_TO_GENERATE):
                 generated = self._generate_message(words)
-                logging.info("jeiba '%s' => '%s'", " ".join(words), generated)
+                self.logger.info("jeiba '%s' => '%s'", " ".join(words), generated)
                 if generated in msg:
-                    logging.info("skip, just substring")
+                    self.logger.info("skip, just substring")
                     continue
                 generated_similarity = Levenshtein.ratio(msg, generated)
                 best_similarity = Levenshtein.ratio(msg, best_message)
@@ -153,18 +154,18 @@ class MarkovChat(object):
                     best_message = generated
                     best_similarity = generated_similarity
                 else:
-                    logging.info(
+                    self.logger.info(
                         "predicted msg similarity %s(%s) >= %s(%s), skip",
                         generated, generated_similarity, best_message, best_similarity
                     )
                     continue
 
             if len(best_message) < 5:
-                logging.info("skip, less then 5 char (%s)", best_message)
+                self.logger.info("skip, less then 5 char (%s)", best_message)
                 continue
             else:
                 messages.append((best_message, best_similarity))
-                logging.info("append '{}' to candidate".format(best_message))
+                self.logger.info("append '{}' to candidate".format(best_message))
 
         self._incremental_train(msg)
 
@@ -194,7 +195,7 @@ class MarkovChat(object):
         random.seed(os.urandom(5))
         msg = msg.lower()
         words = list(self._simple_split_message_chinese(msg))
-        logging.info('chat: %s', words)
+        self.logger.info('chat: %s', words)
         if len(words) == 1:
             keys = []
             word = words[0]

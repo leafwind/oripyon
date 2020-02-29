@@ -1,10 +1,10 @@
-from app.common_reply import get_reply_from_mapping_function
-from app.rabbit import my_rabbit, adopt_rabbit
-from message_generator import flex_message_generator
-
 from linebot.models import (
     FlexSendMessage, CarouselContainer
 )
+
+from app.common_reply import get_reply_from_mapping_function
+from app.rabbit import my_rabbit, adopt_rabbit
+from message_generator import flex_message_generator
 
 
 def build_top_menu_function_card_message_tool(_msg_info, _robot_settings):

@@ -2,15 +2,15 @@ import datetime
 import json
 import logging
 import os
-import time
 
 import cachetools.func
 import gspread
+import time
 import yaml
 from linebot.api import LineBotApi
 from linebot.exceptions import LineBotApiError
 from linebot.models import TextSendMessage, MessageEvent, TextMessage, ImageMessage, AudioMessage, StickerMessage, \
-    MemberLeftEvent, MemberJoinedEvent, ImageSendMessage, LeaveEvent, JoinEvent, FollowEvent
+    MemberLeftEvent, MemberJoinedEvent, ImageSendMessage, JoinEvent, FollowEvent
 
 from announcement_log import check_or_create_table_line_announcement_log, query_line_announcement_log, \
     insert_line_announcement_log
@@ -148,20 +148,8 @@ def get_announcement(msg_info):
         return None
 
 
-# put all types of handlers into line web hook handler
-def add_handlers(line_web_hook_handler):
-    @line_web_hook_handler.add(LeaveEvent)
-    def handle_leave_event(event):
-        logger = logging.getLogger(__name__)
-        if event.source.type == 'room':
-            source_id = event.source.room_id
-        elif event.source.type == 'group':
-            source_id = event.source.group_id
-        else:
-            raise ValueError
-        logger.info(
-            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} LeaveEvent")
-
+# message handlers
+def add_message_handlers(line_web_hook_handler):
     @line_web_hook_handler.add(MessageEvent, message=TextMessage)
     def handle_text_message(event):
         logger = logging.getLogger(__name__)
@@ -181,7 +169,8 @@ def add_handlers(line_web_hook_handler):
         if not user_name:
             user_name = get_cached_user_name(source_id, uid)
         logger.info(
-            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')[:10]} | {user_name} | {event.message.text}")
+            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')[:10]} "
+            f"| {user_name} | {event.message.text}")
 
         vip_groups, vip_users = get_vip_groups_users()
         msg_info = MessageInfo(event.source.type, source_id, uid, user_name, event.message.text)
@@ -265,6 +254,28 @@ def add_handlers(line_web_hook_handler):
         # )
         pass
 
+    @line_web_hook_handler.default()
+    def default(event):
+        logger = logging.getLogger(__name__)
+        if event.source.type == 'room':
+            source_id = event.source.room_id
+        elif event.source.type == 'user':
+            source_id = event.source.user_id
+        elif event.source.type == 'group':
+            source_id = event.source.group_id
+        else:
+            raise ValueError
+        uid = event.source.user_id
+        user_name = cache_user_info.get(uid, None)
+        if not user_name:
+            user_name = get_cached_user_name(source_id, uid)
+        logger.info(
+            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} "
+            f"{user_name}：(default handler){event.message}")
+
+
+# event handlers
+def add_event_handlers(line_web_hook_handler):
     @line_web_hook_handler.add(MemberLeftEvent)
     def handle_member_leave_event(event):
         logger = logging.getLogger(__name__)
@@ -274,6 +285,7 @@ def add_handlers(line_web_hook_handler):
             source_id = event.source.group_id
         else:
             raise ValueError
+        line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=f'QQ \\~/')])
         logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} 有人退群囉")
 
@@ -288,7 +300,6 @@ def add_handlers(line_web_hook_handler):
             raise ValueError
         logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')}")
-
         # 可怕的象奶儀式
         if source_id in [
             'Cfbbdac072c508472fd3acc9ac8fa7adc',
@@ -299,9 +310,9 @@ def add_handlers(line_web_hook_handler):
             replies_img = ['cLD5pX1.jpg', '0dpXilD.jpg', 'srpzgjG.jpg']
             replies = [ImageSendMessage(original_content_url=imgur_url + r, preview_image_url=imgur_url + r, ) for r in
                        replies_img]
-            replies.append(TextSendMessage(text=f'新人還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
+            replies.append(TextSendMessage(text=f'還有呼吸嗎 記得到記事本簽到(上面圖片那篇)'))
         else:
-            return
+            replies = [TextSendMessage(text=f'安安 \\^O^/')]
         line_bot_api.reply_message(event.reply_token, replies)
 
     @line_web_hook_handler.add(JoinEvent)
@@ -334,24 +345,10 @@ def add_handlers(line_web_hook_handler):
             raise ValueError
         logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} JoinEvent")
-        replies = [TextSendMessage(text=f'安安/ 感謝邀請我進來～')]
+        replies = [
+            TextSendMessage(text=f'安安/ 感謝加我好友～／人◕ ‿‿ ◕人＼'),
+            TextSendMessage(text=f'為了確保您了解隱私方面的疑慮，請先閱讀使用須知，另外使用手冊也在同一處 https://oripyon.weebly.com'),
+            TextSendMessage(text=f'請務必也加飼育員為好友 https://line.me/R/ti/p/%40026hfcxi ，這樣功能更動或維修時才能通知你喔！'),
+            TextSendMessage(text=f'如果有些功能無法使用，可能是因為你沒有申請的關係，也請私訊飼育員詢問。'),
+        ]
         line_bot_api.reply_message(event.reply_token, replies)
-
-    @line_web_hook_handler.default()
-    def default(event):
-        logger = logging.getLogger(__name__)
-        if event.source.type == 'room':
-            source_id = event.source.room_id
-        elif event.source.type == 'user':
-            source_id = event.source.user_id
-        elif event.source.type == 'group':
-            source_id = event.source.group_id
-        else:
-            raise ValueError
-        uid = event.source.user_id
-        user_name = cache_user_info.get(uid, None)
-        if not user_name:
-            user_name = get_cached_user_name(source_id, uid)
-        logger.info(
-            f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} "
-            f"{user_name}：(default handler){event.message}")

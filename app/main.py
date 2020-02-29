@@ -11,7 +11,7 @@ from linebot.exceptions import (
 )
 from telegram.ext import Dispatcher
 
-from bot_handler import line_handler, telegram_handler
+from bot_handler import line, tg
 
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3").setLevel(logging.WARNING)
@@ -65,7 +65,8 @@ def line_callback():
     # handle Web hook body
     try:
         # logging.info('body: %s', body)
-        line_handler.add_handlers(line_web_hook_handler)
+        line.add_event_handlers(line_web_hook_handler)
+        line.add_message_handlers(line_web_hook_handler)
         line_web_hook_handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
@@ -76,7 +77,7 @@ def line_callback():
 @application.route("/telegram_callback", methods=['POST'])
 def telegram_callback():
     logging.info('telegram_callback')
-    telegram_handler.add_handlers(dispatcher)
+    tg.add_handlers(dispatcher)
     if request.method == "POST":
         update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
         # Update dispatcher process that handler to process this message

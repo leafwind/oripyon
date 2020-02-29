@@ -272,15 +272,17 @@ def common_reply(msg_info, robot_settings):
     reply = get_reply_from_mapping_function(msg_info, robot_settings, pattern_mapping_common)
     if reply:
         return reply
+    # import logging
+    # logger = logging.getLogger(__name__)
     # if msg == last_msg.get(source_id, None):
     #     now = int(time.time())
-    #     logging.info('偵測到重複，準備推齊')
+    #     logger.info('偵測到重複，準備推齊')
     #     repeated_diff_ts = now - replied_time.get((source_id, msg), 0)
     #     if repeated_diff_ts > 600:
-    #         logging.info(f'{msg} 上次重複已經超過 {repeated_diff_ts} 秒，執行推齊！')
+    #         logger.info(f'{msg} 上次重複已經超過 {repeated_diff_ts} 秒，執行推齊！')
     #         replied_time[(source_id, msg)] = now
     #         return [TextSendMessage(text=msg)]
     #     else:
-    #         logging.info(f'{msg} 上次重複在 {repeated_diff_ts} 秒內，不推齊')
+    #         logger.info(f'{msg} 上次重複在 {repeated_diff_ts} 秒內，不推齊')
     last_msg[msg_info.source_id] = msg_info.msg
     return []
