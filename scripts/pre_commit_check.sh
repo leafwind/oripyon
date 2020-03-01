@@ -4,7 +4,7 @@ source venv/bin/activate
 echo "# -------------------"
 echo "# running nosetests"
 echo "# -------------------"
-python -m pytest --cov=./ --cov-config=.coveragerc
+python -m pytest --cov=./ --cov-config=.coveragerc --log-cli-level=INFO
 
 echo "# -------------------"
 echo "# pyflakes"

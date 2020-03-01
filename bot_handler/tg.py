@@ -6,18 +6,18 @@ from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContex
 from app import dice
 
 
-def bot_help(update: Update, context: CallbackContext):
-    _args = context.args
+def bot_help(update: Update, _context: CallbackContext):
+    # _args = context.args
     update.message.reply_text('Help!')
 
 
-def weather(update: Update, context: CallbackContext):
-    _args = context.args
+def weather(update: Update, _context: CallbackContext):
+    # _args = context.args
     update.message.reply_text('weather!')
 
 
-def tarot(update: Update, context: CallbackContext):
-    _args = context.args
+def tarot(update: Update, _context: CallbackContext):
+    # _args = context.args
     card = dice.draw_tarot()
     update.message.reply_photo(
         photo=card['url'],
@@ -27,16 +27,19 @@ def tarot(update: Update, context: CallbackContext):
     )
 
 
-def fortune(update: Update, context: CallbackContext):
-    _args = context.args
+def fortune(update: Update, _context: CallbackContext):
+    # _args = context.args
     reply = dice.fortune(None, None)
     update.message.reply_text(reply)
 
 
-def make_reply(update: Update, context: CallbackContext):
-    _args = context.args
+def make_reply(update: Update, _context: CallbackContext):
+    # _args = context.args
     text = update.message.text
     logger = logging.getLogger(__name__)
+    logger.info(f'location: {update.message.location}')
+    # lat = update.message.location.latitude
+    # lon = update.message.location.longitude
     if 'ㄆㄆ' in text:
         reply = '我知道！戳！'
         logger.info(f'reply: {reply}')

@@ -1,7 +1,7 @@
 import calendar
 from datetime import datetime
 
-from app.util import get_exchange_rate
+from app.ext_apis.util import get_exchange_rate
 
 
 def exchange_rate(_msg_info, _robot_settings):
