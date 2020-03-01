@@ -17,11 +17,15 @@ def bot_help(update: Update, _context: CallbackContext):
 def set_location(update: Update, _context: CallbackContext):
     # Requesting location and contact from user
     location_keyboard = KeyboardButton(text="我要提供位置資訊", request_location=True)
-    contact_keyboard = KeyboardButton(text="我要提供電話資訊", request_contact=True)
-    custom_keyboard = [[location_keyboard, contact_keyboard]]
-    reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+    reject_keyboard = KeyboardButton(text="我不想提供")
+    custom_keyboard = [[location_keyboard, reject_keyboard]]
+    reply_markup = ReplyKeyboardMarkup(
+        custom_keyboard,
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
     update.message.reply_text(
-        text="你想提供什麼資訊讓朽咪提供更多服務呢？\n位置資訊會用來提供天氣服務，電話號碼目前沒有作用。",
+        text="你想提供位置資訊讓朽咪提供更多服務嗎？",
         reply_markup=reply_markup
     )
 
