@@ -72,7 +72,7 @@ def make_reply(update: Update, _context: CallbackContext):
 
 def add_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler("help", bot_help, pass_args=True))
-    dispatcher.add_handler(CommandHandler("set-location", set_location, pass_args=True))
+    dispatcher.add_handler(CommandHandler("setlocation", set_location, pass_args=True))
     dispatcher.add_handler(CommandHandler("weather", weather, pass_args=True))
     dispatcher.add_handler(CommandHandler("tarot", tarot, pass_args=True))
     dispatcher.add_handler(CommandHandler("fortune", fortune, pass_args=True))
