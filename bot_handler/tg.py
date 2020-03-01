@@ -4,6 +4,7 @@ from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
 
 from app import dice
+from app.ext_apis.util import reverse_geocode_customize
 
 
 def bot_help(update: Update, _context: CallbackContext):
@@ -34,7 +35,8 @@ def weather(update: Update, _context: CallbackContext):
     else:
         lat = location.latitude
         lon = location.longitude
-        update.message.reply_text(f'您的位置資訊：({lat}, {lon})')
+        geo_info = reverse_geocode_customize((lat, lon))
+        update.message.reply_text(f'您的位置資訊：{geo_info["name"]}, {geo_info["admin1"]}, {geo_info["cc"]} ({lat}, {lon})')
 
 
 def tarot(update: Update, _context: CallbackContext):

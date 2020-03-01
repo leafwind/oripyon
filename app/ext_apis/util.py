@@ -1,6 +1,7 @@
 import logging
 
 import requests
+import reverse_geocoder as rg
 
 
 def get_short_url(target_url):
@@ -41,3 +42,26 @@ def get_like_coinmarketcap():
 def get_reservoir_stat():
     r = requests.get('https://www.taiwanstat.com/waters/latest')
     return r.json()[0]
+
+
+def reverse_geocode_customize(coordinates):
+    # local, database, oldest: https://github.com/thampiman/reverse-geocoder
+    # forwarding, older: https://github.com/DenisCarriere/geocoder
+    # forwarding, newer: https://github.com/alexreisner/geocoder
+    """
+    :param coordinates: list of tuples,
+    e.g. (51.5214588, -0.1729636), (9.936033, 76.259952), (37.38605, -122.08385)
+    :return: list of dict, e.g.
+    [
+      {
+        'name': 'Cochin',
+        'cc': 'IN',
+        'lat': '9.93988',
+        'lon': '76.26022',
+        'admin1': 'Kerala',
+        'admin2': 'Ernakulam'
+      },
+    ]
+    """
+    results = rg.search(coordinates)  # default mode = 2
+    return results
