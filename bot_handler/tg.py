@@ -35,7 +35,7 @@ def weather(update: Update, _context: CallbackContext):
     else:
         lat = location.latitude
         lon = location.longitude
-        geo_info = reverse_geocode_customize((lat, lon))
+        geo_info = reverse_geocode_customize((lat, lon))[0]
         update.message.reply_text(f'您的位置資訊：{geo_info["name"]}, {geo_info["admin1"]}, {geo_info["cc"]} ({lat}, {lon})')
 
 
