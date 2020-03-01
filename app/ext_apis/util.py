@@ -45,6 +45,7 @@ def get_reservoir_stat():
 
 
 def reverse_geocode_customize(coordinates):
+    # free database: https://simplemaps.com/resources/free-country-cities
     # local, database, oldest: https://github.com/thampiman/reverse-geocoder
     # forwarding, older: https://github.com/DenisCarriere/geocoder
     # forwarding, newer: https://github.com/alexreisner/geocoder
