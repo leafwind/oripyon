@@ -90,6 +90,11 @@ def telegram_callback():
         logger.info(f'chat_id: {update.message.chat.id}, message: {update.message.text}')
         if update.message.sticker is not None:
             logger.info(f'sticker file_id: {update.message.sticker.file_id}')
+        if update.message.location is not None:
+            location = update.message.location
+            lat = location.latitude
+            lon = location.longitude
+            update.message.reply_text(f'位置資訊：({lat}, {lon})')
     return 'OK'
 
 
