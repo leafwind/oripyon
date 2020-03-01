@@ -11,6 +11,7 @@ from linebot.exceptions import (
 )
 from telegram.ext import Dispatcher
 
+from app.ext_apis.util import reverse_geocode_customize
 from bot_handler import line, tg
 
 logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -94,7 +95,8 @@ def telegram_callback():
             location = update.message.location
             lat = location.latitude
             lon = location.longitude
-            update.message.reply_text(f'位置資訊：({lat}, {lon})')
+            geo_info = reverse_geocode_customize((lat, lon))
+            update.message.reply_text(f'您的位置資訊：{geo_info["name"]}, {geo_info["admin1"]}, {geo_info["cc"]} ({lat}, {lon})')
     return 'OK'
 
 
