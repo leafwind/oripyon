@@ -46,6 +46,9 @@ with open("bot_token.yml", 'r') as stream:
 line_web_hook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
 telegram_bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
+# Context based callbacks
+# https://github.com/python-telegram-bot/python-telegram-bot/wiki/Transition-guide-to-Version-12.0#context-based-callbacks
+# If you do not use Updater but only Dispatcher you should instead set use_context=True when you create the Dispatcher.
 dispatcher = Dispatcher(telegram_bot, None, use_context=True)
 
 # index endpoint
