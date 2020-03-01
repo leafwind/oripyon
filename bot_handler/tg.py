@@ -15,12 +15,12 @@ def bot_help(update: Update, _context: CallbackContext):
 # https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets#requesting-location-and-contact-from-user
 def set_location(update: Update, _context: CallbackContext):
     # Requesting location and contact from user
-    location_keyboard = KeyboardButton(text="send_location", request_location=True)
-    contact_keyboard = KeyboardButton(text="send_contact", request_contact=True)
+    location_keyboard = KeyboardButton(text="我要提供位置資訊", request_location=True)
+    contact_keyboard = KeyboardButton(text="我要提供電話資訊", request_contact=True)
     custom_keyboard = [[location_keyboard, contact_keyboard]]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard)
     update.message.reply_text(
-        text="Would you mind sharing your location and contact with me?",
+        text="你想提供什麼資訊讓朽咪提供更多服務呢？\n位置資訊會用來提供天氣服務，電話號碼目前沒有作用。",
         reply_markup=reply_markup
     )
 
@@ -72,7 +72,7 @@ def make_reply(update: Update, _context: CallbackContext):
 
 def add_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler("help", bot_help, pass_args=True))
-    dispatcher.add_handler(CommandHandler("set_location", set_location, pass_args=True))
+    dispatcher.add_handler(CommandHandler("set-location", set_location, pass_args=True))
     dispatcher.add_handler(CommandHandler("weather", weather, pass_args=True))
     dispatcher.add_handler(CommandHandler("tarot", tarot, pass_args=True))
     dispatcher.add_handler(CommandHandler("fortune", fortune, pass_args=True))
