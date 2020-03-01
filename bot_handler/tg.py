@@ -17,7 +17,7 @@ def bot_help(update: Update, _context: CallbackContext):
 def set_location(update: Update, _context: CallbackContext):
     # Requesting location and contact from user
     location_keyboard = KeyboardButton(text="我要提供位置資訊", request_location=True)
-    reject_keyboard = KeyboardButton(text="我不想提供")
+    reject_keyboard = KeyboardButton(text="沒事了")
     custom_keyboard = [[location_keyboard, reject_keyboard]]
     reply_markup = ReplyKeyboardMarkup(
         custom_keyboard,
@@ -74,6 +74,10 @@ def make_reply(update: Update, _context: CallbackContext):
             disable_notification=True,
             reply_to_message_id=update.message.message_id,
         )
+    elif '沒事了' in text:
+        reply = '沒事就好\U0001F430'
+        logger.info(f'reply: {reply}')
+        update.message.reply_text(reply)
 
 
 def add_handlers(dispatcher):
