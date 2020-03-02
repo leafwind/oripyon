@@ -96,7 +96,8 @@ def telegram_callback():
             lat = location.latitude
             lon = location.longitude
             geo_info = reverse_geocode_customize((lat, lon))[0]
-            update.message.reply_text(f'您的位置資訊：{geo_info["name"]}, {geo_info["admin1"]}, {geo_info["cc"]} ({lat}, {lon})')
+            user = update.effective_user
+            update.message.reply_text(f'{user.fullname}({user.id})您的位置資訊：{geo_info["name"]}, {geo_info["admin1"]}, {geo_info["cc"]} ({lat}, {lon})')
     return 'OK'
 
 
