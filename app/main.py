@@ -97,8 +97,15 @@ def telegram_callback():
             lon = location.longitude
             geo_info = reverse_geocode_customize((lat, lon))[0]
             user = update.effective_user
-            logger.info(f'{user}')
-            update.message.reply_text(f'({user.id})您的位置資訊：{geo_info["name"]}, {geo_info["admin1"]}, {geo_info["cc"]} ({lat}, {lon})')
+            update.message.reply_text(
+                f'{user.first_name} 您的資訊將會被朽咪記住，天氣預測功能將根據這些資訊提供服務\n'
+                f'\U0001F194 id: {user.id}\n'
+                f'\U00003294 first name: {user.firstname}\n'
+                f'\U0001F464 username: {user.username}\n'
+                f'\U0001F5FA geo info - name: {geo_info["name"]}\n'
+                f'\U0001F5FA geo info - admin1: {geo_info["admin1"]}\n'
+                f'\U0001F5FA geo info - country: {geo_info["cc"]}\n'
+                f'\U0001F5FA geo info - lat: {lat}, lon: {lon}')
     return 'OK'
 
 
