@@ -1,6 +1,6 @@
 import logging
 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, KeyboardButton, KeyboardMarkup
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
 
 from app import dice
@@ -14,10 +14,10 @@ def bot_help(update: Update, _context: CallbackContext):
 
 
 def get_location_keyboard_markup():
-    location_keyboard = InlineKeyboardButton(text="我要提供位置資訊", request_location=True)
-    reject_keyboard = InlineKeyboardButton(text="先不要")
+    location_keyboard = KeyboardButton(text="我要提供位置資訊", request_location=True)
+    reject_keyboard = KeyboardButton(text="先不要")
     custom_keyboard = [[location_keyboard, reject_keyboard]]
-    markup = InlineKeyboardMarkup(
+    markup = KeyboardMarkup(
         custom_keyboard,
         resize_keyboard=True,
         one_time_keyboard=True,
