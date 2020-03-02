@@ -3,7 +3,7 @@ import logging
 import cachetools.func
 import requests
 import time
-from app.ext_apis.util import build_kd_tree
+from app.ext_apis.util import build_kd_tree, gps_dms_to_dd
 
 
 @cachetools.func.ttl_cache(ttl=3600*6)
@@ -65,11 +65,13 @@ def epa_aqi_api():
         }, ...
     ]
     """
+    logger = logging.getLogger(__name__)
+    logger.info(f'{__name__} start')
     start = int(time.time())
     url = 'https://opendata.epa.gov.tw/ws/Data/AQI/?$format=json'
     r = requests.get(url)
     end = int(time.time())
-    logging.getLogger(__name__).info(f'{__name__} took {end - start} seconds')
+    logger.info(f'{__name__} took {end - start} seconds')
     json_data = r.json()
 
     # build K-D tree for all positions
@@ -80,16 +82,6 @@ def epa_aqi_api():
         site_coords.append([lat, lon])
     tree = build_kd_tree(site_coords)
     return json_data, tree
-
-
-def gps_dms_to_dd(dms):
-    """
-    :param dms: list of degrees, minutes, seconds
-    :return:
-    """
-    degrees, minutes, seconds = dms[0], dms[1], dms[2]
-    decimal_degrees = degrees + (minutes/60.0) + (seconds/3600.0)
-    return decimal_degrees
 
 
 @cachetools.func.ttl_cache(ttl=60 * 10)
@@ -113,19 +105,24 @@ def uv_api():
         },
     ]
     """
+    logger = logging.getLogger(__name__)
+    logger.info(f'{__name__} start')
     start = int(time.time())
     url = 'https://opendata.epa.gov.tw/ws/Data/UV/?$format=json'
     r = requests.get(url)
     end = int(time.time())
-    logging.getLogger(__name__).info(f'{__name__} took {end - start} seconds')
+    logger.info(f'{__name__} took {end - start} seconds')
     json_data = r.json()
     # transform dms unit to dd
     for j in json_data:
-        lat_dms = [int(d) for d in j['WGS84Lat'].split(',')]
-        j['lat'] = gps_dms_to_dd(lat_dms)
-        lon_dms = [int(d) for d in j['WGS84Lon'].split(',')]
-        j['lon'] = gps_dms_to_dd(lon_dms)
-
+        try:
+            lat_dms = [int(d) for d in j['WGS84Lat'].split(',')]
+            j['lat'] = gps_dms_to_dd(lat_dms)
+            lon_dms = [int(d) for d in j['WGS84Lon'].split(',')]
+            j['lon'] = gps_dms_to_dd(lon_dms)
+        except Exception as e:
+            logging.warning(f'{j["WGS84Lat"]}, {j["WGS84Lon"]}')
+            logger.exception(e)
     # build K-D tree for all positions
     site_coords = []
     for site in json_data:

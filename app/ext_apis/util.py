@@ -89,3 +89,13 @@ def build_kd_tree(list_of_coords):
         places.append(cartesian_coord)
     tree = spatial.KDTree(places)
     return tree
+
+
+def gps_dms_to_dd(dms):
+    """
+    :param dms: list of degrees, minutes, seconds
+    :return:
+    """
+    degrees, minutes, seconds = dms[0], dms[1], dms[2]
+    decimal_degrees = degrees + (minutes/60.0) + (seconds/3600.0)
+    return decimal_degrees
