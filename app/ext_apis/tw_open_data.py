@@ -3,6 +3,7 @@ import logging
 import cachetools.func
 import requests
 import time
+from app.ext_apis.util import build_kd_tree
 
 
 @cachetools.func.ttl_cache(ttl=3600*6)
@@ -70,7 +71,15 @@ def epa_aqi_api():
     end = int(time.time())
     logging.getLogger(__name__).info(f'{__name__} took {end - start} seconds')
     json_data = r.json()
-    return json_data
+
+    # build K-D tree for all positions
+    site_coords = []
+    for site in json_data:
+        lat = float(site['Latitude'])
+        lon = float(site['Longitude'])
+        site_coords.append([lat, lon])
+    tree = build_kd_tree(site_coords)
+    return json_data, tree
 
 
 def gps_dms_to_dd(degrees, minutes, seconds):
@@ -109,4 +118,12 @@ def uv_api():
     for j in json_data:
         j['lat'] = gps_dms_to_dd(j['WGS84Lat'])
         j['lon'] = gps_dms_to_dd(j['WGS84Lon'])
-    return json_data
+
+    # build K-D tree for all positions
+    site_coords = []
+    for site in json_data:
+        lat = float(site['lat'])
+        lon = float(site['lon'])
+        site_coords.append([lat, lon])
+    tree = build_kd_tree(site_coords)
+    return json_data, tree

@@ -4,6 +4,7 @@ from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
 
 from app import dice
+from app.ext_apis.tw_open_data import epa_aqi_api, uv_api
 from app.ext_apis.util import reverse_geocode_customize
 from app.sqlite_utils.user_location import query_tg_user_location
 
@@ -44,11 +45,19 @@ def weather(update: Update, _context: CallbackContext):
             reply_markup=get_location_keyboard_markup()
         )
     else:
+        aqi_json_data, aqi_site_tree = epa_aqi_api()
+        uv_json_data, uv_site_tree = uv_api()
+        from app.ext_apis.util import cartesian
+        cartesian_coord = cartesian(lat, lon)
+        closest_aqi_site = aqi_site_tree.query([cartesian_coord], p=2)
+        closest_uv_site = uv_site_tree.query([cartesian_coord], p=2)
+        aqi_site_index = closest_aqi_site[1][0]
+        uv_site_index = closest_uv_site[1][0]
         geo_info = reverse_geocode_customize((lat, lon))[0]
         update.message.reply_text(
-            f'地名: {geo_info["name"]}\n'
-            f'一級行政區: {geo_info["admin1"]}\n'
-            f'國家: {geo_info["cc"]}'
+            f'{geo_info["name"]} (行政區: {geo_info["admin1"]}, 國家: {geo_info["cc"]})\n'
+            f'空品資訊：{aqi_json_data[aqi_site_index]}\n'
+            f'紫外線資訊：{uv_json_data[uv_site_index]}'
         )
 
 

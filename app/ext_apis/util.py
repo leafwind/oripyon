@@ -1,7 +1,9 @@
 import logging
 
+import math
 import requests
 import reverse_geocoder as rg
+from scipy import spatial
 
 
 def get_short_url(target_url):
@@ -66,3 +68,24 @@ def reverse_geocode_customize(coordinates):
     """
     results = rg.search(coordinates)  # default mode = 2
     return results
+
+
+def cartesian(latitude, longitude, elevation=0):
+    # Convert to radians
+    latitude = latitude * (math.pi / 180)
+    longitude = longitude * (math.pi / 180)
+
+    R = 6371  # 6378137.0 + elevation  # relative to centre of the earth
+    X = R * math.cos(latitude) * math.cos(longitude)
+    Y = R * math.cos(latitude) * math.sin(longitude)
+    Z = R * math.sin(latitude)
+    return X, Y, Z
+
+
+def build_kd_tree(list_of_coords):
+    places = []
+    for coordinates in list_of_coords:
+        cartesian_coord = cartesian(*coordinates)
+        places.append(cartesian_coord)
+    tree = spatial.KDTree(places)
+    return tree
