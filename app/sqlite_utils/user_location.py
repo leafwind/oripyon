@@ -10,7 +10,7 @@ def check_or_create_table_tg_user_location():
     create_sql = f'''
         CREATE TABLE IF NOT EXISTS {TABLE_TG_USER_LOCATION}
         (
-            user_id text, lat real, lon real,
+            user_id text, first_name text, user_name text, lat real, lon real,
             PRIMARY KEY (user_id)
         )
     '''
@@ -19,13 +19,17 @@ def check_or_create_table_tg_user_location():
     conn.close()
 
 
-def insert_tg_user_location(user_id, lat, lon):
+def insert_tg_user_location(user_id, first_name, user_name, lat, lon):
     conn = sqlite3.connect(TG_USER_LOCATION_DB_PATH)
     c = conn.cursor()
     insert_sql = f'''
-        INSERT OR REPLACE INTO {TABLE_TG_USER_LOCATION} VALUES (:user_id, :lat, :lon);
+        INSERT OR REPLACE INTO {TABLE_TG_USER_LOCATION} VALUES (:user_id, :first_name, :user_name, :lat, :lon);
     '''
-    c.execute(insert_sql, {'user_id': user_id, 'lat': lat, 'lon': lon})
+    c.execute(
+        insert_sql, {
+            'user_id': user_id, 'first_name': first_name, 'user_name': user_name, 'lat': lat, 'lon': lon
+        }
+    )
     conn.commit()
     conn.close()
 

@@ -11,6 +11,7 @@ from linebot.exceptions import (
 )
 from telegram.ext import Dispatcher
 
+from app.sqlite_utils.user_location import check_or_create_table_tg_user_location, insert_tg_user_location
 from bot_handler import line, tg
 
 logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -102,6 +103,8 @@ def telegram_callback():
                 f'\U0001F464 username: {user.username}\n'
                 f'\U0001F5FA 經緯度: {lat}, {lon}'
             )
+            check_or_create_table_tg_user_location()
+            insert_tg_user_location(user.id, user.first_name, user.username, lat, lon)
     return 'OK'
 
 
