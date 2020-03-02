@@ -1,10 +1,11 @@
 import logging
 
-from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
 
 from app import dice
 from app.ext_apis.util import reverse_geocode_customize
+from app.sqlite_utils.user_location import query_tg_user_location
 
 
 def bot_help(update: Update, _context: CallbackContext):
@@ -12,35 +13,43 @@ def bot_help(update: Update, _context: CallbackContext):
     update.message.reply_text('Help!')
 
 
-# from Code snippets
-# https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets#requesting-location-and-contact-from-user
-def set_location(update: Update, _context: CallbackContext):
-    # Requesting location and contact from user
-    location_keyboard = KeyboardButton(text="我要提供位置資訊", request_location=True)
-    reject_keyboard = KeyboardButton(text="沒事了")
+def get_location_keyboard_markup():
+    location_keyboard = InlineKeyboardButton(text="我要提供位置資訊", request_location=True)
+    reject_keyboard = InlineKeyboardButton(text="先不要")
     custom_keyboard = [[location_keyboard, reject_keyboard]]
-    reply_markup = ReplyKeyboardMarkup(
+    markup = InlineKeyboardMarkup(
         custom_keyboard,
         resize_keyboard=True,
         one_time_keyboard=True,
     )
+    return markup
+
+
+# from Code snippets
+# https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets#requesting-location-and-contact-from-user
+def set_location(update: Update, _context: CallbackContext):
     update.message.reply_text(
         text="你想提供位置資訊讓朽咪提供更多服務嗎？",
-        reply_markup=reply_markup
+        reply_markup=get_location_keyboard_markup()
     )
 
 
 def weather(update: Update, _context: CallbackContext):
     # _args = context.args
-    logger = logging.getLogger(__name__)
-    location = update.message.location
-    if not location:
-        update.message.reply_text('朽咪不知道您的位置資訊，所以無法提供天氣服務，請使用 /set_location 指令提供位置資訊')
+    gps_location = query_tg_user_location(update.effective_user.user_id)
+    lat, lon = gps_location
+    if not gps_location:
+        update.message.reply_text(
+            text='朽咪不知道您的位置資訊，你想提供位置資訊讓朽咪提供更多服務嗎？',
+            reply_markup=get_location_keyboard_markup()
+        )
     else:
-        lat = location.latitude
-        lon = location.longitude
         geo_info = reverse_geocode_customize((lat, lon))[0]
-        update.message.reply_text(f'您的位置資訊：{geo_info["name"]}, {geo_info["admin1"]}, {geo_info["cc"]} ({lat}, {lon})')
+        update.message.reply_text(
+            f'地名: {geo_info["name"]}\n'
+            f'一級行政區: {geo_info["admin1"]}\n'
+            f'國家: {geo_info["cc"]}'
+        )
 
 
 def tarot(update: Update, _context: CallbackContext):

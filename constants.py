@@ -20,8 +20,10 @@ TEST_GROUP_IDS = [
     'C498a6c669b4648d8dcb807415554fda1',
 ]
 
+TG_USER_LOCATION_DB_PATH = '/var/sqlite/tg_user_location.db'
 LINE_DB_PATH = '/var/sqlite/line.db'
 
+TABLE_TG_USER_LOCATION = 'tg_user_location'
 TABLE_LINE_MSG_COUNT = 'msg_count'
 TABLE_LINE_CMD_COUNT = 'cmd_count'
 TABLE_LINE_ANNOUNCEMENT_LOG = 'announcement_log'

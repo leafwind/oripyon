@@ -11,7 +11,6 @@ from linebot.exceptions import (
 )
 from telegram.ext import Dispatcher
 
-from app.ext_apis.util import reverse_geocode_customize
 from bot_handler import line, tg
 
 logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -95,18 +94,14 @@ def telegram_callback():
             location = update.message.location
             lat = location.latitude
             lon = location.longitude
-            geo_info = reverse_geocode_customize((lat, lon))[0]
             user = update.effective_user
             update.message.reply_text(
                 f'您的資訊將會被朽咪記住，天氣預測功能將根據以下這些資訊提供服務：\n'
                 f'\U0001F194 {user.id}\n'
                 f'\U00003294 first name: {user.first_name}\n'
                 f'\U0001F464 username: {user.username}\n'
-                f'\U0001F5FA 地理位置資訊\n'
-                f'- 地名: {geo_info["name"]}\n'
-                f'- 一級行政區: {geo_info["admin1"]}\n'
-                f'- 國家: {geo_info["cc"]}\n'
-                f'- 經緯度: {lat}, {lon}')
+                f'\U0001F5FA 經緯度: {lat}, {lon}'
+            )
     return 'OK'
 
 
