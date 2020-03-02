@@ -121,8 +121,10 @@ def uv_api():
     json_data = r.json()
     # transform dms unit to dd
     for j in json_data:
-        j['lat'] = gps_dms_to_dd(j['WGS84Lat'].split(','))
-        j['lon'] = gps_dms_to_dd(j['WGS84Lon'].split(','))
+        lat_dms = [int(d) for d in j['WGS84Lat'].split(',')]
+        j['lat'] = gps_dms_to_dd(lat_dms)
+        lon_dms = [int(d) for d in j['WGS84Lon'].split(',')]
+        j['lon'] = gps_dms_to_dd(lon_dms)
 
     # build K-D tree for all positions
     site_coords = []
