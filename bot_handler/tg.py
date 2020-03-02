@@ -1,6 +1,6 @@
 import logging
 
-from telegram import Update, KeyboardButton, KeyboardMarkup
+from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
 
 from app import dice
@@ -17,7 +17,7 @@ def get_location_keyboard_markup():
     location_keyboard = KeyboardButton(text="我要提供位置資訊", request_location=True)
     reject_keyboard = KeyboardButton(text="先不要")
     custom_keyboard = [[location_keyboard, reject_keyboard]]
-    markup = KeyboardMarkup(
+    markup = ReplyKeyboardMarkup(
         custom_keyboard,
         resize_keyboard=True,
         one_time_keyboard=True,
