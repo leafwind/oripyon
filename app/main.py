@@ -100,7 +100,7 @@ def telegram_callback():
             update.message.reply_text(
                 f'{user.first_name} 您的資訊將會被朽咪記住，天氣預測功能將根據這些資訊提供服務\n'
                 f'\U0001F194 id: {user.id}\n'
-                f'\U00003294 first name: {user.firstname}\n'
+                f'\U00003294 first name: {user.first_name}\n'
                 f'\U0001F464 username: {user.username}\n'
                 f'\U0001F5FA geo info - name: {geo_info["name"]}\n'
                 f'\U0001F5FA geo info - admin1: {geo_info["admin1"]}\n'
