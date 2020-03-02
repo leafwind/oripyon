@@ -5,6 +5,7 @@ from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContex
 
 from app import dice
 from app.ext_apis.tw_open_data import epa_aqi_api, uv_api
+from app.ext_apis.util import cartesian
 from app.ext_apis.util import reverse_geocode_customize
 from app.sqlite_utils.user_location import query_tg_user_location
 
@@ -47,7 +48,6 @@ def weather(update: Update, _context: CallbackContext):
     else:
         aqi_json_data, aqi_site_tree = epa_aqi_api()
         uv_json_data, uv_site_tree = uv_api()
-        from app.ext_apis.util import cartesian
         cartesian_coord = cartesian(lat, lon)
         closest_aqi_site = aqi_site_tree.query([cartesian_coord], p=2)
         closest_uv_site = uv_site_tree.query([cartesian_coord], p=2)
