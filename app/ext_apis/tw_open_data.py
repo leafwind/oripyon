@@ -82,7 +82,12 @@ def epa_aqi_api():
     return json_data, tree
 
 
-def gps_dms_to_dd(degrees, minutes, seconds):
+def gps_dms_to_dd(dms):
+    """
+    :param dms: list of degrees, minutes, seconds
+    :return:
+    """
+    degrees, minutes, seconds = dms[0], dms[1], dms[2]
     decimal_degrees = degrees + (minutes/60.0) + (seconds/3600.0)
     return decimal_degrees
 
@@ -116,8 +121,8 @@ def uv_api():
     json_data = r.json()
     # transform dms unit to dd
     for j in json_data:
-        j['lat'] = gps_dms_to_dd(tuple(j['WGS84Lat'].split(',')))
-        j['lon'] = gps_dms_to_dd(tuple(j['WGS84Lon'].split(',')))
+        j['lat'] = gps_dms_to_dd(j['WGS84Lat'].split(','))
+        j['lon'] = gps_dms_to_dd(j['WGS84Lon'].split(','))
 
     # build K-D tree for all positions
     site_coords = []
