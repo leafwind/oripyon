@@ -116,9 +116,9 @@ def uv_api():
     # transform dms unit to dd
     for j in json_data:
         try:
-            lat_dms = [int(d) for d in j['WGS84Lat'].split(',')]
+            lat_dms = [float(d) for d in j['WGS84Lat'].split(',')]
             j['lat'] = gps_dms_to_dd(lat_dms)
-            lon_dms = [int(d) for d in j['WGS84Lon'].split(',')]
+            lon_dms = [float(d) for d in j['WGS84Lon'].split(',')]
             j['lon'] = gps_dms_to_dd(lon_dms)
         except Exception as e:
             logging.warning(f'{j["WGS84Lat"]}, {j["WGS84Lon"]}')
