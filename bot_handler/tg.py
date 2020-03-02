@@ -36,7 +36,7 @@ def set_location(update: Update, _context: CallbackContext):
 
 def weather(update: Update, _context: CallbackContext):
     # _args = context.args
-    gps_location = query_tg_user_location(update.effective_user.user_id)
+    gps_location = query_tg_user_location(update.effective_user.id)
     lat, lon = gps_location
     if not gps_location:
         update.message.reply_text(
