@@ -71,3 +71,42 @@ def epa_aqi_api():
     logging.getLogger(__name__).info(f'{__name__} took {end - start} seconds')
     json_data = r.json()
     return json_data
+
+
+def gps_dms_to_dd(degrees, minutes, seconds):
+    decimal_degrees = degrees + (minutes/60.0) + (seconds/3600.0)
+    return decimal_degrees
+
+
+@cachetools.func.ttl_cache(ttl=60 * 10)
+def uv_api():
+    """
+    紫外線即時監測資料
+    https://data.gov.tw/dataset/6076
+    環保署和中央氣象局設於全國紫外線測站每小時發布之紫外線監測資料（環保署及中央氣象局資料已整合成1個檔）
+    主要欄位說明:
+    County(縣市)、PublishAgency(發布機關)、PublishTime(發布時間)、SiteName(測站名稱)、UVI(紫外線指數)、WGS84Lat(緯度（WGS84）)、WGS84Lon(經度（WGS84）)
+    :return:
+    [
+        {
+            "County": "花蓮縣",
+            "PublishAgency": "中央氣象局",
+            "PublishTime": "2020-03-02 09:00",
+            "SiteName": "花蓮",
+            "UVI": "0.88",
+            "WGS84Lat": "23,58,30",
+            "WGS84Lon": "121,36,48"
+        },
+    ]
+    """
+    start = int(time.time())
+    url = 'https://opendata.epa.gov.tw/ws/Data/UV/?$format=json'
+    r = requests.get(url)
+    end = int(time.time())
+    logging.getLogger(__name__).info(f'{__name__} took {end - start} seconds')
+    json_data = r.json()
+    # transform dms unit to dd
+    for j in json_data:
+        j['lat'] = gps_dms_to_dd(j['WGS84Lat'])
+        j['lon'] = gps_dms_to_dd(j['WGS84Lon'])
+    return json_data
