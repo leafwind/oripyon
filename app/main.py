@@ -101,7 +101,7 @@ def telegram_callback():
                 f'\U0001F194 {user.id}\n'
                 f'\U00003294 first name: {user.first_name}\n'
                 f'\U0001F464 username: {user.username}\n'
-                f'\U0001F5FA 經緯度: {lat}, {lon}'
+                f'\U0001F310 經緯度: {lat}, {lon}'
             )
             check_or_create_table_tg_user_location()
             insert_tg_user_location(user.id, user.first_name, user.username, lat, lon)

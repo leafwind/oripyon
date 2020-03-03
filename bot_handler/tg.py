@@ -78,14 +78,16 @@ def weather(update: Update, _context: CallbackContext):
         uv_publish_time = uv_info['PublishTime']
         geo_info = reverse_geocode_customize((lat, lon))[0]
         update.message.reply_text(
-            f'你所在的位置：{geo_info["name"]} (行政區: {geo_info["admin1"]}, 國家: {geo_info["cc"]})\n'
+            f'\U0001F310你所在的位置：{geo_info["name"]} (行政區: {geo_info["admin1"]}, 國家: {geo_info["cc"]})\n'
             f'離你最近的測站資訊：\n'
             f'\n'
-            f'\U0001047A空品資訊從{aqi_site_name}測站 ({aqi_site_county})\n'
-            f'{aqi_status} (AQI: {aqi}, PM2.5: {pm25}) 時間: {aqi_publish_time}\n'
+            f'\U0001047A \U0001F4A8 空品資訊從{aqi_site_name}測站 ({aqi_site_county})\n'
+            f'\U000027A1 {aqi_status} (AQI: {aqi}, PM2.5: {pm25})\n'
+            f'\U0000231A時間: {aqi_publish_time}\n'
             f'\n'
             f'\U0000263C紫外線資訊從{uv_site_name}測站 ({uv_site_county})\n'
-            f'UVI: {uvi} 時間: {uv_publish_time}\n'
+            f'\U000027A1 UVI: {uvi} \n'
+            f'\U0000231A時間: {uv_publish_time}\n'
         )
 
 
