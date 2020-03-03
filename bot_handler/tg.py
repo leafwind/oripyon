@@ -7,6 +7,7 @@ from app import dice
 from app.ext_apis.tw_open_data import epa_aqi_api, uv_api
 from app.ext_apis.util import cartesian
 from app.ext_apis.util import reverse_geocode_customize
+from app.sqlite_utils.user_location import check_or_create_table_tg_user_location, insert_tg_user_location
 from app.sqlite_utils.user_location import query_tg_user_location
 
 
@@ -130,6 +131,27 @@ def make_reply(update: Update, _context: CallbackContext):
         update.message.reply_text(reply)
 
 
+def receive_location(update: Update):
+    location = update.message.location
+    lat = location.latitude
+    lon = location.longitude
+    user = update.effective_user
+    update.message.reply_text(
+        f'您的資訊將會被朽咪記住，天氣預測功能將根據以下這些資訊提供服務：\n'
+        f'\U0001F194 {user.id}\n'
+        f'\U00003294 first name: {user.first_name}\n'
+        f'\U0001F464 username: {user.username}\n'
+        f'\U0001F310 經緯度: {lat}, {lon}'
+    )
+    check_or_create_table_tg_user_location()
+    insert_tg_user_location(user.id, user.first_name, user.username, lat, lon)
+
+
+def receive_sticker(update: Update):
+    logger = logging.getLogger(__name__)
+    logger.info(f'sticker file_id: {update.message.sticker.file_id}')
+
+
 def add_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler("help", bot_help, pass_args=True))
     dispatcher.add_handler(CommandHandler("setlocation", set_location, pass_args=True))
@@ -137,3 +159,5 @@ def add_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler("tarot", tarot, pass_args=True))
     dispatcher.add_handler(CommandHandler("fortune", fortune, pass_args=True))
     dispatcher.add_handler(MessageHandler(Filters.text, make_reply))
+    dispatcher.add_handler(MessageHandler(Filters.location, receive_location))
+    dispatcher.add_handler(MessageHandler(Filters.sticker, receive_sticker))

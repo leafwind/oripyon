@@ -11,7 +11,6 @@ from linebot.exceptions import (
 )
 from telegram.ext import Dispatcher
 
-from app.sqlite_utils.user_location import check_or_create_table_tg_user_location, insert_tg_user_location
 from bot_handler import line, tg
 
 logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -90,29 +89,6 @@ def telegram_callback():
     update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
     # Update dispatcher process that handler to process this message
     dispatcher.process_update(update)
-    message = update.message or update.edited_message
-    if not message:
-        logger.warning(f'no message attribute in: {update}')
-    elif not message.text:
-        logger.warning(f'no text attribute in: {message}')
-    else:
-        logger.info(f'user_id: {update.effective_user.id}, message: {message.text}')
-    if message.sticker is not None:
-        logger.info(f'sticker file_id: {message.sticker.file_id}')
-    if message.location is not None:
-        location = message.location
-        lat = location.latitude
-        lon = location.longitude
-        user = update.effective_user
-        message.reply_text(
-            f'您的資訊將會被朽咪記住，天氣預測功能將根據以下這些資訊提供服務：\n'
-            f'\U0001F194 {user.id}\n'
-            f'\U00003294 first name: {user.first_name}\n'
-            f'\U0001F464 username: {user.username}\n'
-            f'\U0001F310 經緯度: {lat}, {lon}'
-        )
-        check_or_create_table_tg_user_location()
-        insert_tg_user_location(user.id, user.first_name, user.username, lat, lon)
     return 'OK'
 
 
