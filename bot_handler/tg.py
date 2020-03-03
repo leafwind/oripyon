@@ -108,6 +108,8 @@ def fortune(update: Update, _context: CallbackContext):
 
 def make_reply(update: Update, _context: CallbackContext):
     # _args = context.args
+    if not update.message.text:
+        logging.warning(f'no text attribute in: {update.message}')
     text = update.message.text
     logger = logging.getLogger(__name__)
     if 'ㄆㄆ' in text:
