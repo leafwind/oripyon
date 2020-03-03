@@ -285,7 +285,6 @@ def add_event_handlers(line_web_hook_handler):
             source_id = event.source.group_id
         else:
             raise ValueError
-        line_bot_api.reply_message(event.reply_token, [TextSendMessage(text=f'QQ \\~/')])
         logger.info(
             f"{GROUP_MAPPING.get(source_id, {'name': source_id}).get('name')} 有人退群囉")
 
