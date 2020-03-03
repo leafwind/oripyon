@@ -17,25 +17,23 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: install virtualenv
+    - name: install virtualenv and requirements
       run: |
         python -m pip install --upgrade pip
         pip install virtualenv
+        pip install -r requirements.txt
     - name: set environment variables for building uWSGI
       run: |
         CFLAGS="-I/usr/local/opt/openssl/include" LDFLAGS="-L/usr/local/opt/openssl/lib" UWSGI_PROFILE_OVERRIDE=ssl=true
     - name: repo built-in check
       run: |
-        pip install pytest flake8 pyflakes pylint
         ./scripts/pre_commit_check.sh
     - name: Lint with flake8
       run: |
-        pip install flake8
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=venv
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=15 --max-line-length=120 --statistics --exclude=venv,taiwan_area_map,line-user-info
     - name: Test with pytest
       run: |
-        pip install pytest
         python -m pytest --cov=./ --cov-config=.coveragerc --log-cli-level=INFO
