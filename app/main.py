@@ -88,9 +88,12 @@ def telegram_callback():
         update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
         # Update dispatcher process that handler to process this message
         dispatcher.process_update(update)
-        logger.info(f'user_id: {update.effective_user.id}, message: {update.message.text}')
-        if not update.message.text:
-            logging.warning(f'no text attribute in: {update.message}')
+        if not update.message:
+            logger.warning(f'no message attribute in: {update}')
+        elif not update.message.text:
+            logger.warning(f'no text attribute in: {update.message}')
+        else:
+            logger.info(f'user_id: {update.effective_user.id}, message: {update.message.text}')
         if update.message.sticker is not None:
             logger.info(f'sticker file_id: {update.message.sticker.file_id}')
         if update.message.location is not None:
