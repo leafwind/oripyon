@@ -1,8 +1,10 @@
+import inspect
 import logging
 
 import cachetools.func
 import requests
 import time
+
 from app.ext_apis.util import build_kd_tree, gps_dms_to_dd
 
 
@@ -66,12 +68,12 @@ def epa_aqi_api():
     ]
     """
     logger = logging.getLogger(__name__)
-    logger.info(f'{__name__} start')
+    logger.info(f'{inspect.currentframe().f_code.co_name} start')
     start = int(time.time())
     url = 'https://opendata.epa.gov.tw/ws/Data/AQI/?$format=json'
     r = requests.get(url)
     end = int(time.time())
-    logger.info(f'{__name__} took {end - start} seconds')
+    logger.info(f'{inspect.currentframe().f_code.co_name} took {end - start} seconds')
     json_data = r.json()
 
     # build K-D tree for all positions
@@ -106,12 +108,12 @@ def uv_api():
     ]
     """
     logger = logging.getLogger(__name__)
-    logger.info(f'{__name__} start')
+    logger.info(f'{inspect.currentframe().f_code.co_name} start')
     start = int(time.time())
     url = 'https://opendata.epa.gov.tw/ws/Data/UV/?$format=json'
     r = requests.get(url)
     end = int(time.time())
-    logger.info(f'{__name__} took {end - start} seconds')
+    logger.info(f'{inspect.currentframe().f_code.co_name} took {end - start} seconds')
     json_data = r.json()
     # transform dms unit to dd
     for j in json_data:
