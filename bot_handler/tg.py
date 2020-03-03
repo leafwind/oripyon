@@ -1,6 +1,6 @@
 import logging
 
-from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
+from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
 
 from app import dice
@@ -18,7 +18,7 @@ def bot_help(update: Update, _context: CallbackContext):
 
 def get_location_keyboard_markup():
     location_keyboard = KeyboardButton(text="我要提供位置資訊", request_location=True)
-    reject_keyboard = KeyboardButton(text="先不要")
+    reject_keyboard = KeyboardButton(text="關閉鍵盤")
     custom_keyboard = [[location_keyboard, reject_keyboard]]
     markup = ReplyKeyboardMarkup(
         custom_keyboard,
@@ -115,8 +115,12 @@ def make_reply(update: Update, _context: CallbackContext):
         logging.warning(f'no text attribute in: {update.message}')
     text = update.message.text
     logger = logging.getLogger(__name__)
-    if 'ㄆㄆ' in text:
-        reply = '我知道！戳！'
+    if text == '關閉鍵盤':
+        reply = 'OK!\U0001F430'
+        logger.info(f'reply: {reply}')
+        update.message.reply_text(reply, reply_markup=ReplyKeyboardRemove())
+    elif 'ㄆㄆ' in text:
+        reply = '我知道！戳！\U0001F430'
         logger.info(f'reply: {reply}')
         update.message.reply_text(reply)
     elif '我看了' in text:
