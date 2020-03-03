@@ -84,32 +84,35 @@ def line_callback():
 def telegram_callback():
     logger = logging.getLogger(__name__)
     tg.add_handlers(dispatcher)
-    if request.method == "POST":
-        update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
-        # Update dispatcher process that handler to process this message
-        dispatcher.process_update(update)
-        if not update.message:
-            logger.warning(f'no message attribute in: {update}')
-        elif not update.message.text:
-            logger.warning(f'no text attribute in: {update.message}')
-        else:
-            logger.info(f'user_id: {update.effective_user.id}, message: {update.message.text}')
-        if update.message.sticker is not None:
-            logger.info(f'sticker file_id: {update.message.sticker.file_id}')
-        if update.message.location is not None:
-            location = update.message.location
-            lat = location.latitude
-            lon = location.longitude
-            user = update.effective_user
-            update.message.reply_text(
-                f'您的資訊將會被朽咪記住，天氣預測功能將根據以下這些資訊提供服務：\n'
-                f'\U0001F194 {user.id}\n'
-                f'\U00003294 first name: {user.first_name}\n'
-                f'\U0001F464 username: {user.username}\n'
-                f'\U0001F310 經緯度: {lat}, {lon}'
-            )
-            check_or_create_table_tg_user_location()
-            insert_tg_user_location(user.id, user.first_name, user.username, lat, lon)
+    if request.method != "POST":
+        logger.warning(f'request.method != "POST"')
+        return 'OK'
+    update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
+    # Update dispatcher process that handler to process this message
+    dispatcher.process_update(update)
+    message = update.message or update.edited_message
+    if not message:
+        logger.warning(f'no message attribute in: {update}')
+    elif not message.text:
+        logger.warning(f'no text attribute in: {message}')
+    else:
+        logger.info(f'user_id: {update.effective_user.id}, message: {message.text}')
+    if message.sticker is not None:
+        logger.info(f'sticker file_id: {message.sticker.file_id}')
+    if message.location is not None:
+        location = message.location
+        lat = location.latitude
+        lon = location.longitude
+        user = update.effective_user
+        message.reply_text(
+            f'您的資訊將會被朽咪記住，天氣預測功能將根據以下這些資訊提供服務：\n'
+            f'\U0001F194 {user.id}\n'
+            f'\U00003294 first name: {user.first_name}\n'
+            f'\U0001F464 username: {user.username}\n'
+            f'\U0001F310 經緯度: {lat}, {lon}'
+        )
+        check_or_create_table_tg_user_location()
+        insert_tg_user_location(user.id, user.first_name, user.username, lat, lon)
     return 'OK'
 
 
