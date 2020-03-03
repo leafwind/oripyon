@@ -15,12 +15,14 @@ def get_function_keyboard_markup():
     weather_button = KeyboardButton(text='\U00002603 天氣')
     tarot_button = KeyboardButton(text='\U0001F0CF 塔羅')
     fortune_button = KeyboardButton(text='\U0001F3B0 運勢')
+    dummy_button = KeyboardButton(text='\U0001F914 別按')
     touch_schumi_button = KeyboardButton(text='\U0001F430 摸朽咪')
-    set_location_button = KeyboardButton(text='\U0001F4CD 位置', request_location=True)
+    feedback_button = KeyboardButton(text='\U0001F4E8 建議交流')
+    set_location_button = KeyboardButton(text='\U0001F4CD 設定位置', request_location=True)
     close_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
     custom_keyboard = [
         [weather_button, tarot_button, fortune_button],
-        [touch_schumi_button, ],
+        [dummy_button, touch_schumi_button, feedback_button],
         [set_location_button, close_button]
     ]
     markup = ReplyKeyboardMarkup(
@@ -130,9 +132,21 @@ def fortune(update: Update, _context: CallbackContext):
     update.message.reply_text(reply)
 
 
+def dummy_reply(update: Update, _context: CallbackContext):
+    reply = '什麼事都沒發生，就跟你說別按齁 \U0001F430'
+    logging.getLogger(__name__).info(f'reply: {reply}')
+    update.message.reply_text(reply)
+
+
 def touch_schumi(update: Update, _context: CallbackContext):
     reply = dice.touch_schumi()
     logging.getLogger(__name__).info(f'reply: {reply}')
+    update.message.reply_text(reply)
+
+
+def feedback(update: Update, _context: CallbackContext):
+    reply = f'聯絡作者 @leafwind_tw\n' \
+            f'朽咪公開聊天區 @oripyon_talk'
     update.message.reply_text(reply)
 
 
@@ -165,9 +179,13 @@ def make_reply(update: Update, _context: CallbackContext):
         tarot(update, _context)
     elif text == '\U0001F3B0 運勢':
         fortune(update, _context)
+    elif text == '\U0001F914 別按':
+        dummy_reply(update, _context)
     elif text == '\U0001F430 摸朽咪':
         touch_schumi(update, _context)
-    elif text == '\U0001F4CD 位置':
+    elif text == '\U0001F4E8 建議交流':
+        feedback(update, _context)
+    elif text == '\U0001F4CD 設定位置':
         set_location(update, _context)
     elif text == '\U0000274E 關閉鍵盤':
         close_keyboard(update, _context)
@@ -210,10 +228,10 @@ def receive_sticker(update: Update, _context: CallbackContext):
 
 def add_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler("help", bot_help, pass_args=True))
-    dispatcher.add_handler(CommandHandler("setlocation", set_location, pass_args=True))
     dispatcher.add_handler(CommandHandler("weather", weather, pass_args=True))
-    dispatcher.add_handler(CommandHandler("tarot", tarot, pass_args=True))
-    dispatcher.add_handler(CommandHandler("fortune", fortune, pass_args=True))
+    # dispatcher.add_handler(CommandHandler("tarot", tarot, pass_args=True))
+    # dispatcher.add_handler(CommandHandler("fortune", fortune, pass_args=True))
+    dispatcher.add_handler(CommandHandler("setlocation", set_location, pass_args=True))
     dispatcher.add_handler(MessageHandler(Filters.text, make_reply))
     dispatcher.add_handler(MessageHandler(Filters.location, receive_location))
     dispatcher.add_handler(MessageHandler(Filters.sticker, receive_sticker))
