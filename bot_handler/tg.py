@@ -84,6 +84,8 @@ def weather(update: Update, _context: CallbackContext):
             reply_markup=get_location_keyboard_markup()
         )
     else:
+        reply = '自動取用離你最近的測站天氣資料中，目前僅限台灣國內才能正常使用'
+        update.message.reply_text(text=reply)
         aqi_json_data, aqi_site_tree = epa_aqi_api()
         aqi_info = get_weather_data_from_closest_site(lat, lon, aqi_json_data, aqi_site_tree)
         aqi_site_name = aqi_info['SiteName']
