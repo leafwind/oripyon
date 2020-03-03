@@ -131,7 +131,7 @@ def make_reply(update: Update, _context: CallbackContext):
         update.message.reply_text(reply)
 
 
-def receive_location(update: Update):
+def receive_location(update: Update, _context: CallbackContext):
     location = update.message.location
     lat = location.latitude
     lon = location.longitude
@@ -147,7 +147,7 @@ def receive_location(update: Update):
     insert_tg_user_location(user.id, user.first_name, user.username, lat, lon)
 
 
-def receive_sticker(update: Update):
+def receive_sticker(update: Update, _context: CallbackContext):
     logger = logging.getLogger(__name__)
     logger.info(f'sticker file_id: {update.message.sticker.file_id}')
 
