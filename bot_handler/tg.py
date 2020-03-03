@@ -36,6 +36,13 @@ def set_location(update: Update, _context: CallbackContext):
     )
 
 
+def get_weather_data_from_closest_site(lat, lon, json_data, site_tree):
+    cartesian_coord = cartesian(lat, lon)
+    closest_site = site_tree.query([cartesian_coord], p=2)
+    site_index = closest_site[1][0]
+    return json_data[site_index]
+
+
 def weather(update: Update, _context: CallbackContext):
     # _args = context.args
     gps_location = query_tg_user_location(update.effective_user.id)
@@ -47,17 +54,29 @@ def weather(update: Update, _context: CallbackContext):
         )
     else:
         aqi_json_data, aqi_site_tree = epa_aqi_api()
+        aqi_info = get_weather_data_from_closest_site(lat, lon, aqi_json_data, aqi_site_tree)
+        aqi_site_name = aqi_info['SiteName']
+        aqi_site_county = aqi_info['County']
+        aqi = aqi_info['AQI']
+        aqi_status = aqi_info['Status']
+        pm25 = aqi_info['PM2.5']
+        aqi_publish_time = aqi_info['PublishTime']
         uv_json_data, uv_site_tree = uv_api()
-        cartesian_coord = cartesian(lat, lon)
-        closest_aqi_site = aqi_site_tree.query([cartesian_coord], p=2)
-        closest_uv_site = uv_site_tree.query([cartesian_coord], p=2)
-        aqi_site_index = closest_aqi_site[1][0]
-        uv_site_index = closest_uv_site[1][0]
+        uv_info = get_weather_data_from_closest_site(lat, lon, uv_json_data, uv_site_tree)
+        uv_site_name = uv_info['SiteName']
+        uv_site_county = uv_info['County']
+        uvi = uv_info['UVI']
+        uv_publish_time = uv_info['PublishTime']
         geo_info = reverse_geocode_customize((lat, lon))[0]
         update.message.reply_text(
-            f'{geo_info["name"]} (行政區: {geo_info["admin1"]}, 國家: {geo_info["cc"]})\n'
-            f'空品資訊：{aqi_json_data[aqi_site_index]}\n'
-            f'紫外線資訊：{uv_json_data[uv_site_index]}'
+            f'你所在的位置：{geo_info["name"]} (行政區: {geo_info["admin1"]}, 國家: {geo_info["cc"]})\n'
+            f'離你最近的測站資訊：\n'
+            f'\n'
+            f'空品資訊從{aqi_site_name}測站 ({aqi_site_county})\n'
+            f'{aqi_status} (AQI: {aqi}, PM2.5: {pm25}) 時間: {aqi_publish_time}\n'
+            f'\n'
+            f'紫外線資訊從{uv_site_name}測站 ({uv_site_county})\n'
+            f'UVI: {uvi} 時間: {uv_publish_time}\n'
         )
 
 
