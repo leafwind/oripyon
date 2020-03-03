@@ -37,6 +37,15 @@ def set_location(update: Update, _context: CallbackContext):
 
 
 def get_weather_data_from_closest_site(lat, lon, json_data, site_tree):
+    """
+    use K-D tree to find closet place
+    ref: https://www.timvink.nl/closest-coordinates/
+    :param lat:
+    :param lon:
+    :param json_data:
+    :param site_tree:
+    :return:
+    """
     cartesian_coord = cartesian(lat, lon)
     closest_site = site_tree.query([cartesian_coord], p=2)
     site_index = closest_site[1][0]
@@ -72,10 +81,10 @@ def weather(update: Update, _context: CallbackContext):
             f'你所在的位置：{geo_info["name"]} (行政區: {geo_info["admin1"]}, 國家: {geo_info["cc"]})\n'
             f'離你最近的測站資訊：\n'
             f'\n'
-            f'空品資訊從{aqi_site_name}測站 ({aqi_site_county})\n'
+            f'\U0001047A空品資訊從{aqi_site_name}測站 ({aqi_site_county})\n'
             f'{aqi_status} (AQI: {aqi}, PM2.5: {pm25}) 時間: {aqi_publish_time}\n'
             f'\n'
-            f'紫外線資訊從{uv_site_name}測站 ({uv_site_county})\n'
+            f'\U0000263C紫外線資訊從{uv_site_name}測站 ({uv_site_county})\n'
             f'UVI: {uvi} 時間: {uv_publish_time}\n'
         )
 
