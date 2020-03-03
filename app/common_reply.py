@@ -5,7 +5,7 @@ from linebot.models import (
 )
 
 from app.dice import fortune, tarot_line_reply, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat, find_schumi, \
-    touch_schumi, draw_sinoalice
+    touch_schumi_line_reply, draw_sinoalice
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
     bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
 from app.finance import exchange_rate
@@ -87,7 +87,7 @@ pattern_mapping_common = [
     {
         'cmd': '摸朽咪',
         'type': 'equal',
-        'function': touch_schumi,
+        'function': touch_schumi_line_reply,
         'multi_type_output': True
     },
     {

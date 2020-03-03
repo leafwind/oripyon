@@ -15,7 +15,7 @@ from constants import HUGE_GROUP_IDS, TEACHER_HO, PAN_SENTENCES, GSPREAD_KEY_CAT
 tarot_cards = json.load(open('app/tarot.json', encoding='utf8'))
 
 
-def touch_schumi(_msg_info, _robot_settings):
+def touch_schumi():
     random.seed(os.urandom(5))
     gss_scopes = ['https://spreadsheets.google.com/feeds']
     gss_client = auth_gss_client(GOOGLE_AUTH_JSON_PATH, gss_scopes)
@@ -30,7 +30,12 @@ def touch_schumi(_msg_info, _robot_settings):
         weights.append(float(w))
         population.append(text)
     text = random.choices(population=population, weights=weights, k=1)[0]
-    replies = [('text', text)]
+    return text
+
+
+def touch_schumi_line_reply(_msg_info, _robot_settings):
+    reply_text = touch_schumi()
+    replies = [('text', reply_text)]
     return replies
 
 

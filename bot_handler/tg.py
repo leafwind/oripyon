@@ -11,15 +11,18 @@ from app.sqlite_utils.user_location import check_or_create_table_tg_user_locatio
 from app.sqlite_utils.user_location import query_tg_user_location
 
 
-def bot_help(update: Update, _context: CallbackContext):
-    # _args = context.args
-    update.message.reply_text('Help!')
-
-
-def get_location_keyboard_markup():
-    location_keyboard = KeyboardButton(text="我要提供位置資訊", request_location=True)
-    reject_keyboard = KeyboardButton(text="關閉鍵盤")
-    custom_keyboard = [[location_keyboard, reject_keyboard]]
+def get_function_keyboard_markup():
+    weather_button = KeyboardButton(text='\U00002603 天氣')
+    tarot_button = KeyboardButton(text='\U0001F0CF 塔羅')
+    fortune_button = KeyboardButton(text='\U0001F3B0 運勢')
+    touch_schumi_button = KeyboardButton(text='\U0001F430 摸朽咪')
+    set_location_button = KeyboardButton(text='\U0001F4CD 位置', request_location=True)
+    close_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
+    custom_keyboard = [
+        [weather_button, tarot_button, fortune_button],
+        [touch_schumi_button, ],
+        [set_location_button, close_button]
+    ]
     markup = ReplyKeyboardMarkup(
         custom_keyboard,
         resize_keyboard=True,
@@ -28,13 +31,27 @@ def get_location_keyboard_markup():
     return markup
 
 
-# from Code snippets
-# https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets#requesting-location-and-contact-from-user
-def set_location(update: Update, _context: CallbackContext):
+def bot_help(update: Update, _context: CallbackContext):
+    # _args = context.args
     update.message.reply_text(
-        text="你想提供位置資訊讓朽咪提供更多服務嗎？",
-        reply_markup=get_location_keyboard_markup()
+        text=f'你可以：\n'
+             f'輸入 "/" 展開指令選單\n'
+             f'使用貼圖旁邊的 [ / ] 按鈕展開指令選單\n'
+             f'使用下面的鍵盤選單',
+        reply_markup=get_function_keyboard_markup()
     )
+
+
+def get_location_keyboard_markup():
+    location_button = KeyboardButton(text='我要提供位置資訊', request_location=True)
+    reject_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
+    custom_keyboard = [[location_button, reject_button]]
+    markup = ReplyKeyboardMarkup(
+        custom_keyboard,
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+    return markup
 
 
 def get_weather_data_from_closest_site(lat, lon, json_data, site_tree):
@@ -58,8 +75,10 @@ def weather(update: Update, _context: CallbackContext):
     gps_location = query_tg_user_location(update.effective_user.id)
     lat, lon = gps_location
     if not gps_location:
+        reply = '朽咪不知道您的位置資訊，你想提供位置資訊讓朽咪提供更多服務嗎？'
+        logging.getLogger(__name__).info(f'reply: {reply}')
         update.message.reply_text(
-            text='朽咪不知道您的位置資訊，你想提供位置資訊讓朽咪提供更多服務嗎？',
+            text=reply,
             reply_markup=get_location_keyboard_markup()
         )
     else:
@@ -95,6 +114,7 @@ def weather(update: Update, _context: CallbackContext):
 def tarot(update: Update, _context: CallbackContext):
     # _args = context.args
     card = dice.draw_tarot()
+    logging.getLogger(__name__).info(f'reply: {card}')
     update.message.reply_photo(
         photo=card['url'],
         caption=card['nameCN'],
@@ -106,7 +126,31 @@ def tarot(update: Update, _context: CallbackContext):
 def fortune(update: Update, _context: CallbackContext):
     # _args = context.args
     reply = dice.fortune(None, None)
+    logging.getLogger(__name__).info(f'reply: {reply}')
     update.message.reply_text(reply)
+
+
+def touch_schumi(update: Update, _context: CallbackContext):
+    reply = dice.touch_schumi()
+    logging.getLogger(__name__).info(f'reply: {reply}')
+    update.message.reply_text(reply)
+
+
+# from Code snippets
+# https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets#requesting-location-and-contact-from-user
+def set_location(update: Update, _context: CallbackContext):
+    reply = '你想提供位置資訊讓朽咪提供更多服務嗎？'
+    logging.getLogger(__name__).info(f'reply: {reply}')
+    update.message.reply_text(
+        text=reply,
+        reply_markup=get_location_keyboard_markup()
+    )
+
+
+def close_keyboard(update: Update, _context: CallbackContext):
+    reply = 'OK!\U0001F430'
+    logging.getLogger(__name__).info(f'reply: {reply}')
+    update.message.reply_text(reply, reply_markup=ReplyKeyboardRemove())
 
 
 def make_reply(update: Update, _context: CallbackContext):
@@ -115,10 +159,18 @@ def make_reply(update: Update, _context: CallbackContext):
         logging.warning(f'no text attribute in: {update.message}')
     text = update.message.text
     logger = logging.getLogger(__name__)
-    if text == '關閉鍵盤':
-        reply = 'OK!\U0001F430'
-        logger.info(f'reply: {reply}')
-        update.message.reply_text(reply, reply_markup=ReplyKeyboardRemove())
+    if text == '\U00002603 天氣':
+        weather(update, _context)
+    elif text == '\U0001F0CF 塔羅':
+        tarot(update, _context)
+    elif text == '\U0001F3B0 運勢':
+        fortune(update, _context)
+    elif text == '\U0001F430 摸朽咪':
+        touch_schumi(update, _context)
+    elif text == '\U0001F4CD 位置':
+        set_location(update, _context)
+    elif text == '\U0000274E 關閉鍵盤':
+        close_keyboard(update, _context)
     elif 'ㄆㄆ' in text:
         reply = '我知道！戳！\U0001F430'
         logger.info(f'reply: {reply}')

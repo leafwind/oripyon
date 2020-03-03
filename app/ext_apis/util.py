@@ -70,7 +70,7 @@ def reverse_geocode_customize(coordinates):
     return results
 
 
-def cartesian(latitude, longitude, elevation=0):
+def cartesian(latitude, longitude, _elevation=0):
     # Convert to radians
     latitude = latitude * (math.pi / 180)
     longitude = longitude * (math.pi / 180)
