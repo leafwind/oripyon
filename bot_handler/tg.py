@@ -88,15 +88,15 @@ def weather(update: Update, _context: CallbackContext):
                 reply_markup=get_location_keyboard_markup()
             )
         else:
-            reply = '請私訊朽咪 @oripyon_bot 提供位置資訊'
+            reply = '朽咪不知道您的位置資訊，請點擊 @oripyon_bot 打開對話以提供位置'
             logging.getLogger(__name__).info(f'reply: {reply}')
             update.message.reply_text(
                 text=reply
             )
     else:
         lat, lon = gps_location
-        reply = '自動取用離你最近的測站天氣資料中，目前僅限台灣國內才能正常使用'
-        update.message.reply_text(text=reply)
+        update.message.reply_text(text='自動取用離你最近的測站天氣資料中，目前僅限台灣國內才能正常使用', disable_notification=True)
+        update.message.reply_text(text='取得環保署即時空品資料中...', disable_notification=True)
         aqi_json_data, aqi_site_tree = epa_aqi_api()
         aqi_info = get_weather_data_from_closest_site(lat, lon, aqi_json_data, aqi_site_tree)
         aqi_site_name = aqi_info['SiteName']
@@ -105,6 +105,7 @@ def weather(update: Update, _context: CallbackContext):
         aqi_status = aqi_info['Status']
         pm25 = aqi_info['PM2.5']
         aqi_publish_time = aqi_info['PublishTime']
+        update.message.reply_text(text='取得環保署即時紫外線資料中...', disable_notification=True)
         uv_json_data, uv_site_tree = uv_api()
         uv_info = get_weather_data_from_closest_site(lat, lon, uv_json_data, uv_site_tree)
         uv_site_name = uv_info['SiteName']
