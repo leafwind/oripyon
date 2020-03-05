@@ -11,14 +11,18 @@ from app.sqlite_utils.user_location import check_or_create_table_tg_user_locatio
 from app.sqlite_utils.user_location import query_tg_user_location
 
 
-def get_function_keyboard_markup():
+def get_function_keyboard_markup(chat_type):
     weather_button = KeyboardButton(text='\U00002603 天氣')
     tarot_button = KeyboardButton(text='\U0001F0CF 塔羅')
     fortune_button = KeyboardButton(text='\U0001F3B0 運勢')
     dummy_button = KeyboardButton(text='\U0001F914 別按')
     touch_schumi_button = KeyboardButton(text='\U0001F430 摸朽咪')
     feedback_button = KeyboardButton(text='\U0001F4E8 建議交流')
-    set_location_button = KeyboardButton(text='\U0001F4CD 設定位置', request_location=True)
+    # “private”, “group”, “supergroup” or “channel”
+    if chat_type != 'private':
+        set_location_button = KeyboardButton(text='\U0001F4CD 設定位置')
+    else:
+        set_location_button = KeyboardButton(text='\U0001F4CD 設定位置', request_location=True)
     close_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
     custom_keyboard = [
         [weather_button, tarot_button, fortune_button],
@@ -40,7 +44,7 @@ def bot_help(update: Update, _context: CallbackContext):
              f'輸入 "/" 展開指令選單\n'
              f'使用貼圖旁邊的 [ / ] 按鈕展開指令選單\n'
              f'使用下面的鍵盤選單',
-        reply_markup=get_function_keyboard_markup()
+        reply_markup=get_function_keyboard_markup(update.message.chat.type)
     )
 
 
@@ -77,12 +81,19 @@ def weather(update: Update, _context: CallbackContext):
     gps_location = query_tg_user_location(update.effective_user.id)
     lat, lon = gps_location
     if not gps_location:
-        reply = '朽咪不知道您的位置資訊，你想提供位置資訊讓朽咪提供更多服務嗎？'
-        logging.getLogger(__name__).info(f'reply: {reply}')
-        update.message.reply_text(
-            text=reply,
-            reply_markup=get_location_keyboard_markup()
-        )
+        if update.message.chat.type == 'private':
+            reply = '朽咪不知道您的位置資訊，你想提供位置資訊讓朽咪提供更多服務嗎？'
+            logging.getLogger(__name__).info(f'reply: {reply}')
+            update.message.reply_text(
+                text=reply,
+                reply_markup=get_location_keyboard_markup()
+            )
+        else:
+            reply = '請私訊朽咪 @oripyon_bot 提供位置資訊'
+            logging.getLogger(__name__).info(f'reply: {reply}')
+            update.message.reply_text(
+                text=reply
+            )
     else:
         reply = '自動取用離你最近的測站天氣資料中，目前僅限台灣國內才能正常使用'
         update.message.reply_text(text=reply)
@@ -155,12 +166,20 @@ def feedback(update: Update, _context: CallbackContext):
 # from Code snippets
 # https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets#requesting-location-and-contact-from-user
 def set_location(update: Update, _context: CallbackContext):
-    reply = '你想提供位置資訊讓朽咪提供更多服務嗎？'
-    logging.getLogger(__name__).info(f'reply: {reply}')
-    update.message.reply_text(
-        text=reply,
-        reply_markup=get_location_keyboard_markup()
-    )
+    if update.message.chat.type == 'private':
+        reply = '你想提供位置資訊讓朽咪提供更多服務嗎？'
+        logging.getLogger(__name__).info(f'reply: {reply}')
+        update.message.reply_text(
+            text=reply,
+            reply_markup=get_location_keyboard_markup()
+        )
+    else:
+        reply = '抱歉，位置只支援私訊朽咪 @oripyon_bot 提供'
+        logging.getLogger(__name__).info(f'reply: {reply}')
+        update.message.reply_text(
+            text=reply
+        )
+
 
 
 def close_keyboard(update: Update, _context: CallbackContext):
