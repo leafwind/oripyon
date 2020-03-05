@@ -79,7 +79,6 @@ def get_weather_data_from_closest_site(lat, lon, json_data, site_tree):
 def weather(update: Update, _context: CallbackContext):
     # _args = context.args
     gps_location = query_tg_user_location(update.effective_user.id)
-    lat, lon = gps_location
     if not gps_location:
         if update.message.chat.type == 'private':
             reply = '朽咪不知道您的位置資訊，你想提供位置資訊讓朽咪提供更多服務嗎？'
@@ -95,6 +94,7 @@ def weather(update: Update, _context: CallbackContext):
                 text=reply
             )
     else:
+        lat, lon = gps_location
         reply = '自動取用離你最近的測站天氣資料中，目前僅限台灣國內才能正常使用'
         update.message.reply_text(text=reply)
         aqi_json_data, aqi_site_tree = epa_aqi_api()
@@ -179,7 +179,6 @@ def set_location(update: Update, _context: CallbackContext):
         update.message.reply_text(
             text=reply
         )
-
 
 
 def close_keyboard(update: Update, _context: CallbackContext):
