@@ -56,7 +56,7 @@ def get_ncov_keyboard_markup():
     iran_button = KeyboardButton(text='\U0001F1EE\U0001F1F7 伊朗')
     reject_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
     custom_keyboard = [
-        [korea_button, japan_button, italy_button, iran_button]
+        [korea_button, japan_button, italy_button, iran_button],
         [reject_button]
     ]
     markup = ReplyKeyboardMarkup(
