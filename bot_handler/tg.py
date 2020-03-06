@@ -2,10 +2,11 @@ import logging
 
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
+from telegram.files.inputmedia import InputMediaPhoto
 
 from app import dice
-from app.ext_apis.tw_open_data import epa_aqi_api, uv_api
 from app.ext_apis.dxy_open_data import load_ncov_data
+from app.ext_apis.tw_open_data import epa_aqi_api, uv_api
 from app.ext_apis.util import cartesian
 from app.ext_apis.util import reverse_geocode_customize
 from app.sqlite_utils.user_location import check_or_create_table_tg_user_location, insert_tg_user_location
@@ -180,11 +181,11 @@ def ncov_reply(update: Update, _context: CallbackContext):
 
 
 def query_ncov(update: Update, _context: CallbackContext, country):
-    media_group = []
     country_image_url = load_ncov_data()
+    media_group = []
     for key in country_image_url:
         if key.startswith(country):
-            media_group.append(country_image_url[key])
+            media_group.append(InputMediaPhoto(media=country_image_url[key], caption=key))
     update.message.reply_media_group(
         media=media_group,
         disable_notification=True,
