@@ -35,6 +35,7 @@ def get_function_keyboard_markup(chat_type):
         custom_keyboard,
         resize_keyboard=True,
         one_time_keyboard=True,
+        selective=True,
     )
     return markup
 
@@ -64,6 +65,7 @@ def get_ncov_keyboard_markup():
         custom_keyboard,
         resize_keyboard=True,
         one_time_keyboard=True,
+        selective=True,
     )
     return markup
 
@@ -76,6 +78,7 @@ def get_location_keyboard_markup():
         custom_keyboard,
         resize_keyboard=True,
         one_time_keyboard=True,
+        selective=True,
     )
     return markup
 
