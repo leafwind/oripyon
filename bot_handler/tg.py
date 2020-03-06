@@ -174,7 +174,7 @@ def dummy_reply(update: Update, _context: CallbackContext):
 def ncov_reply(update: Update, _context: CallbackContext):
     reply = '請選擇要查詢的災區國家 \U0001F430'
     update.message.reply_text(
-        reply=reply,
+        text=reply,
         reply_markup=get_ncov_keyboard_markup()
     )
 
