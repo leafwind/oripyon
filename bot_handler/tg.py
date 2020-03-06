@@ -5,6 +5,7 @@ from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContex
 
 from app import dice
 from app.ext_apis.tw_open_data import epa_aqi_api, uv_api
+from app.ext_apis.dxy_open_data import load_ncov_data
 from app.ext_apis.util import cartesian
 from app.ext_apis.util import reverse_geocode_customize
 from app.sqlite_utils.user_location import check_or_create_table_tg_user_location, insert_tg_user_location
@@ -15,7 +16,7 @@ def get_function_keyboard_markup(chat_type):
     weather_button = KeyboardButton(text='\U00002603 天氣')
     tarot_button = KeyboardButton(text='\U0001F0CF 塔羅')
     fortune_button = KeyboardButton(text='\U0001F3B0 運勢')
-    dummy_button = KeyboardButton(text='\U0001F914 別按')
+    ncov_button = KeyboardButton(text='\U0001F637　武漢肺炎')
     touch_schumi_button = KeyboardButton(text='\U0001F430 摸朽咪')
     feedback_button = KeyboardButton(text='\U0001F4E8 建議交流')
     # “private”, “group”, “supergroup” or “channel”
@@ -26,7 +27,7 @@ def get_function_keyboard_markup(chat_type):
     close_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
     custom_keyboard = [
         [weather_button, tarot_button, fortune_button],
-        [dummy_button, touch_schumi_button, feedback_button],
+        [ncov_button, touch_schumi_button, feedback_button],
         [set_location_button, close_button]
     ]
     markup = ReplyKeyboardMarkup(
@@ -46,6 +47,24 @@ def bot_help(update: Update, _context: CallbackContext):
              f'使用下面的鍵盤選單',
         reply_markup=get_function_keyboard_markup(update.message.chat.type)
     )
+
+
+def get_ncov_keyboard_markup():
+    korea_button = KeyboardButton(text='\U0001F1F0\U0001F1F7 韓國')
+    japan_button = KeyboardButton(text='\U0001F1EF\U0001F1F5 日本')
+    italy_button = KeyboardButton(text='\U0001F1EE\U0001F1F9 義大利')
+    iran_button = KeyboardButton(text='\U0001F1EE\U0001F1F7 伊朗')
+    reject_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
+    custom_keyboard = [
+        [korea_button, japan_button, italy_button, iran_button]
+        [reject_button]
+    ]
+    markup = ReplyKeyboardMarkup(
+        custom_keyboard,
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+    return markup
 
 
 def get_location_keyboard_markup():
@@ -152,6 +171,26 @@ def dummy_reply(update: Update, _context: CallbackContext):
     update.message.reply_text(reply)
 
 
+def ncov_reply(update: Update, _context: CallbackContext):
+    reply = '請選擇要查詢的災區國家 \U0001F430'
+    update.message.reply_text(
+        reply=reply,
+        reply_markup=get_ncov_keyboard_markup()
+    )
+
+
+def query_ncov(update: Update, _context: CallbackContext, country):
+    media_group = []
+    country_image_url = load_ncov_data()
+    for key in country_image_url:
+        if key.startswith(country):
+            media_group.append(country_image_url[key])
+    update.message.reply_media_group(
+        media=media_group,
+        disable_notification=True,
+    )
+
+
 def touch_schumi(update: Update, _context: CallbackContext):
     reply = dice.touch_schumi()
     logging.getLogger(__name__).info(f'reply: {reply}')
@@ -200,8 +239,8 @@ def make_reply(update: Update, _context: CallbackContext):
         tarot(update, _context)
     elif text == '\U0001F3B0 運勢':
         fortune(update, _context)
-    elif text == '\U0001F914 別按':
-        dummy_reply(update, _context)
+    elif text == '\U0001F637　武漢肺炎':
+        ncov_reply(update, _context)
     elif text == '\U0001F430 摸朽咪':
         touch_schumi(update, _context)
     elif text == '\U0001F4E8 建議交流':
@@ -210,6 +249,14 @@ def make_reply(update: Update, _context: CallbackContext):
         set_location(update, _context)
     elif text == '\U0000274E 關閉鍵盤':
         close_keyboard(update, _context)
+    elif text == '\U0001F1F0\U0001F1F7 韓國':
+        query_ncov(update, _context, 'korea')
+    elif text == '\U0001F1EF\U0001F1F5 日本':
+        query_ncov(update, _context, 'japan')
+    elif text == '\U0001F1EE\U0001F1F9 義大利':
+        query_ncov(update, _context, 'italy')
+    elif text == '\U0001F1EE\U0001F1F7 伊朗':
+        query_ncov(update, _context, 'iran')
     elif 'ㄆㄆ' in text:
         reply = '我知道！戳！\U0001F430'
         logger.info(f'reply: {reply}')
