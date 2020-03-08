@@ -119,7 +119,7 @@ def weather(update: Update, _context: CallbackContext):
     else:
         lat, lon = gps_location
         update.message.reply_text(text='自動取用離你最近的測站天氣資料中，目前僅限台灣國內才能正常使用', disable_notification=True)
-        update.message.reply_text(text='取得環保署即時空品資料中...', disable_notification=True)
+        # update.message.reply_text(text='取得環保署即時空品資料中...', disable_notification=True)
         aqi_json_data, aqi_site_tree = epa_aqi_api()
         aqi_info = get_weather_data_from_closest_site(lat, lon, aqi_json_data, aqi_site_tree)
         aqi_site_name = aqi_info['SiteName']
@@ -128,7 +128,7 @@ def weather(update: Update, _context: CallbackContext):
         aqi_status = aqi_info['Status']
         pm25 = aqi_info['PM2.5']
         aqi_publish_time = aqi_info['PublishTime']
-        update.message.reply_text(text='取得環保署即時紫外線資料中...', disable_notification=True)
+        # update.message.reply_text(text='取得環保署即時紫外線資料中...', disable_notification=True)
         uv_json_data, uv_site_tree = uv_api()
         uv_info = get_weather_data_from_closest_site(lat, lon, uv_json_data, uv_site_tree)
         uv_site_name = uv_info['SiteName']
