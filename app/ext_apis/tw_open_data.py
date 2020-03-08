@@ -1,4 +1,4 @@
-import inspect
+import json
 import logging
 
 import cachetools.func
@@ -32,7 +32,6 @@ def ey_clarify_api():
     return json_data
 
 
-@cachetools.func.ttl_cache(ttl=60*10)
 def epa_aqi_api():
     """
     空氣品質指標(AQI)
@@ -67,14 +66,16 @@ def epa_aqi_api():
         }, ...
     ]
     """
-    logger = logging.getLogger(__name__)
-    logger.info(f'{inspect.currentframe().f_code.co_name} start')
-    start = int(time.time())
-    url = 'https://opendata.epa.gov.tw/ws/Data/AQI/?$format=json'
-    r = requests.get(url)
-    end = int(time.time())
-    logger.info(f'{inspect.currentframe().f_code.co_name} took {end - start} seconds')
-    json_data = r.json()
+    # logger = logging.getLogger(__name__)
+    # logger.info(f'{inspect.currentframe().f_code.co_name} start')
+    # start = int(time.time())
+    # url = 'https://opendata.epa.gov.tw/ws/Data/AQI/?$format=json'
+    # r = requests.get(url)
+    # end = int(time.time())
+    # logger.info(f'{inspect.currentframe().f_code.co_name} took {end - start} seconds')
+    # json_data = r.json()
+    with open('cache_ext_data/aqi.json', 'r') as f:
+        json_data = json.load(f)
 
     # build K-D tree for all positions
     site_coords = []
@@ -86,7 +87,6 @@ def epa_aqi_api():
     return json_data, tree
 
 
-@cachetools.func.ttl_cache(ttl=60 * 10)
 def uv_api():
     """
     紫外線即時監測資料
@@ -108,13 +108,15 @@ def uv_api():
     ]
     """
     logger = logging.getLogger(__name__)
-    logger.info(f'{inspect.currentframe().f_code.co_name} start')
-    start = int(time.time())
-    url = 'https://opendata.epa.gov.tw/ws/Data/UV/?$format=json'
-    r = requests.get(url)
-    end = int(time.time())
-    logger.info(f'{inspect.currentframe().f_code.co_name} took {end - start} seconds')
-    json_data = r.json()
+    # logger.info(f'{inspect.currentframe().f_code.co_name} start')
+    # start = int(time.time())
+    # url = 'https://opendata.epa.gov.tw/ws/Data/UV/?$format=json'
+    # r = requests.get(url)
+    # end = int(time.time())
+    # logger.info(f'{inspect.currentframe().f_code.co_name} took {end - start} seconds')
+    # json_data = r.json()
+    with open('cache_ext_data/uv.json', 'r') as f:
+        json_data = json.load(f)
     # transform dms unit to dd
     for j in json_data:
         try:
