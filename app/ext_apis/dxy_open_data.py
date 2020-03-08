@@ -96,7 +96,7 @@ import csv
 import json
 
 
-def load_ncov_data(filepath='/home/leafbot/DXYOverall.csv'):
+def load_ncov_data(filepath='/home/leafbot/git/oripyon/cache_ext_data/DXYOverall.csv'):
     with open(filepath) as f:
         reader = csv.reader(f)
         headers = next(reader, None)
