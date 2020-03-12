@@ -6,6 +6,7 @@ from telegram.files.inputmedia import InputMediaPhoto
 
 from app import dice
 from app.ext_apis.dxy_open_data import load_ncov_data
+from app.ext_apis import csse_covid_19_data
 from app.ext_apis.tw_open_data import epa_aqi_api, uv_api
 from app.ext_apis.util import cartesian
 from app.ext_apis.util import reverse_geocode_customize
@@ -191,6 +192,18 @@ def query_ncov(update: Update, _context: CallbackContext, country):
             media_group.append(InputMediaPhoto(media=country_image_url[key], caption=key))
     update.message.reply_media_group(
         media=media_group,
+        disable_notification=True,
+    )
+
+
+def query_ncov_csse(update: Update, _context: CallbackContext, country):
+    country_state_result, country_result = csse_covid_19_data.load_ncov_data()
+    if country not in country_result:
+        reply = '查無此國家'
+    else:
+        reply = [data[0].strftime('%Y-%m-%d') + ': ' + str(data[1]) + ', ' for data in country_result[country]]
+    update.message.reply_test(
+        text=reply,
         disable_notification=True,
     )
 

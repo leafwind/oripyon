@@ -118,14 +118,14 @@ def load_ncov_data(filepath='cache_ext_data/DXYOverall.csv'):
             for h, v in zip(headers, row):
                 column[h].append(v)
             # only load 1 record (newest data)
-            importantForeignTrendChart = column['importantForeignTrendChart'][0].replace('\'', '\"')
+            important_foreign_trend_chart = column['importantForeignTrendChart'][0].replace('\'', '\"')
             # print(importantForeignTrendChart)
-            d = json.loads(importantForeignTrendChart)
+            d = json.loads(important_foreign_trend_chart)
             country_image_url = {}
             for item in d:
                 title = item['title']
-                imgUrl = item['imgUrl']
-                country_image_url[country_mapping[title]] = imgUrl
+                img_url = item['imgUrl']
+                country_image_url[country_mapping[title]] = img_url
             break
         return country_image_url
 
