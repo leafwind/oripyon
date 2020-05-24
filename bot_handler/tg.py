@@ -19,6 +19,7 @@ def get_function_keyboard_markup(chat_type):
     tarot_button = KeyboardButton(text='\U0001F0CF 塔羅')
     fortune_button = KeyboardButton(text='\U0001F3B0 運勢')
     ncov_button = KeyboardButton(text='\U0001F637　武漢肺炎')
+    ncov_new_button = KeyboardButton(text='\U0001F637　武漢肺炎(CSSE)')
     touch_schumi_button = KeyboardButton(text='\U0001F430 摸朽咪')
     feedback_button = KeyboardButton(text='\U0001F4E8 建議交流')
     # “private”, “group”, “supergroup” or “channel”
@@ -29,8 +30,8 @@ def get_function_keyboard_markup(chat_type):
     close_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
     custom_keyboard = [
         [weather_button, tarot_button, fortune_button],
-        [ncov_button, touch_schumi_button, feedback_button],
-        [set_location_button, close_button]
+        [ncov_button, ncov_new_button, touch_schumi_button],
+        [feedback_button, set_location_button, close_button]
     ]
     markup = ReplyKeyboardMarkup(
         custom_keyboard,
@@ -258,6 +259,8 @@ def make_reply(update: Update, _context: CallbackContext):
         fortune(update, _context)
     elif text == '\U0001F637　武漢肺炎':
         ncov_reply(update, _context)
+    elif text == '\U0001F637　武漢肺炎(CSSE)':
+        query_ncov_csse()
     elif text == '\U0001F430 摸朽咪':
         touch_schumi(update, _context)
     elif text == '\U0001F4E8 建議交流':

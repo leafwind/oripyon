@@ -7,7 +7,7 @@ from linebot.models import (
 from app.dice import fortune, tarot_line_reply, nca, choice, coc_7e_basic, draw_card, pan_pan, draw_cat, find_schumi, \
     touch_schumi_line_reply, draw_sinoalice
 from app.direct_reply import gurulingpo, poor_chinese, qq, mahoshoujo, why, \
-    bot_help, tzguguaning, daughter_red, girlfriend, pier_girl
+    bot_help, tzguguaning, daughter_red, girlfriend, pier_girl, sinoalice_raid_boss
 from app.finance import exchange_rate
 from app.google_utils.custom_search import google_search_image
 from app.weather_status import weather_now, rainfall_now, radar_now, aqi_now, aqi_predict, aqi_status, reservoir_now
@@ -27,6 +27,7 @@ coc_7e_skill_pattern = re.compile(
     """, re.VERBOSE | re.IGNORECASE)
 gurulingpo_pattern = re.compile(r'咕嚕靈波')
 mahoshoujo_pattern = re.compile(r'魔法少女')
+sinoalice_boss_pattern = re.compile(r'討伐時間')
 tzguguaning_pattern = re.compile(r'慈孤觀音')
 daughter_red_pattern = re.compile(r'女兒紅')
 girlfriend_pattern = re.compile(r'求女(朋)?友')
@@ -196,6 +197,11 @@ pattern_mapping_common = [
         'cmd': tzguguaning_pattern,
         'type': 'search',
         'function': tzguguaning
+    },
+    {
+        'cmd': sinoalice_boss_pattern,
+        'type': 'equal',
+        'function': sinoalice_raid_boss
     },
     {
         'cmd': daughter_red_pattern,
