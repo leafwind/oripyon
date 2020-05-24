@@ -27,7 +27,6 @@ coc_7e_skill_pattern = re.compile(
     """, re.VERBOSE | re.IGNORECASE)
 gurulingpo_pattern = re.compile(r'咕嚕靈波')
 mahoshoujo_pattern = re.compile(r'魔法少女')
-sinoalice_boss_pattern = re.compile(r'討伐時間')
 tzguguaning_pattern = re.compile(r'慈孤觀音')
 daughter_red_pattern = re.compile(r'女兒紅')
 girlfriend_pattern = re.compile(r'求女(朋)?友')
@@ -199,7 +198,7 @@ pattern_mapping_common = [
         'function': tzguguaning
     },
     {
-        'cmd': sinoalice_boss_pattern,
+        'cmd': '討伐時間',
         'type': 'equal',
         'function': sinoalice_raid_boss
     },
