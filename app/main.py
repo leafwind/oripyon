@@ -84,7 +84,7 @@ def telegram_callback():
     logger = logging.getLogger(__name__)
     tg.add_handlers(dispatcher)
     if request.method != "POST":
-        logger.warning(f'request.method != "POST"')
+        logger.warning('request.method != "POST"')
         return 'OK'
     update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
     # Update dispatcher process that handler to process this message

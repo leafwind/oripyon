@@ -25,5 +25,5 @@ def exchange_rate(_msg_info, _robot_settings):
     usdjpy_date_utc8 = datetime.utcfromtimestamp(usdjpy_ts + 8 * 3600)
     reply_usd_jpy = f'1USD = {mapping["USDJPY"]["Exrate"]} JPY\n{usdjpy_date_utc8}'
     reply_jpy_twd = f'估計匯率\n1JPY = {mapping["USDTWD"]["Exrate"] / mapping["USDJPY"]["Exrate"]} TWD'
-    comment = f'以上匯率僅供參考，與當地銀行將會有所出入'
+    comment = '以上匯率僅供參考，與當地銀行將會有所出入'
     return '\n'.join([reply_usd_twd, reply_usd_jpy, reply_jpy_twd, comment])

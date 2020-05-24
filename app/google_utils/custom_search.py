@@ -25,7 +25,7 @@ def get_google_custom_search_result(query_string, num=10, safe='active', search_
     api_url += f'&safe={safe}'
     api_url += f'&searchType={search_type}'
     api_url += f'&q={query_string}'
-    api_url += f'&cx=010322789978293582519:tmzyqrdufxq'
+    api_url += '&cx=010322789978293582519:tmzyqrdufxq'
     logging.info(api_url)
     r = requests.get(api_url)
     result = r.json()

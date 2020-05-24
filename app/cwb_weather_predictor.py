@@ -13,7 +13,7 @@ def predict(location):
     ts_now = int(time.time())
 
     c = conn.cursor()
-    query_str = f'''
+    query_str = '''
         SELECT end_ts, Wx, MaxT, MinT, PoP, CI FROM level_1_2
         WHERE location=? AND end_ts > ?
         ORDER BY end_ts ASC;
@@ -39,7 +39,7 @@ def predict(location):
             }
             return_list.append(data)
     else:
-        query_str = f'''
+        query_str = '''
             SELECT start_ts, end_ts, Wx, T, AT, PoP, CI
             FROM level_3
             WHERE sub_location=? AND start_ts > ?
