@@ -101,7 +101,7 @@ def wrap_code_block(text: str) -> str:
     return "```\n" + text + "\n```"
 
 
-def callback_query_handler(bot, update, _context: CallbackContext):
+def callback_query_handler(bot, update):
     cqd = update.callback_query.data
     if cqd.startswith(validator_icon):
         validator_address = cqd.split()[1]
