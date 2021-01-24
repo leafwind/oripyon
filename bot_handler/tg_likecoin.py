@@ -2,7 +2,7 @@
 Interface of LikeCoin Telegram bot
 """
 import logging
-
+from cachetools import cached, TTLCache
 import requests
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
@@ -10,7 +10,15 @@ from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContex
 
 reply_rabbit_icon = "\U0001F430"
 validator_icon = "\U0001F47E"
-validators = []
+
+
+# cache validator status for no longer than 1hour
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+def get_validators():
+    r = requests.get("https://mainnet-node.like.co/staking/validators")
+    result = r.json()
+    validators = result["result"]
+    return validators
 
 
 def get_function_keyboard_markup(chat_type):
@@ -45,7 +53,7 @@ def get_inline_validators_button_markup():
             text=v['description']['moniker'],
             callback_data=f"{validator_icon} {v['operator_address']}"
         )
-        for v in validators
+        for v in get_validators()
     ]
 
     validator_table = []
@@ -61,11 +69,6 @@ def get_inline_validators_button_markup():
 
 
 def validator_status(update: Update, _context: CallbackContext):
-    global validators
-    if not validators:
-        r = requests.get("https://mainnet-node.like.co/staking/validators")
-        result = r.json()
-        validators = result["result"]
     markup = get_inline_validators_button_markup()
     reply = f"請選擇要查詢的驗證人 {reply_rabbit_icon}"
     update.message.reply_text(
@@ -117,7 +120,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
     if query.data.startswith(validator_icon):
         validator_address = query.data.split()[1]
         logging.info(f"validator_address: {validator_address}")
-        for v in validators:
+        for v in get_validators():
             if validator_address == v['operator_address']:
                 logging.info(f"found: {v['description']['moniker']}")
                 commission_rate = v["commission"]["commission_rates"]["rate"]
