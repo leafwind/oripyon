@@ -110,7 +110,8 @@ def callback_query_handler(update: Update, _context: CallbackContext):
             if validator_address == v['operator_address']:
                 logging.info(f"found: {v['description']['moniker']}")
                 commission_rate = v["commission"]["commission_rates"]["rate"]
-                text = f"validator: {v['description']['moniker']}\n" \
+                text = f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n"\
+                    f"validator: {v['description']['moniker']}\n" \
                     f"commission rate: {commission_rate:.0%}\n"
                 update.callback_query.edit_message_text(
                     text=wrap_code_block(text),
