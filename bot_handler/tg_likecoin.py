@@ -80,7 +80,7 @@ def close_keyboard(update: Update, _context: CallbackContext):
     update.message.reply_text(reply, reply_markup=ReplyKeyboardRemove())
 
 
-def text_reply_handler(update: Update):
+def text_reply_handler(update: Update, _context: CallbackContext):
     # _args = context.args
     if not update.message.text:
         logging.warning(f'no text attribute in: {update.message}')
@@ -101,7 +101,7 @@ def wrap_code_block(text: str) -> str:
     return "```\n" + text + "\n```"
 
 
-def callback_query_handler(bot, update):
+def callback_query_handler(bot, update, _context: CallbackContext):
     cqd = update.callback_query.data
     if cqd.startswith(validator_icon):
         validator_address = cqd.split()[1]
@@ -118,7 +118,7 @@ def callback_query_handler(bot, update):
                 )
 
 
-def start_handler(update: Update):
+def start_handler(update: Update, _context: CallbackContext):
     update.message.reply_text(
         text=f'你可以：\n'
              f'輸入 "/" 展開指令選單\n'
