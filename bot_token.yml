@@ -6,6 +6,7 @@ LINE_CHANNEL_SECRET: your_secret
 LINE_CHANNEL_ACCESS_TOKEN: your_access_token
 # https://t.me/botfather
 TELEGRAM_TOKEN: your_token
+TELEGRAM_LIKECOIN_LEAFWIND_TOKEN: your_token
 # https://discordapp.com/developers/applications
 DISCORD_TOKEN: your_token
 GOOGLE_API_KEY: your_api_key

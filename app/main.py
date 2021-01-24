@@ -11,7 +11,7 @@ from linebot.exceptions import (
 )
 from telegram.ext import Dispatcher
 
-from bot_handler import line, tg
+from bot_handler import line, tg_oripyon, tg_likecoin
 
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("requests.packages.urllib3").setLevel(logging.WARNING)
@@ -43,13 +43,17 @@ with open("bot_token.yml", 'r') as stream:
     data = yaml.safe_load(stream)
     LINE_CHANNEL_SECRET = data['LINE_CHANNEL_SECRET']
     TELEGRAM_TOKEN = data['TELEGRAM_TOKEN']
+    TELEGRAM_LIKECOIN_LEAFWIND_TOKEN = data['TELEGRAM_LIKECOIN_LEAFWIND_TOKEN']
 line_web_hook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
 telegram_bot = telegram.Bot(token=TELEGRAM_TOKEN)
+telegram_likecoin_leafwind_bot = telegram.Bot(token=TELEGRAM_LIKECOIN_LEAFWIND_TOKEN)
 
 # Context based callbacks
 # https://github.com/python-telegram-bot/python-telegram-bot/wiki/Transition-guide-to-Version-12.0#context-based-callbacks
 # If you do not use Updater but only Dispatcher you should instead set use_context=True when you create the Dispatcher.
 dispatcher = Dispatcher(telegram_bot, None, use_context=True)
+likecoin_dispatcher = Dispatcher(telegram_likecoin_leafwind_bot, None, use_context=True)
+
 
 # index endpoint
 @application.route('/', methods=['GET', 'POST'])
@@ -82,13 +86,27 @@ def line_callback():
 @application.route("/telegram_callback", methods=['POST'])
 def telegram_callback():
     logger = logging.getLogger(__name__)
-    tg.add_handlers(dispatcher)
+    tg_oripyon.add_handlers(dispatcher)
     if request.method != "POST":
         logger.warning('request.method != "POST"')
         return 'OK'
     update = telegram.Update.de_json(request.get_json(force=True), telegram_bot)
     # Update dispatcher process that handler to process this message
     dispatcher.process_update(update)
+    return 'OK'
+
+
+# telegram callback endpoint for LikeCoin
+@application.route("/telegram_likecoin_callback", methods=['POST'])
+def telegram_likecoin_callback():
+    logger = logging.getLogger(__name__)
+    tg_likecoin.add_handlers(likecoin_dispatcher)
+    if request.method != "POST":
+        logger.warning('request.method != "POST"')
+        return 'OK'
+    update = telegram.Update.de_json(request.get_json(force=True), telegram_likecoin_leafwind_bot)
+    # Update dispatcher process that handler to process this message
+    likecoin_dispatcher.process_update(update)
     return 'OK'
 
 

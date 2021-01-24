@@ -2,11 +2,8 @@ import logging
 
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
-from telegram.files.inputmedia import InputMediaPhoto
 
 from app import dice
-from app.ext_apis.dxy_open_data import load_ncov_data
-from app.ext_apis import csse_covid_19_data
 from app.ext_apis.tw_open_data import epa_aqi_api, uv_api
 from app.ext_apis.util import cartesian
 from app.ext_apis.util import reverse_geocode_customize
@@ -18,10 +15,8 @@ def get_function_keyboard_markup(chat_type):
     weather_button = KeyboardButton(text='\U00002603 天氣')
     tarot_button = KeyboardButton(text='\U0001F0CF 塔羅')
     fortune_button = KeyboardButton(text='\U0001F3B0 運勢')
-    ncov_button = KeyboardButton(text='\U0001F637　武漢肺炎')
-    ncov_new_button = KeyboardButton(text='\U0001F637　武漢肺炎(CSSE)')
     touch_schumi_button = KeyboardButton(text='\U0001F430 摸朽咪')
-    feedback_button = KeyboardButton(text='\U0001F4E8 建議交流')
+    feedback_button = KeyboardButton(text='\U0001F465 建議交流')
     # “private”, “group”, “supergroup” or “channel”
     if chat_type != 'private':
         set_location_button = KeyboardButton(text='\U0001F4CD 設定位置')
@@ -30,7 +25,7 @@ def get_function_keyboard_markup(chat_type):
     close_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
     custom_keyboard = [
         [weather_button, tarot_button, fortune_button],
-        [ncov_button, ncov_new_button, touch_schumi_button],
+        [touch_schumi_button],
         [feedback_button, set_location_button, close_button]
     ]
     markup = ReplyKeyboardMarkup(
@@ -177,38 +172,6 @@ def dummy_reply(update: Update, _context: CallbackContext):
     update.message.reply_text(reply)
 
 
-def ncov_reply(update: Update, _context: CallbackContext):
-    reply = '請選擇要查詢的災區國家 \U0001F430'
-    update.message.reply_text(
-        text=reply,
-        reply_markup=get_ncov_keyboard_markup()
-    )
-
-
-def query_ncov(update: Update, _context: CallbackContext, country):
-    country_image_url = load_ncov_data()
-    media_group = []
-    for key in country_image_url:
-        if key.startswith(country):
-            media_group.append(InputMediaPhoto(media=country_image_url[key], caption=key))
-    update.message.reply_media_group(
-        media=media_group,
-        disable_notification=True,
-    )
-
-
-def query_ncov_csse(update: Update, _context: CallbackContext, country):
-    country_state_result, country_result = csse_covid_19_data.load_ncov_data()
-    if country not in country_result:
-        reply = '查無此國家'
-    else:
-        reply = [data[0].strftime('%Y-%m-%d') + ': ' + str(data[1]) + ', ' for data in country_result[country]]
-    update.message.reply_test(
-        text=reply,
-        disable_notification=True,
-    )
-
-
 def touch_schumi(update: Update, _context: CallbackContext):
     reply = dice.touch_schumi()
     logging.getLogger(__name__).info(f'reply: {reply}')
@@ -257,26 +220,14 @@ def make_reply(update: Update, _context: CallbackContext):
         tarot(update, _context)
     elif text == '\U0001F3B0 運勢':
         fortune(update, _context)
-    elif text == '\U0001F637　武漢肺炎':
-        ncov_reply(update, _context)
-    elif text == '\U0001F637　武漢肺炎(CSSE)':
-        query_ncov_csse()
     elif text == '\U0001F430 摸朽咪':
         touch_schumi(update, _context)
-    elif text == '\U0001F4E8 建議交流':
+    elif text == '\U0001F465 建議交流':
         feedback(update, _context)
     elif text == '\U0001F4CD 設定位置':
         set_location(update, _context)
     elif text == '\U0000274E 關閉鍵盤':
         close_keyboard(update, _context)
-    elif text == '\U0001F1F0\U0001F1F7 韓國':
-        query_ncov(update, _context, 'korea')
-    elif text == '\U0001F1EF\U0001F1F5 日本':
-        query_ncov(update, _context, 'japan')
-    elif text == '\U0001F1EE\U0001F1F9 義大利':
-        query_ncov(update, _context, 'italy')
-    elif text == '\U0001F1EE\U0001F1F7 伊朗':
-        query_ncov(update, _context, 'iran')
     elif 'ㄆㄆ' in text:
         reply = '我知道！戳！\U0001F430'
         logger.info(f'reply: {reply}')
