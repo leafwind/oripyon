@@ -4,8 +4,8 @@ Interface of LikeCoin Telegram bot
 import logging
 
 import requests
-from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext, CallbackQueryHandler
 
 reply_rabbit_icon = "\U0001F430"
@@ -39,11 +39,7 @@ def proposal_status(update: Update, _context: CallbackContext):
     update.message.reply_text("TODO")
 
 
-def validator_status(update: Update, _context: CallbackContext):
-    global validators
-    r = requests.get("https://mainnet-node.like.co/staking/validators")
-    result = r.json()
-    validators = result["result"]
+def get_inline_validators_button_markup():
     validator_buttons = [
         InlineKeyboardButton(
             text=v['description']['moniker'],
@@ -51,6 +47,7 @@ def validator_status(update: Update, _context: CallbackContext):
         )
         for v in validators
     ]
+
     validator_table = []
     # re-format 1-D button list to 2-D button list of list
     num_of_col = 3
@@ -60,7 +57,16 @@ def validator_status(update: Update, _context: CallbackContext):
             row.append(validator_buttons.pop(0))
         validator_table.append(row)
     markup = InlineKeyboardMarkup(validator_table)
+    return markup
 
+
+def validator_status(update: Update, _context: CallbackContext):
+    global validators
+    if not validators:
+        r = requests.get("https://mainnet-node.like.co/staking/validators")
+        result = r.json()
+        validators = result["result"]
+    markup = get_inline_validators_button_markup()
     reply = f"請選擇要查詢的驗證人 {reply_rabbit_icon}"
     update.message.reply_text(
         text=reply,
@@ -104,6 +110,7 @@ def wrap_code_block(text: str) -> str:
 def callback_query_handler(update: Update, _context: CallbackContext):
     query = update.callback_query
     # CallbackQueries need to be answered, even if no notification to the user is needed
+    # Otherwise, the edit_message_text() function will create a new message
     # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
     query.answer()
 
@@ -119,6 +126,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 query.edit_message_text(
                     text=f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n" + wrap_code_block(text),
                     parse_mode="MarkdownV2",
+                    reply_markup=get_inline_validators_button_markup()
                 )
                 return
         logging.info(f"cannot find {validator_address}")
@@ -126,6 +134,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
         query.edit_message_text(
             text=f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n" + wrap_code_block(text),
             parse_mode="MarkdownV2",
+            reply_markup=get_inline_validators_button_markup()
         )
         return
 
