@@ -148,7 +148,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 apr = get_inflation() / (get_staking_pool() / get_supply()) * (1 - float(commission_rate))
                 text = f"validator: {v['description']['moniker']}\n" \
                     f"commission rate: {float(commission_rate):.0%}\n" \
-                    f"APR (Annual percentage rate): {apr:.0%}\n"
+                    f"APR (Annual percentage rate): {apr:.2%}\n"
                 query.edit_message_text(
                     text=f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n" + wrap_code_block(text),
                     parse_mode="MarkdownV2",
