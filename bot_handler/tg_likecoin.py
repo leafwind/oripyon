@@ -16,9 +16,30 @@ validator_icon = "\U0001F47E"
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
 def get_validators():
     r = requests.get("https://mainnet-node.like.co/staking/validators")
-    result = r.json()
-    validators = result["result"]
-    return validators
+    return r.json()["result"]
+
+
+# cache validator status for no longer than 1hour
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+def get_inflation() -> float:
+    r = requests.get("https://mainnet-node.like.co/minting/inflation")
+    return float(r.json()["result"])
+
+
+# cache validator status for no longer than 1hour
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+def get_staking_pool() -> float:
+    r = requests.get("https://mainnet-node.like.co/staking/pool")
+    nano_like = float(r.json()["result"]["bonded_tokens"])
+    return nano_like / 1000000000
+
+
+# cache validator status for no longer than 1hour
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+def get_supply() -> float:
+    r = requests.get("https://mainnet-node.like.co/supply/total")
+    nano_like = float(r.json()["result"]["amount"])
+    return nano_like / 1000000000
 
 
 def get_function_keyboard_markup(chat_type):
@@ -124,8 +145,10 @@ def callback_query_handler(update: Update, _context: CallbackContext):
             if validator_address == v['operator_address']:
                 logging.info(f"found: {v['description']['moniker']}")
                 commission_rate = v["commission"]["commission_rates"]["rate"]
+                apr = get_inflation() / (get_staking_pool() / get_supply()) * (1 - float(commission_rate))
                 text = f"validator: {v['description']['moniker']}\n" \
-                    f"commission rate: {float(commission_rate):.0%}\n"
+                    f"commission rate: {float(commission_rate):.0%}\n" \
+                    f"APR (Annual percentage rate): {apr:.0%}\n"
                 query.edit_message_text(
                     text=f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n" + wrap_code_block(text),
                     parse_mode="MarkdownV2",

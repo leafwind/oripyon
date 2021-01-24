@@ -1,7 +1,7 @@
 line-bot-sdk
 python-telegram-bot
 Flask
-request
+requests
 pytest
 pytest-cov
 coverage
