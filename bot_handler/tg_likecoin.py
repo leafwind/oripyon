@@ -8,7 +8,7 @@ from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardR
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext
 
 reply_rabbit_icon = "\U0001F430"
-validator_icon = "\U0001F471"
+validator_icon = "\U0001F47E"
 
 
 def get_function_keyboard_markup(chat_type):
