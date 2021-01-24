@@ -2,8 +2,10 @@
 Interface of LikeCoin Telegram bot
 """
 import logging
-from cachetools import cached, TTLCache
+from typing import Dict, Tuple, List
+
 import requests
+from cachetools import cached, TTLCache
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext, CallbackQueryHandler
@@ -17,6 +19,20 @@ validator_icon = "\U0001F47E"
 def get_validators():
     r = requests.get("https://mainnet-node.like.co/staking/validators")
     return r.json()["result"]
+
+
+# cache validator voting power for no longer than 1hour
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+def get_validators_voting_power() -> Tuple[Dict, float]:
+    r = requests.get("https://mainnet-node.like.co/validatorsets/latest")
+    validators_power = r.json()["result"]["validators"]
+    voting_power_map = {}
+    voting_power_total = 0.0
+    for v in validators_power:
+        voting_power = float(v["voting_power"])
+        voting_power_map[v["address"]] = voting_power
+        voting_power_total += voting_power
+    return voting_power_map, voting_power_total
 
 
 # cache validator status for no longer than 1hour
@@ -40,6 +56,41 @@ def get_supply() -> float:
     r = requests.get("https://mainnet-node.like.co/supply/total")
     nano_like = float(r.json()["result"][0]["amount"])
     return nano_like / 1000000000
+
+
+# cache all proposal status for no longer than 1hour
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+def get_proposals() -> Tuple[List[str], List[str]]:
+    r = requests.get("https://mainnet-node.like.co/gov/proposals")
+    result = r.json()["result"]
+    existing_proposal_id = []
+    ongoing_proposal_id = []
+    for proposal in result:
+        existing_proposal_id.append(proposal["id"])
+        if proposal["proposal_status"] == "VotingPeriod":
+            ongoing_proposal_id.append(proposal["id"])
+    return existing_proposal_id, ongoing_proposal_id
+
+
+# cache single proposal status for no longer than 1hour
+@cached(cache=TTLCache(maxsize=256, ttl=3600))
+def get_proposal(proposal_id: str) -> Dict:
+    r = requests.get(f"https://mainnet-node.like.co/gov/proposals/{proposal_id}/votes")
+    vote_record_map = {}
+    for vote in r.json()["result"]:
+        vote_record_map[vote["voter"]] = vote["option"]
+    return vote_record_map
+
+
+# cache participated proposals for each validators
+@cached(cache=TTLCache(maxsize=256, ttl=3600))
+def get_participated_proposal(validator_address: str) -> Tuple[int, int]:
+    existing_proposal_id, _ongoing_proposal_id = get_proposals()
+    participated = 0
+    for proposal_id in existing_proposal_id:
+        if validator_address in get_proposal(proposal_id):
+            participated += 1
+    return participated, len(existing_proposal_id)
 
 
 def get_function_keyboard_markup(chat_type):
@@ -146,9 +197,16 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 logging.info(f"found: {v['description']['moniker']}")
                 commission_rate = v["commission"]["commission_rates"]["rate"]
                 apr = get_inflation() / (get_staking_pool() / get_supply()) * (1 - float(commission_rate))
+                voting_power_map, voting_power_total = get_validators_voting_power()
+                _existing_proposal_id, ongoing_proposal_id = get_proposals()
+                num_participated_proposal, num_total_proposal = get_participated_proposal(validator_address)
+                ongoing_proposal_activities = [f"    議案 {proposal_id}: {get_proposal(proposal_id)['option']}\n" for proposal_id in ongoing_proposal_id]
                 text = f"validator: {v['description']['moniker']}\n" \
-                    f"commission rate: {float(commission_rate):.0%}\n" \
-                    f"APR (Annual percentage rate): {apr:.2%}\n"
+                    f"投票權排名: {voting_power_map['validator_address'] / voting_power_total:.2%}\n" \
+                    f"佣金: {float(commission_rate):.0%}\n" \
+                    f"預估年收益: {apr:.2%}\n" \
+                    f"參與度（投票議案／有效議案）: {num_participated_proposal} / {num_total_proposal}\n" \
+                    f"進行中的議案表態: \n{ongoing_proposal_activities}"
                 query.edit_message_text(
                     text=f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n" + wrap_code_block(text),
                     parse_mode="MarkdownV2",
