@@ -101,7 +101,7 @@ def wrap_code_block(text: str) -> str:
     return "```\n" + text + "\n```"
 
 
-def callback_query_handler(bot, update):
+def callback_query_handler(update: Update, _context: CallbackContext):
     cqd = update.callback_query.data
     if cqd.startswith(validator_icon):
         validator_address = cqd.split()[1]
@@ -111,8 +111,7 @@ def callback_query_handler(bot, update):
                 commission_rate = v["commission"]["commission_rates"]["rate"]
                 text = f"validator: {v['description']['moniker']}" \
                     f"commission rate: {commission_rate}"
-                bot.send_message(
-                    chat_id=update.message.from_user.id,
+                update.message.reply_text(
                     text=wrap_code_block(text),
                     parse_mode="MarkdownV2",
                 )
