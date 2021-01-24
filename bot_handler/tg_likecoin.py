@@ -112,10 +112,11 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 commission_rate = v["commission"]["commission_rates"]["rate"]
                 text = f"validator: {v['description']['moniker']}" \
                     f"commission rate: {commission_rate}"
-                update.message.reply_text(
+                update.callback_query.reply_text(
                     text=wrap_code_block(text),
                     parse_mode="MarkdownV2",
                 )
+                update.callback_query.answer()
                 return
         logging.info(f"cannot find {validator_address}")
 
