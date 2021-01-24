@@ -41,12 +41,19 @@ def validator_status(update: Update, _context: CallbackContext):
         KeyboardButton(text=f"{validator_icon} {v['description']['moniker']}")
         for v in validators
     ]
-    custom_keyboard = [
-        validator_buttons,
-        [KeyboardButton(text='\U0000274E 關閉鍵盤')]
-    ]
+    validator_table = []
+    # re-format 1-D button list to 2-D button list of list
+    num_of_col = 3
+    while validator_buttons:
+        row = []
+        for i in range(num_of_col):
+            row.append(validator_buttons.pop(0))
+        validator_table.append(row)
+    final_row = [KeyboardButton(text='\U0000274E 關閉鍵盤')]
+    validator_table.append(final_row)
+
     markup = ReplyKeyboardMarkup(
-        custom_keyboard,
+        validator_table,
         resize_keyboard=True,
         selective=True,
     )
