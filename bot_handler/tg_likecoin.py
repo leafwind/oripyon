@@ -107,7 +107,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
         validator_address = cqd.split()[1]
         logging.info(f"validator_address: {validator_address}")
         for v in validators:
-            if validator_address == v['validator_address']:
+            if validator_address == v['operator_address']:
                 commission_rate = v["commission"]["commission_rates"]["rate"]
                 text = f"validator: {v['description']['moniker']}" \
                     f"commission rate: {commission_rate}"
