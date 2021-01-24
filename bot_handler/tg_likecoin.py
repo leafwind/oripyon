@@ -23,16 +23,14 @@ def get_validators():
 
 # cache validator voting power for no longer than 1hour
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
-def get_validators_voting_power() -> Tuple[Dict, float]:
+def get_total_voting_power() -> float:
     r = requests.get("https://mainnet-node.like.co/validatorsets/latest")
     validators_power = r.json()["result"]["validators"]
-    voting_power_map = {}
     voting_power_total = 0.0
     for v in validators_power:
         voting_power = float(v["voting_power"])
-        voting_power_map[v["address"]] = voting_power
         voting_power_total += voting_power
-    return voting_power_map, voting_power_total
+    return voting_power_total
 
 
 # cache validator status for no longer than 1hour
@@ -197,12 +195,12 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 logging.info(f"found: {v['description']['moniker']}")
                 commission_rate = v["commission"]["commission_rates"]["rate"]
                 apr = get_inflation() / (get_staking_pool() / get_supply()) * (1 - float(commission_rate))
-                voting_power_map, voting_power_total = get_validators_voting_power()
+                total_voting_power = get_total_voting_power()
                 _existing_proposal_id, ongoing_proposal_id = get_proposals()
                 num_participated_proposal, num_total_proposal = get_participated_proposal(validator_address)
                 ongoing_proposal_activities = [f"    議案 {proposal_id}: {get_proposal(proposal_id).get(validator_address, '未表態')}\n" for proposal_id in ongoing_proposal_id]
                 text = f"validator: {v['description']['moniker']}\n" \
-                    f"投票權排名: {voting_power_map[validator_address] / voting_power_total:.2%}\n" \
+                    f"投票權: {v['delegator_shares'] / 1000000000.0 / total_voting_power:.2%}\n" \
                     f"佣金: {float(commission_rate):.0%}\n" \
                     f"預估年收益: {apr:.2%}\n" \
                     f"參與度（投票議案／有效議案）: {num_participated_proposal} / {num_total_proposal}\n" \
