@@ -108,6 +108,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
         logging.info(f"validator_address: {validator_address}")
         for v in validators:
             if validator_address == v['operator_address']:
+                logging.info(f"found: {v['description']['moniker']}")
                 commission_rate = v["commission"]["commission_rates"]["rate"]
                 text = f"validator: {v['description']['moniker']}" \
                     f"commission rate: {commission_rate}"
@@ -115,6 +116,8 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                     text=wrap_code_block(text),
                     parse_mode="MarkdownV2",
                 )
+                return
+        logging.info(f"cannot find {validator_address}")
 
 
 def start_handler(update: Update, _context: CallbackContext):
