@@ -38,7 +38,7 @@ def get_staking_pool() -> float:
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
 def get_supply() -> float:
     r = requests.get("https://mainnet-node.like.co/supply/total")
-    nano_like = float(r.json()["result"]["amount"])
+    nano_like = float(r.json()["result"][0]["amount"])
     return nano_like / 1000000000
 
 
