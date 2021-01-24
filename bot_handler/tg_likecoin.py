@@ -102,9 +102,13 @@ def wrap_code_block(text: str) -> str:
 
 
 def callback_query_handler(update: Update, _context: CallbackContext):
-    cqd = update.callback_query.data
-    if cqd.startswith(validator_icon):
-        validator_address = cqd.split()[1]
+    query = update.callback_query
+    # CallbackQueries need to be answered, even if no notification to the user is needed
+    # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
+    query.answer()
+
+    if query.data.startswith(validator_icon):
+        validator_address = query.data.split()[1]
         logging.info(f"validator_address: {validator_address}")
         for v in validators:
             if validator_address == v['operator_address']:
@@ -112,14 +116,14 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 commission_rate = v["commission"]["commission_rates"]["rate"]
                 text = f"validator: {v['description']['moniker']}\n" \
                     f"commission rate: {float(commission_rate):.0%}\n"
-                update.callback_query.edit_message_text(
+                query.edit_message_text(
                     text=f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n" + wrap_code_block(text),
                     parse_mode="MarkdownV2",
                 )
                 return
         logging.info(f"cannot find {validator_address}")
         text = f"validator: {validator_address} not found\n"
-        update.callback_query.edit_message_text(
+        query.edit_message_text(
             text=f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n" + wrap_code_block(text),
             parse_mode="MarkdownV2",
         )
