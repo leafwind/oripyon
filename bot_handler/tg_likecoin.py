@@ -98,7 +98,7 @@ def text_reply_handler(update: Update, _context: CallbackContext):
 
 
 def wrap_code_block(text: str) -> str:
-    return "```\n" + text + "\n```"
+    return "```\n" + text + "```"
 
 
 def callback_query_handler(update: Update, _context: CallbackContext):
@@ -110,16 +110,19 @@ def callback_query_handler(update: Update, _context: CallbackContext):
             if validator_address == v['operator_address']:
                 logging.info(f"found: {v['description']['moniker']}")
                 commission_rate = v["commission"]["commission_rates"]["rate"]
-                text = f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n"\
-                    f"validator: {v['description']['moniker']}\n" \
-                    f"commission rate: {commission_rate:.0%}\n"
+                text = f"validator: {v['description']['moniker']}\n" \
+                    f"commission rate: {float(commission_rate):.0%}\n"
                 update.callback_query.edit_message_text(
-                    text=wrap_code_block(text),
+                    text=f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n" + wrap_code_block(text),
                     parse_mode="MarkdownV2",
                 )
                 return
         logging.info(f"cannot find {validator_address}")
-        update.callback_query.answer(text="not found")
+        text = f"validator: {validator_address} not found\n"
+        update.callback_query.edit_message_text(
+            text=f"請選擇要查詢的驗證人 {reply_rabbit_icon}\n" + wrap_code_block(text),
+            parse_mode="MarkdownV2",
+        )
         return
 
 
