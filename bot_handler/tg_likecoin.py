@@ -110,14 +110,12 @@ def callback_query_handler(update: Update, _context: CallbackContext):
             if validator_address == v['operator_address']:
                 logging.info(f"found: {v['description']['moniker']}")
                 commission_rate = v["commission"]["commission_rates"]["rate"]
-                text = f"validator: {v['description']['moniker']}" \
-                    f"commission rate: {commission_rate}"
-                # update.callback_query.bot.send_message(
-                #     update.callback_query.chat_instance,
-                #     text=wrap_code_block(text),
-                #     parse_mode="MarkdownV2",
-                # )
-                update.callback_query.answer(text=text, show_alert=True)
+                text = f"validator: {v['description']['moniker']}\n" \
+                    f"commission rate: {commission_rate:.0%}\n"
+                update.callback_query.edit_message_text(
+                    text=wrap_code_block(text),
+                    parse_mode="MarkdownV2",
+                )
                 return
         logging.info(f"cannot find {validator_address}")
         update.callback_query.answer(text="not found")
