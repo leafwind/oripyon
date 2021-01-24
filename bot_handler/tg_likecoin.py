@@ -86,15 +86,15 @@ def text_reply_handler(update: Update, _context: CallbackContext):
         logging.warning(f'no text attribute in: {update.message}')
     text = update.message.text
     if text == "\U0001F5F3 現有議案":
-        proposal_status(update)
+        proposal_status(update, _context)
     elif text == f"{validator_icon} 驗證人狀態":
-        validator_status(update)
+        validator_status(update, _context)
     elif text == "\U0001F465 建議交流":
-        feedback(update)
+        feedback(update, _context)
     elif text == "\U0000274E 關閉鍵盤":
-        close_keyboard(update)
+        close_keyboard(update, _context)
     elif text.startswith(f"{validator_icon} "):
-        get_single_validator_status(update)
+        get_single_validator_status(update, _context)
 
 
 def wrap_code_block(text: str) -> str:
