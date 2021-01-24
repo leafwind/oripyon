@@ -34,7 +34,7 @@ def proposal_status(update: Update, _context: CallbackContext):
 
 
 def validator_status(update: Update, _context: CallbackContext):
-    r = requests.get("https://mainnet-node.like.co/staking/validatsrs")
+    r = requests.get("https://mainnet-node.like.co/staking/validators")
     result = r.json()
     validators = result["result"]
     validator_buttons = [
