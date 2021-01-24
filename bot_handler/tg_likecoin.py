@@ -117,7 +117,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 #     text=wrap_code_block(text),
                 #     parse_mode="MarkdownV2",
                 # )
-                update.callback_query.answer(text=text)
+                update.callback_query.answer(text=text, show_alert=True)
                 return
         logging.info(f"cannot find {validator_address}")
         update.callback_query.answer(text="not found")
