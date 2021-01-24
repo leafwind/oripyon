@@ -200,7 +200,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 voting_power_map, voting_power_total = get_validators_voting_power()
                 _existing_proposal_id, ongoing_proposal_id = get_proposals()
                 num_participated_proposal, num_total_proposal = get_participated_proposal(validator_address)
-                ongoing_proposal_activities = [f"    議案 {proposal_id}: {get_proposal(proposal_id)['option']}\n" for proposal_id in ongoing_proposal_id]
+                ongoing_proposal_activities = [f"    議案 {proposal_id}: {get_proposal(proposal_id)[validator_address]}\n" for proposal_id in ongoing_proposal_id]
                 text = f"validator: {v['description']['moniker']}\n" \
                     f"投票權排名: {voting_power_map['validator_address'] / voting_power_total:.2%}\n" \
                     f"佣金: {float(commission_rate):.0%}\n" \
