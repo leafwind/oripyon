@@ -202,7 +202,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 num_participated_proposal, num_total_proposal = get_participated_proposal(validator_address)
                 ongoing_proposal_activities = [f"    議案 {proposal_id}: {get_proposal(proposal_id).get(validator_address, '未表態')}\n" for proposal_id in ongoing_proposal_id]
                 text = f"validator: {v['description']['moniker']}\n" \
-                    f"投票權排名: {voting_power_map['validator_address'] / voting_power_total:.2%}\n" \
+                    f"投票權排名: {voting_power_map[validator_address] / voting_power_total:.2%}\n" \
                     f"佣金: {float(commission_rate):.0%}\n" \
                     f"預估年收益: {apr:.2%}\n" \
                     f"參與度（投票議案／有效議案）: {num_participated_proposal} / {num_total_proposal}\n" \
