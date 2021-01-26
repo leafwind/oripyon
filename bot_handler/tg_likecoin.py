@@ -115,7 +115,7 @@ def get_single_validator_status(update: Update, _context: CallbackContext):
 
 
 def proposal_status(update: Update, _context: CallbackContext):
-    update.message.reply_text("TODO")
+    update.message.reply_text("此功能施工中...")
 
 
 def get_inline_validators_button_markup():
