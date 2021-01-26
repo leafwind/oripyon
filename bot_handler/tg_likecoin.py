@@ -201,7 +201,7 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 self_address = bech32.bech32_encode('cosmos', words)
                 _existing_proposal_id, ongoing_proposal_id = get_proposals()
                 num_participated_proposal, num_total_proposal = get_participated_proposal(self_address)
-                ongoing_proposal_activities = "".join([f"- 議案 {proposal_id}: {get_proposal(proposal_id).get(self_address, '未表態')}" for proposal_id in ongoing_proposal_id])
+                ongoing_proposal_activities = "".join([f"- 議案 {proposal_id}: {get_proposal(proposal_id).get(self_address, '未表態')}" for proposal_id in ongoing_proposal_id]) if ongoing_proposal_id else "無進行中議案"
                 text = f"validator: {v['description']['moniker']}\n" \
                     f"投票權: {float(v['delegator_shares']) / 1000000.0 / total_voting_power:.2%}\n" \
                     f"佣金: {float(commission_rate):.0%}\n" \
