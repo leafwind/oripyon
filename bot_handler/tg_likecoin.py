@@ -4,6 +4,7 @@ Interface of LikeCoin Telegram bot
 import logging
 from typing import Dict, Tuple, List
 
+import bech32
 import requests
 from cachetools import cached, TTLCache
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
@@ -196,9 +197,11 @@ def callback_query_handler(update: Update, _context: CallbackContext):
                 commission_rate = v["commission"]["commission_rates"]["rate"]
                 apr = get_inflation() / (get_staking_pool() / get_supply()) * (1 - float(commission_rate))
                 total_voting_power = get_total_voting_power()
+                _hrp, words = bech32.bech32_decode(validator_address)
+                self_address = bech32.bech32_encode('cosmos', words)
                 _existing_proposal_id, ongoing_proposal_id = get_proposals()
-                num_participated_proposal, num_total_proposal = get_participated_proposal(validator_address)
-                ongoing_proposal_activities = "".join([f"- 議案 {proposal_id}: {get_proposal(proposal_id).get(validator_address, '未表態')}" for proposal_id in ongoing_proposal_id])
+                num_participated_proposal, num_total_proposal = get_participated_proposal(self_address)
+                ongoing_proposal_activities = "".join([f"- 議案 {proposal_id}: {get_proposal(proposal_id).get(self_address, '未表態')}" for proposal_id in ongoing_proposal_id])
                 text = f"validator: {v['description']['moniker']}\n" \
                     f"投票權: {float(v['delegator_shares']) / 1000000.0 / total_voting_power:.2%}\n" \
                     f"佣金: {float(commission_rate):.0%}\n" \

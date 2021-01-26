@@ -16,3 +16,4 @@ gunicorn
 gevent
 reverse_geocoder
 mock
+bech32
