@@ -150,8 +150,8 @@ def validator_status(update: Update, _context: CallbackContext):
 
 def feedback(update: Update, _context: CallbackContext):
     reply = f'聯絡作者 @leafwind_tw\n' \
-            f'\U27A1FE0F 加入 leafwind 的 [TG LikeCoin 驗證人討論群](https://t.me/validator_leafwind) 提供意見回饋\n' \
-            f'\U27A1FE0F 加入 社群的 [Discord LikeCoin 伺服器](https://discord.com/invite/W4DQ6peZZZ) 一起討論\n'
+            f'\U000027A1 加入 leafwind 的 [TG LikeCoin 驗證人討論群](https://t.me/validator_leafwind) 提供意見回饋\n' \
+            f'\U000027A1 加入 社群的 [Discord LikeCoin 伺服器](https://discord.com/invite/W4DQ6peZZZ) 一起討論\n'
     update.message.reply_text(
         reply,
         parse_mode="MarkdownV2",
