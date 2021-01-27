@@ -126,6 +126,8 @@ def get_inline_validators_button_markup():
         )
         for v in get_validators()
     ]
+    while len(validator_buttons) % 3 != 0:
+        validator_buttons.append(InlineKeyboardButton("", ""))
 
     validator_table = []
     # re-format 1-D button list to 2-D button list of list
@@ -134,8 +136,6 @@ def get_inline_validators_button_markup():
         row = []
         for i in range(num_of_col):
             row.append(validator_buttons.pop(0))
-            if not validator_buttons:
-                break
         validator_table.append(row)
     markup = InlineKeyboardMarkup(validator_table)
     return markup
