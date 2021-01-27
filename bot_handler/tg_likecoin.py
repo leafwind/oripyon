@@ -130,9 +130,11 @@ def get_inline_validators_button_markup():
     validator_table = []
     # re-format 1-D button list to 2-D button list of list
     num_of_col = 3
+    logging.info(f"before loop: {validator_buttons}")
     while validator_buttons:
         row = []
         for i in range(num_of_col):
+            logging.info(f"trying to pop first element in: {validator_buttons}")
             row.append(validator_buttons.pop(0))
         validator_table.append(row)
     markup = InlineKeyboardMarkup(validator_table)
