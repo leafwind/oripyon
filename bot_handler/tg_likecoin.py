@@ -74,8 +74,12 @@ def get_proposals() -> Tuple[List[str], List[str]]:
 # cache single proposal status for no longer than 1hour
 @cached(cache=TTLCache(maxsize=256, ttl=3600))
 def get_proposal(proposal_id: str) -> Dict:
-    r = requests.get(f"https://mainnet-node.like.co/gov/proposals/{proposal_id}/votes")
+    url = f"https://mainnet-node.like.co/gov/proposals/{proposal_id}/votes"
+    r = requests.get(url)
     vote_record_map = {}
+    if not r.json()["result"]:
+        logging.error(f"{url} returns None")
+        return {}
     for vote in r.json()["result"]:
         vote_record_map[vote["voter"]] = vote["option"]
     return vote_record_map
