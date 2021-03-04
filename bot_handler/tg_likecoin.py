@@ -12,7 +12,11 @@ from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardR
 from telegram.ext import MessageHandler, Filters, CommandHandler, CallbackContext, CallbackQueryHandler
 
 reply_rabbit_icon = "\U0001F430"
-validator_icon = "\U0001F47E"
+VALIDATOR_PARTICIPATION = "\U0001F3C1 驗證人參與度"
+SINGLE_VALIDATOR_INFO = "\U0001F47E 單一驗證人資訊"
+PROPOSAL_STATUS = "\U0001F5F3 議案狀態"
+FEEDBACK = "\U0001F465 建議交流"
+CLOSE_KEYBOARD = "\U0000274E 關閉鍵盤"
 
 
 # cache validator status for no longer than 1hour
@@ -78,7 +82,7 @@ def get_proposal(proposal_id: str) -> Dict:
     r = requests.get(url)
     vote_record_map = {}
     if not r.json()["result"]:
-        logging.error(f"{url} returns None")
+        logging.warning(f"{url} voting result is empty, maybe this vote has not start yet or no one has voted.")
         return {}
     for vote in r.json()["result"]:
         vote_record_map[vote["voter"]] = vote["option"]
@@ -97,13 +101,14 @@ def get_participated_proposal(validator_address: str) -> Tuple[int, int]:
 
 
 def get_function_keyboard_markup(chat_type):
-    proposal_status_button = KeyboardButton(text='\U0001F5F3 現有議案')
-    validator_status_button = KeyboardButton(text=f"{validator_icon} 驗證人狀態")
-    feedback_button = KeyboardButton(text='\U0001F465 建議交流')
-    close_button = KeyboardButton(text='\U0000274E 關閉鍵盤')
+    validator_participation_button = KeyboardButton(text=VALIDATOR_PARTICIPATION)
+    single_validator_status_button = KeyboardButton(text=SINGLE_VALIDATOR_INFO)
+    proposal_status_button = KeyboardButton(text=PROPOSAL_STATUS)
+    feedback_button = KeyboardButton(text=FEEDBACK)
+    close_button = KeyboardButton(text=CLOSE_KEYBOARD)
     custom_keyboard = [
-        [proposal_status_button, validator_status_button],
-        [feedback_button, close_button],
+        [validator_participation_button, single_validator_status_button],
+        [proposal_status_button, feedback_button, close_button],
     ]
     markup = ReplyKeyboardMarkup(
         custom_keyboard,
@@ -126,7 +131,7 @@ def get_inline_validators_button_markup():
     validator_buttons = [
         InlineKeyboardButton(
             text=v['description']['moniker'],
-            callback_data=f"{validator_icon} {v['operator_address']}"
+            callback_data=f"{SINGLE_VALIDATOR_INFO.split()[0]} {v['operator_address']}"
         )
         for v in get_validators()
     ]
@@ -145,13 +150,18 @@ def get_inline_validators_button_markup():
     return markup
 
 
-def validator_status(update: Update, _context: CallbackContext):
+def single_validator_status(update: Update, _context: CallbackContext):
     markup = get_inline_validators_button_markup()
     reply = f"請選擇要查詢的驗證人 {reply_rabbit_icon}"
     update.message.reply_text(
         text=reply,
         reply_markup=markup
     )
+
+
+def validator_participation(update: Update, _context: CallbackContext):
+    # existing_proposal_id, _ongoing_proposal_id = get_proposals()
+    update.message.reply_text("此功能施工中...")
 
 
 def feedback(update: Update, _context: CallbackContext):
@@ -172,15 +182,17 @@ def text_reply_handler(update: Update, _context: CallbackContext):
     if not update.message.text:
         logging.warning(f'no text attribute in: {update.message}')
     text = update.message.text
-    if text == "\U0001F5F3 現有議案":
+    if text == VALIDATOR_PARTICIPATION:
+        validator_participation(update, _context)
+    elif text == SINGLE_VALIDATOR_INFO:
+        single_validator_status(update, _context)
+    elif text == PROPOSAL_STATUS:
         proposal_status(update, _context)
-    elif text == f"{validator_icon} 驗證人狀態":
-        validator_status(update, _context)
-    elif text == "\U0001F465 建議交流":
+    elif text == FEEDBACK:
         feedback(update, _context)
-    elif text == "\U0000274E 關閉鍵盤":
+    elif text == CLOSE_KEYBOARD:
         close_keyboard(update, _context)
-    elif text.startswith(f"{validator_icon} "):
+    elif text.startswith(f"{SINGLE_VALIDATOR_INFO.split()[0]} "):
         get_single_validator_status(update, _context)
 
 
@@ -195,7 +207,8 @@ def callback_query_handler(update: Update, _context: CallbackContext):
     # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
     query.answer()
 
-    if query.data.startswith(validator_icon):
+    # 單一驗證人狀態
+    if query.data.startswith(SINGLE_VALIDATOR_INFO.split()[0]):
         validator_address = query.data.split()[1]
         logging.info(f"validator_address: {validator_address}")
         for v in get_validators():
